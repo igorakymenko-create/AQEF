@@ -89,7 +89,7 @@ run *inside* AI Quality Engineering; it is not sufficient by itself to constitut
 
 *Terminology note:* this section uses "AI evaluation" in its common industry sense — the
 general practice of benchmarking model outputs. This is distinct from the Glossary term
-**Evaluation** (`front-matter/08-terminology.md`), which denotes specifically the act of
+**Evaluation** (Front Matter §8), which denotes specifically the act of
 applying Judges within AQEF's governed lifecycle. The two share a word because the
 latter often reuses the techniques of the former (LLM-as-judge, rubric scoring); they are
 not otherwise the same thing.
@@ -332,7 +332,8 @@ physical separation, only that each layer's responsibility is met somewhere.
 ### Component Relationships
 
 The Dataset Engine feeds the Execution Engine with Variables and Prompts. The
-Execution Engine produces Evidence (Conversation plus Artifacts), which the Validator
+Execution Engine produces **Evidence** — a Conversation plus zero or more Artifacts, the
+collective term this document uses for what an Oracle assesses — which the Validator
 Engine consumes first; only if Validation passes does the Judge Engine run against the
 same Evidence (Chapter 3 — Validation before Evaluation). Both engines' Results flow
 into Reporting & Analytics, whose output can trigger a Release Decision (Chapter 6)
@@ -343,32 +344,20 @@ who can change a Contract, approve a Baseline, or override a Quality Gate.
 
 ### Information Flow
 
-```
-Dataset Engine ──(Variables)──► Execution Engine ──► [Environment: runs the Scenario]
-                                       │
-                                       ├──► Conversation (via Conversation Engine)
-                                       └──► Artifact Collection
-                                              │
-                                              ▼
-                                    Validator Engine (runs first)
-                                       │
-                         fail ◄────────┴────────► pass
-                    Result recorded,                │
-                    short-circuits here              ▼
-                                          Judge Engine (Single/Multi Judge,
-                                          Human Reviewer if the Contract requires it)
-                                              │
-                                              ▼
-                                   Reporting & Analytics
-                            (Metrics; Baseline/Snapshot comparison)
-                                              │
-                                              ▼
-                                 Report ──► Release Decision
-                                              │
-                            (new Scenario / revised Contract)
-                                              │
-                                              ▼
-                              back to Dataset Engine / Definition layer
+```mermaid
+flowchart TD
+    DE["Dataset Engine"] -->|Variables| EE["Execution Engine"]
+    EE --> ENV["Environment: runs the Scenario"]
+    ENV --> CE["Conversation<br/>(via Conversation Engine)"]
+    ENV --> AC["Artifact Collection"]
+    CE --> VE["Validator Engine<br/>(runs first)"]
+    AC --> VE
+    VE -->|fail| RF["Result recorded,<br/>short-circuits here"]
+    VE -->|pass| JE["Judge Engine<br/>(Single/Multi Judge, Human Reviewer<br/>if the Contract requires it)"]
+    JE --> RA["Reporting &amp; Analytics<br/>(Metrics; Baseline/Snapshot comparison)"]
+    RA --> REP["Report"]
+    REP --> RD["Release Decision"]
+    RD -->|"new Scenario / revised Contract"| DE
 ```
 
 Governance is not shown as a stage in this diagram — it is the layer that determines
@@ -518,26 +507,15 @@ Project, not a single Conversation.
 
 ### The Lifecycle as a Loop
 
-```
-Requirements ──► Risk Analysis ──► Test Design ──► Execution
-                                                        │
-                                                        ▼
-                                                   Validation
-                                    fail ◄──────────────┴──────────────► pass
-                          Result recorded,                                  │
-                          short-circuits here                               ▼
-                                                                        Evaluation
-                                                                             │
-                                                                             ▼
-                                                                        Reporting
-                                                                             │
-                                                                             ▼
-                                                                    Release Decision
-                                                                             │
-                                              (new Requirement / revised Contract)
-                                                                             │
-                                                                             ▼
-                                                 back to Requirements / Risk Analysis
+```mermaid
+flowchart TD
+    REQ["Requirements"] --> RAN["Risk Analysis"] --> TD["Test Design"] --> EX["Execution"]
+    EX --> VAL["Validation"]
+    VAL -->|fail| RF["Result recorded,<br/>short-circuits here"]
+    VAL -->|pass| EVAL["Evaluation"]
+    EVAL --> REP["Reporting"]
+    REP --> RD["Release Decision"]
+    RD -->|"new Requirement / revised Contract"| REQ
 ```
 
 The loop is what makes the lifecycle a lifecycle rather than a pipeline: Chapter 4
@@ -595,12 +573,14 @@ there is nothing left to model. A Judge or Human Reviewer's Result
 carries a genuine Confidence value, and the Confidence Model is what decides what that
 number *does*, not merely what it records:
 
-- At or above the Confidence threshold set on the relevant Contract clause, a Result is
-  counted at face value in the Aggregation Model that follows.
-- Below that threshold, a Result MUST NOT be silently counted as an ordinary pass or
-  fail. It MAY instead be treated as inconclusive and routed to Human Review (Volume VI)
-  before it is allowed to affect an aggregate, since a Judge that is not confident in its
-  own verdict is exactly the case a Human Reviewer exists to resolve.
+- At or above the Confidence threshold set on the relevant Contract clause, a Result's
+  disposition (Appendix C §C.7) is `actionable`, and it is counted at face value in the
+  Aggregation Model that follows.
+- Below that threshold, a Result's disposition is `inconclusive` — it MUST NOT be
+  silently counted as an ordinary pass or fail. It MAY instead be routed to Human
+  Review (Volume VI), producing a separate Result that starts at disposition
+  `awaiting_review` and resolves once a human responds, since a Judge that is not
+  confident in its own verdict is exactly the case a Human Reviewer exists to resolve.
 - A cluster of low-Confidence Results concentrated on one Scenario or one Judge, rather
   than spread evenly, is itself a signal worth surfacing to Reporting independently of
   any individual Result's disposition — it is frequently the first visible symptom of
@@ -665,37 +645,26 @@ A Release Decision requires every Quality Gate applicable to its scope to pass. 
 one fails, the Decision Pipeline does not silently continue — Governance's Approval
 Workflow (Volume XII) is the only path through which a failing Gate can still result in
 a "ship" outcome, and any such exception MUST be recorded as an explicit, auditable
-override rather than a quiet pass. The same Gate is what a Report surfaces for human
-visibility (Volume XI) and what a CI/CD pipeline queries to decide whether a deployment
-may proceed (Volume XIII) — one mechanism, viewed from two places, not two different
-things wearing the same name.
+override rather than a quiet pass. A Gate reading an aggregate that includes any Result
+whose disposition is not `actionable` (Appendix C §C.7) — a Result still
+`awaiting_review`, or one whose Oracle was `oracle_unavailable` — MUST treat that Result
+as blocking by default; an unresolved or unreachable Oracle is not evidence of quality,
+regardless of how favorably every other Result in the aggregate reads. The same Gate is
+what a Report surfaces for human visibility (Volume XI) and what a CI/CD pipeline
+queries to decide whether a deployment may proceed (Volume XIII) — one mechanism, viewed
+from two places, not two different things wearing the same name.
 
 ### The Decision Pipeline as a Whole
 
-```
-Metrics (Volume XI)
-     │
-     ▼
-Confidence Model ──── low-Confidence Results below the Contract's
-     │                 threshold routed to Human Review (Volume VI)
-     │                 instead of counted directly
-     ▼
-Aggregation Model ─── Business Quality weight applied per Scenario (Ch. 2);
-     │                 Safety: Validator failures act as a hard veto,
-     │                 kept separate from the weighted combination elsewhere
-     ▼
-Quality Gate(s) ───── e.g. Safety Gate, Regression Gate (vs. Baseline/
-     │                 Snapshot, Volume X), Functional Gate, Cost Gate
-     │
-  fail ◄──────────────────────┴──────────────────────► pass (all applicable Gates)
-     │                                                        │
-     ▼                                                        ▼
-Release Decision: don't ship                       Release Decision: ship
-  (or: Governance-logged                                       │
-   override, Volume XII)                                       │
-     │                                                          │
-     └───────────────────────► feedback into Requirements ◄─────┘
-                                 / Risk Analysis (Chapter 5)
+```mermaid
+flowchart TD
+    M["Metrics (Volume XI)"] --> CM["Confidence Model<br/>Low-Confidence Results below the Contract's threshold<br/>routed to Human Review (Volume VI) instead of counted directly"]
+    CM --> AM["Aggregation Model<br/>Business Quality weight applied per Scenario (Ch. 2);<br/>Safety: Validator failures act as a hard veto,<br/>kept separate from the weighted combination elsewhere"]
+    AM --> QG["Quality Gate(s)<br/>e.g. Safety Gate, Regression Gate (vs. Baseline/<br/>Snapshot, Volume X), Functional Gate, Cost Gate"]
+    QG -->|fail| RDN["Release Decision: don't ship<br/>(or: Governance-logged override, Volume XII)"]
+    QG -->|"pass (all applicable Gates)"| RDS["Release Decision: ship"]
+    RDN --> FB["feedback into Requirements / Risk Analysis (Chapter 5)"]
+    RDS --> FB
 ```
 
 A Quality Gate that fails is not the end of the lifecycle any more than a failing

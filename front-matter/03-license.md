@@ -19,4 +19,4 @@ This work is licensed under the Creative Commons Attribution 4.0 International L
 
 Full license text: https://creativecommons.org/licenses/by/4.0/legalcode
 
-© 2025 Igor Akymenko. Licensed under CC BY 4.0.
+© 2026 Igor Akymenko. Licensed under CC BY 4.0.

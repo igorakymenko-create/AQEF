@@ -39,18 +39,13 @@ Scenario and the Quality Contract (Volume VII) attached to it.
   Production Replay, but the Conversation originates from a deliberate, unscripted
   human-led probe rather than real user traffic.
 
-```
-Risk-Analysis-prioritized Requirement ──┐
-                                          │
-Captured Conversation (Production Replay)┼──► choose Dataset source(s) / apply AI Test
-                                          │    Patterns, Boundary Analysis, Negative
-Exploratory session ─────────────────────┘    Testing as needed / compose a Contract
-                                                          │
-                                                          ▼
-                                                Scenario + Contract
-                                                          │
-                                                          ▼
-                                          Execution (Chapter 5 / Volume III)
+```mermaid
+flowchart TD
+    A["Risk-Analysis-prioritized Requirement"] --> D["choose Dataset source(s) / apply AI Test<br/>Patterns, Boundary Analysis, Negative Testing<br/>as needed / compose a Contract"]
+    B["Captured Conversation (Production Replay)"] --> D
+    C["Exploratory session"] --> D
+    D --> SC["Scenario + Contract"]
+    SC --> EX["Execution (Chapter 5 / Volume III)"]
 ```
 
 All three entry points MUST produce the same thing: a Scenario specific enough to be

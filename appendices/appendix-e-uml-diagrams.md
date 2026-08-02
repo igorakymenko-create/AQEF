@@ -10,7 +10,8 @@ Mermaid syntax for inline rendering.
 ## E.1 — Domain Model: Core Entities
 
 The complete entity graph from Volume II. Arrows read as "owns," "produces," or
-"references."
+"references." `Result`'s fields are abbreviated here for diagram readability — Appendix
+C §C.7 is the authoritative shape.
 
 ```mermaid
 classDiagram
@@ -25,28 +26,28 @@ classDiagram
     class Execution { +id : String; +timestamp : DateTime }
     class Conversation { +turns : List~Turn~ }
     class Artifact { +type : String; +data : Any }
-    class Result { +verdict : PassFail; +confidence : Float; +evidence : Any }
+    class Result { +oracle_type : String; +verdict : PassFail; +confidence : Float; +disposition : Disposition; +supporting_evidence : Any }
     class Metric { +name : String; +value : Float; +dimension : QualityDimension }
     class Baseline { +approved_by : String; +approved_at : DateTime }
     class Report { +id : String; +frozen_at : DateTime }
     class Snapshot { +release_label : String; +captured_at : DateTime }
 
-    Project "1" --> "1..*" Suite : owns
-    Suite "1" --> "1..*" Scenario : contains
-    Scenario "1" --> "1" Contract : governed by
-    Scenario "1" --> "0..1" Dataset : instantiated by
-    Dataset "1" --> "1" Variables : supplies
-    Prompt "1" --> "0..*" Variables : interpolates
-    Scenario "1" --> "1..*" Execution : realized by
-    Execution "1..*" --> "1" Environment : runs in
-    Execution "1" --> "1" Conversation : produces
-    Execution "1" --> "0..*" Artifact : captures
-    Execution "1" --> "1..*" Result : yields
-    Result "0..*" --> "0..1" Metric : aggregates into
-    Result "0..1" --> "0..1" Baseline : designated as
-    Metric "0..*" --> "1" Report : presented in
-    Baseline "0..*" --> "0..1" Snapshot : composed into
-    Report "0..1" --> "0..1" Snapshot : may reference
+    Project --> Suite : owns
+    Suite --> Scenario : contains
+    Scenario --> Contract : governed by
+    Scenario --> Dataset : instantiated by
+    Dataset --> Variables : supplies
+    Prompt --> Variables : interpolates
+    Scenario --> Execution : realized by
+    Execution --> Environment : runs in
+    Execution --> Conversation : produces
+    Execution --> Artifact : captures
+    Execution --> Result : yields
+    Result --> Metric : aggregates into
+    Result --> Baseline : designated as
+    Metric --> Report : presented in
+    Baseline --> Snapshot : composed into
+    Report --> Snapshot : may reference
 ```
 
 ## E.2 — Oracle Hierarchy
@@ -76,19 +77,21 @@ classDiagram
     class Result {
         +verdict : PassFail
         +confidence : Float
+        +disposition : Disposition
     }
     class Contract { +name : String }
 
     Oracle <|-- Validator
     Oracle <|-- Judge
     Oracle <|-- HumanReviewer
-    Oracle "1" --> "1" Result : produces
-    Result "1" --> "0..1" Float : confidence (Validator: none)
-    Contract "1" --> "1..*" Oracle : specifies
+    Oracle --> Result : produces
+    Contract --> Oracle : specifies
 ```
 
-*Note: a rendering error in the source draft left this diagram blank in v0.2 — corrected
-here.*
+*Note: a rendering error in the source draft left this diagram blank in v0.2 — the
+cause was an edge label containing a colon, which breaks Mermaid's classDiagram parser.
+The offending edge (redundant with the `confidence` attribute already declared on
+`Result`, above) has been removed rather than re-escaped.*
 
 ## E.3 — Quality Dimensions
 
@@ -134,7 +137,7 @@ classDiagram
     Dataset <|-- SyntheticDataset
     Dataset <|-- GeneratedDataset
     Dataset <|-- ProductionReplayDataset
-    Dataset "1" --> "0..*" CoverageMechanism : applies
+    Dataset --> CoverageMechanism : applies
     CoverageMechanism <|-- DataMutation
     CoverageMechanism <|-- Fuzzing
     CoverageMechanism <|-- EdgeCases
@@ -184,9 +187,9 @@ classDiagram
 
     MultiJudge <|-- IndependenceConfig
     MultiJudge <|-- StabilityConfig
-    IndependenceConfig "1" --> "1..*" Judge : composes
-    StabilityConfig "1" --> "1" Judge : samples
-    MultiJudge "1" --> "1" Consensus : resolves via
+    IndependenceConfig --> Judge : composes
+    StabilityConfig --> Judge : samples
+    MultiJudge --> Consensus : resolves via
     Consensus <|-- Voting
     Consensus <|-- ConfidenceWeightedMean
 ```
@@ -203,10 +206,10 @@ classDiagram
     class Permission { +action : PermissionAction }
     class GovernedAction {
         <<enumeration>>
-        DEFINE_CONTRACT
-        APPROVE_BASELINE
-        OVERRIDE_GATE
-        RELEASE_DECISION
+        contract_define
+        baseline_approve
+        gate_override
+        release_decide
     }
     class ApprovalWorkflow {
         +action : GovernedAction
@@ -216,10 +219,10 @@ classDiagram
         +timestamp : DateTime
     }
 
-    Person "1..*" --> "1" Team : belongs to
-    Person "1" --> "1" Role : assigned
-    Role "1" --> "1..*" Permission : bundles
-    Team "1" --> "1..*" Role : governs
-    Permission "1" --> "1" GovernedAction : authorizes
-    ApprovalWorkflow "1" --> "1" GovernedAction : requires
+    Person --> Team : belongs to
+    Person --> Role : assigned
+    Role --> Permission : bundles
+    Team --> Role : governs
+    Permission --> GovernedAction : authorizes
+    ApprovalWorkflow --> GovernedAction : requires
 ```

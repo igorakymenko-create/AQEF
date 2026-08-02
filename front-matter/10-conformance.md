@@ -12,9 +12,10 @@ implements this specification. This section defines the latter only.
 ## What Conformance Requires
 
 An implementation is AQEF-conformant if it satisfies every applicable MUST-level
-requirement — and, per the guidance below, generally every SHOULD-level one — across the
-Volumes whose capability it actually offers. Conformance is scoped to claimed
-capability, not universal completeness: an implementation that does not integrate with
+requirement across the Volumes whose capability it actually offers — see "Deviating
+from a SHOULD," below, for how SHOULD-level requirements bear on Conformance separately.
+Conformance is scoped to claimed capability, not universal completeness: an
+implementation that does not integrate with
 CI/CD is not non-conformant for lacking Volume XIII's behavior, because Volume XIII's
 rules simply do not apply to a capability it does not claim. An implementation that does
 integrate with CI/CD MUST follow Volume XIII's rules for it. The same scoping applies to

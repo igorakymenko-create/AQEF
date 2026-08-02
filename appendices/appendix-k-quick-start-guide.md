@@ -133,8 +133,9 @@ its own verdict. If the Confidence is below the threshold set in the Expectation
 our example), the Result is treated as inconclusive and MAY be routed to a Human
 Reviewer.
 
-For the Independent Oracles principle (Volume I, Chapter 3), the Judge SHOULD NOT be the
-same model as the system under test.
+For the Independent Oracles principle (Volume I, Chapter 3), the Judge MUST NOT be the
+same model as the system under test, and SHOULD NOT be from the same model family where
+this can be avoided.
 
 ## Step 7 — Read the Results
 
@@ -166,27 +167,14 @@ Once the single-Scenario path works, AQEF's value emerges through scale:
 
 The diagram below shows the minimum path from definition to decision:
 
-```
-Scenario + Contract
-        │
-        ▼
-    Execution
-        │
-        ▼
-    Validation
-        │
-   ┌────┴────┐
-  fail       pass
-   │           │
-   ▼           ▼
-Result:    Evaluation
- fail          │
-               ▼
-        Result: pass/fail
-          + Confidence
-               │
-               ▼
-      Report / Decision
+```mermaid
+flowchart TD
+    SC["Scenario + Contract"] --> EX["Execution"]
+    EX --> VAL["Validation"]
+    VAL -->|fail| RF["Result: fail"]
+    VAL -->|pass| EVAL["Evaluation"]
+    EVAL --> RES["Result: pass/fail + Confidence"]
+    RES --> REP["Report / Decision"]
 ```
 
 This is a single pass through the Quality Lifecycle (Volume I, Chapter 5). As your test

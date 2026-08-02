@@ -12,17 +12,11 @@ actually is in practice: the four ways rows come to exist, the four further mech
 that deliberately shape coverage once rows exist, and the one concern — Versioning —
 that applies across all of them.
 
-```
-   Static / Synthetic / Generated / Production Replay    (sources — pick one or combine)
-                          │
-                          ▼
- Data Mutation / Fuzzing / Edge Cases / Adversarial   (optional, composable, on any source)
-                          │
-                          ▼
-                     Dataset (versioned)
-                          │
-                          ▼
-         Variable Resolution (Volume III — Execution Pipeline)
+```mermaid
+flowchart TD
+    S["Static / Synthetic / Generated / Production Replay<br/>(sources — pick one or combine)"] --> M["Data Mutation / Fuzzing / Edge Cases / Adversarial<br/>(optional, composable, on any source)"]
+    M --> DS["Dataset (versioned)"]
+    DS --> VR["Variable Resolution<br/>(Volume III — Execution Pipeline)"]
 ```
 
 | Mechanism | What produces or changes the rows | Primary purpose |

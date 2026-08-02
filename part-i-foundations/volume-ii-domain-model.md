@@ -5,44 +5,35 @@
 *Question answered:* What are the building blocks of AQEF?
 
 Conceptual definitions for these same nouns are specified in
-`front-matter/08-terminology.md`; this volume adds their structural relationships,
-precise enough to become the JSON Schema in `appendices/appendix-b-json-schema.md`.
+Front Matter §8; this volume adds their structural relationships,
+precise enough to become the JSON Schema in Appendix B.
 
 ## Relationship Overview
 
-```
-Project
- ├─ Environment(s)        — model/prompt/infra version an Execution runs against
- └─ Suite(s)
-     └─ Scenario(s)  ◄──── Dataset (supplies Variables to instantiate it)
-           │
-           │   Quality Contract attached: which Oracles run, what thresholds apply
-           ▼
-       EXECUTION   (one Scenario × one Environment × one point in time)
-           │
-           ├──► Conversation   (the Prompt/Response transcript actually produced)
-           └──► Artifact(s)    (logs, tool-call traces, token/latency data, etc.)
-                      │
-                      ▼
-        Oracles evaluate the Conversation (+ Artifacts) against the Contract
-           ├─ Validator        → Result  (deterministic, no Confidence)
-           ├─ Judge            → Result  (probabilistic, carries Confidence)
-           └─ Human Reviewer   → Result  (may carry Confidence; may serve as
-                                           ground truth for Judge calibration)
-                      │
-                      ▼
-                   Result(s)
-                      │
-        ┌─────────────┼──────────────────┐
-        ▼             ▼                  ▼
-    Baseline       Metric             Snapshot
- (per-Scenario   (aggregated       (frozen wider state:
-  reference for   across many       many Baselines +
-  regression)      Executions)       config, at a release)
-                      │                  │
-                      └────────┬─────────┘
-                               ▼
-                            Report  →  Release Decision (Volume I, Ch. 6)
+```mermaid
+flowchart TD
+    PROJ["Project"] --> ENV["Environment(s)<br/>model/prompt/infra version an Execution runs against"]
+    PROJ --> SUITE["Suite(s)"]
+    SUITE --> SCEN["Scenario(s)"]
+    DS["Dataset<br/>(supplies Variables to instantiate it)"] --> SCEN
+    SCEN -->|"Quality Contract attached:<br/>which Oracles run, what thresholds apply"| EXEC["EXECUTION<br/>(one Scenario × one Environment × one point in time)"]
+    EXEC --> CONV["Conversation<br/>(the Prompt/Response transcript actually produced)"]
+    EXEC --> ART["Artifact(s)<br/>(logs, tool-call traces, token/latency data, etc.)"]
+    CONV --> ORACLES["Oracles evaluate the Conversation<br/>(+ Artifacts) against the Contract"]
+    ART --> ORACLES
+    ORACLES --> VAL["Validator → Result<br/>(deterministic, no Confidence)"]
+    ORACLES --> JUDGE["Judge → Result<br/>(probabilistic, carries Confidence)"]
+    ORACLES --> HR["Human Reviewer → Result<br/>(may carry Confidence; may serve as<br/>ground truth for Judge calibration)"]
+    VAL --> RES["Result(s)"]
+    JUDGE --> RES
+    HR --> RES
+    RES --> BASE["Baseline<br/>(per-Scenario reference for regression)"]
+    RES --> MET["Metric<br/>(aggregated across many Executions)"]
+    RES --> SNAP["Snapshot<br/>(frozen wider state: many Baselines +<br/>config, at a release)"]
+    BASE --> REP["Report"]
+    MET --> REP
+    SNAP --> REP
+    REP --> RD["Release Decision (Volume I, Ch. 6)"]
 ```
 
 Three nouns that are easy to collapse but are kept deliberately separate:
@@ -66,7 +57,7 @@ A named, curated collection of Scenarios grouped by testing purpose (e.g. "Regre
 Suite", "Jailbreak Suite"). *Relationships:* belongs to a Project; contains many
 Scenarios; is the unit that gets run against an Environment, producing many Executions.
 
-**Scenario** — see Glossary (`front-matter/08-terminology.md`). *Relationships:* belongs
+**Scenario** — see Glossary (Front Matter §8). *Relationships:* belongs
 to one or more Suites; references a Quality Contract; may reference a Dataset for
 data-driven variants; is realized by Executions.
 
@@ -125,10 +116,11 @@ evidence beyond the Conversation text.
 
 **Result**
 The verdict produced by one Oracle applying one Contract clause to a Conversation (and
-its Artifacts) — a pass/fail or score, Confidence if the Oracle is a Judge or Human
-Reviewer, and supporting evidence. *Relationships:* produced by exactly one Oracle for
-exactly one Execution; many Results aggregate into a Metric; a Result MAY be designated
-a Baseline.
+its Artifacts) — a pass/fail, Confidence if the Oracle is a Judge or Human Reviewer, a
+disposition stating whether that verdict is safe to use yet, and supporting evidence.
+*Relationships:* produced by exactly one Oracle for exactly one Execution; many Results
+aggregate into a Metric; a Result MAY be designated a Baseline. See Appendix C §C.7 for
+the concrete shape.
 
 **Baseline** — see Glossary. *Relationships:* a designated Execution/Result pair for a
 given Scenario; referenced by later Executions of that Scenario for Semantic Regression

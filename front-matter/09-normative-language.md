@@ -35,11 +35,7 @@ keywords before this section existed to confirm it.
 
 A MUST, SHOULD, or MAY carries the same force wherever it appears in a Volume or
 Appendix's own prose — Front Matter, a Volume's main text, and a Chapter within Volume I
-are not different tiers of obligation. It does not carry that force in
-`_project-notes/decisions-log.md` or in `index.md`'s own status notes, both of which
-index.md already marks as working records, not part of the published document: where a
-decisions-log entry restates a requirement using MUST, it is cross-referencing an
-obligation that lives in the Volume it cites, not creating a second, independent one.
+are not different tiers of obligation.
 
 ---
 

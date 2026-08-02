@@ -85,62 +85,62 @@ subject's output varies (Volume I, Chapter 3).
 
 | Method | Path | Description | Permission |
 |---|---|---|---|
-| GET | `/projects` | List all Projects the caller has access to. | Read |
-| POST | `/projects` | Create a new Project. | Project create |
-| GET | `/projects/{project}` | Retrieve Project details with Environments and Suites. | Read |
-| PUT | `/projects/{project}` | Replace Project configuration. | Project edit |
-| DELETE | `/projects/{project}` | Delete a Project and all its data. | Project delete |
+| GET | `/projects` | List all Projects the caller has access to. | `read` |
+| POST | `/projects` | Create a new Project. | `project_create` |
+| GET | `/projects/{project}` | Retrieve Project details with Environments and Suites. | `read` |
+| PUT | `/projects/{project}` | Replace Project configuration. | `project_edit` |
+| DELETE | `/projects/{project}` | Delete a Project and all its data. | `project_delete` |
 
 **Environment**
 
 | Method | Path | Description | Permission |
 |---|---|---|---|
-| GET | `/projects/{project}/environments` | List Environments. | Read |
-| POST | `/projects/{project}/environments` | Create an Environment. | Environment create |
-| GET | `/projects/{project}/environments/{env}` | Retrieve Environment details. | Read |
-| PUT | `/projects/{project}/environments/{env}` | Replace Environment configuration. | Environment edit |
-| DELETE | `/projects/{project}/environments/{env}` | Delete an Environment. | Environment delete |
+| GET | `/projects/{project}/environments` | List Environments. | `read` |
+| POST | `/projects/{project}/environments` | Create an Environment. | `environment_create` |
+| GET | `/projects/{project}/environments/{env}` | Retrieve Environment details. | `read` |
+| PUT | `/projects/{project}/environments/{env}` | Replace Environment configuration. | `environment_edit` |
+| DELETE | `/projects/{project}/environments/{env}` | Delete an Environment. | `environment_delete` |
 
 **Suite and Scenario**
 
 | Method | Path | Description | Permission |
 |---|---|---|---|
-| GET | `/projects/{project}/suites` | List Suites. | Read |
-| POST | `/projects/{project}/suites` | Create a Suite. | Suite create |
-| GET | `.../suites/{suite}` | Retrieve Suite with Scenarios. | Read |
-| GET | `.../suites/{suite}/scenarios/{scenario}` | Retrieve a Scenario. | Read |
-| POST | `.../suites/{suite}/scenarios` | Add a Scenario. | Scenario create |
-| PUT | `.../suites/{suite}/scenarios/{scenario}` | Replace a Scenario. | Scenario edit |
-| DELETE | `.../suites/{suite}/scenarios/{scenario}` | Remove a Scenario. | Scenario delete |
+| GET | `/projects/{project}/suites` | List Suites. | `read` |
+| POST | `/projects/{project}/suites` | Create a Suite. | `suite_create` |
+| GET | `.../suites/{suite}` | Retrieve Suite with Scenarios. | `read` |
+| GET | `.../suites/{suite}/scenarios/{scenario}` | Retrieve a Scenario. | `read` |
+| POST | `.../suites/{suite}/scenarios` | Add a Scenario. | `scenario_create` |
+| PUT | `.../suites/{suite}/scenarios/{scenario}` | Replace a Scenario. | `scenario_edit` |
+| DELETE | `.../suites/{suite}/scenarios/{scenario}` | Remove a Scenario. | `scenario_delete` |
 
 **Contract**
 
 | Method | Path | Description | Permission |
 |---|---|---|---|
-| GET | `/projects/{project}/contracts` | List Reusable Contracts. | Read |
-| POST | `/projects/{project}/contracts` | Create a Contract. Governed by Approval Workflow. | Contract define |
-| GET | `/projects/{project}/contracts/{contract}` | Retrieve a Contract. | Read |
-| PUT | `/projects/{project}/contracts/{contract}` | Replace a Contract. Governed by Approval Workflow. | Contract define |
+| GET | `/projects/{project}/contracts` | List Reusable Contracts. | `read` |
+| POST | `/projects/{project}/contracts` | Create a Contract. Governed by Approval Workflow. | `contract_define` |
+| GET | `/projects/{project}/contracts/{contract}` | Retrieve a Contract. | `read` |
+| PUT | `/projects/{project}/contracts/{contract}` | Replace a Contract. Governed by Approval Workflow. | `contract_define` |
 
 **Dataset**
 
 | Method | Path | Description | Permission |
 |---|---|---|---|
-| GET | `/projects/{project}/datasets` | List Datasets. | Read |
-| POST | `/projects/{project}/datasets` | Create a Dataset (version MUST be specified). | Dataset create |
-| GET | `/projects/{project}/datasets/{dataset}` | Retrieve Dataset metadata. | Read |
-| GET | `/projects/{project}/datasets/{dataset}/rows` | Retrieve Dataset rows (paginated). | Read |
-| POST | `/projects/{project}/datasets/{dataset}/versions` | Create a new version. | Dataset create |
+| GET | `/projects/{project}/datasets` | List Datasets. | `read` |
+| POST | `/projects/{project}/datasets` | Create a Dataset (version MUST be specified). | `dataset_create` |
+| GET | `/projects/{project}/datasets/{dataset}` | Retrieve Dataset metadata. | `read` |
+| GET | `/projects/{project}/datasets/{dataset}/rows` | Retrieve Dataset rows (paginated). | `read` |
+| POST | `/projects/{project}/datasets/{dataset}/versions` | Create a new version. | `dataset_create` |
 
 **Execution**
 
 | Method | Path | Description | Permission |
 |---|---|---|---|
-| POST | `/projects/{project}/executions` | Trigger Execution(s) for a Suite × Environment. | Execute |
-| GET | `/projects/{project}/executions/{execution}` | Retrieve Execution status and metadata. | Read |
-| GET | `.../executions/{execution}/conversation` | Retrieve the Conversation transcript. | Read |
-| GET | `.../executions/{execution}/artifacts` | List Artifacts. | Read |
-| GET | `.../executions/{execution}/results` | List Results (Validator + Judge). | Read |
+| POST | `/projects/{project}/executions` | Trigger Execution(s) for a Suite × Environment. | `execute` |
+| GET | `/projects/{project}/executions/{execution}` | Retrieve Execution status and metadata. | `read` |
+| GET | `.../executions/{execution}/conversation` | Retrieve the Conversation transcript. | `read` |
+| GET | `.../executions/{execution}/artifacts` | List Artifacts. | `read` |
+| GET | `.../executions/{execution}/results` | List Results (Validator + Judge). | `read` |
 
 **Triggering:** `POST /executions` accepts a body specifying `suite`, `environment`,
 and optional `gates` to check after completion. The response returns a batch
@@ -151,47 +151,47 @@ for completion.
 
 | Method | Path | Description | Permission |
 |---|---|---|---|
-| GET | `/projects/{project}/baselines` | List approved Baselines. | Read |
-| POST | `/projects/{project}/baselines` | Designate an Execution as Baseline. Governed by Approval Workflow. | Baseline approve |
-| GET | `/projects/{project}/baselines/{baseline}` | Retrieve Baseline details. | Read |
+| GET | `/projects/{project}/baselines` | List approved Baselines. | `read` |
+| POST | `/projects/{project}/baselines` | Designate an Execution as Baseline. Governed by Approval Workflow. | `baseline_approve` |
+| GET | `/projects/{project}/baselines/{baseline}` | Retrieve Baseline details. | `read` |
 
 **Quality Gate**
 
 | Method | Path | Description | Permission |
 |---|---|---|---|
-| GET | `/projects/{project}/gates` | List Gate definitions. | Read |
-| POST | `/projects/{project}/gates` | Define a Quality Gate. | Gate define |
-| POST | `/projects/{project}/gates/check` | Evaluate Gates against a set of Results. | Execute |
-| POST | `/projects/{project}/gates/{gate}/override` | Override a failed Gate. Governed by Approval Workflow. | Gate override |
+| GET | `/projects/{project}/gates` | List Gate definitions. | `read` |
+| POST | `/projects/{project}/gates` | Define a Quality Gate. | `gate_define` |
+| POST | `/projects/{project}/gates/check` | Evaluate Gates against a set of Results. | `execute` |
+| POST | `/projects/{project}/gates/{gate}/override` | Override a failed Gate. Governed by Approval Workflow. | `gate_override` |
 
 **Report and Release Decision**
 
 | Method | Path | Description | Permission |
 |---|---|---|---|
-| GET | `/projects/{project}/reports` | List Reports. | Read |
-| GET | `/projects/{project}/reports/{report}` | Retrieve a frozen Report. | Read |
-| POST | `/projects/{project}/releases` | Record a Release Decision. Governed by Approval Workflow. | Release decide |
-| GET | `/projects/{project}/releases` | List Release Decisions. | Read |
+| GET | `/projects/{project}/reports` | List Reports. | `read` |
+| GET | `/projects/{project}/reports/{report}` | Retrieve a frozen Report. | `read` |
+| POST | `/projects/{project}/releases` | Record a Release Decision. Governed by Approval Workflow. | `release_decide` |
+| GET | `/projects/{project}/releases` | List Release Decisions. | `read` |
 
 **Governance**
 
 | Method | Path | Description | Permission |
 |---|---|---|---|
-| GET | `/teams` | List Teams. | Team read |
-| POST | `/teams` | Create a Team. | Team admin |
-| GET | `/roles` | List Roles and their Permissions. | Role read |
-| POST | `/roles` | Create a Role. | Role admin |
-| GET | `/projects/{project}/audit` | Query audit log (filtered by action type, date, actor). | Audit read |
-| GET | `/projects/{project}/approvals` | List Approval Workflow records. | Audit read |
+| GET | `/teams` | List Teams. | `team_read` |
+| POST | `/teams` | Create a Team. | `team_admin` |
+| GET | `/roles` | List Roles and their Permissions. | `role_read` |
+| POST | `/roles` | Create a Role. | `role_admin` |
+| GET | `/projects/{project}/audit` | Query audit log (filtered by action type, date, actor). | `audit_read` |
+| GET | `/projects/{project}/approvals` | List Approval Workflow records. | `audit_read` |
 
 **Plugin**
 
 | Method | Path | Description | Permission |
 |---|---|---|---|
-| GET | `/plugins` | List registered plugins. | Read |
-| POST | `/plugins` | Register a plugin. Triggers mechanical verification for Validator Plugins. | Plugin register |
-| GET | `/plugins/{plugin}` | Retrieve plugin details and version history. | Read |
-| POST | `/plugins/{plugin}/deprecate` | Deprecate a plugin version. Historical Results remain valid. | Plugin admin |
+| GET | `/plugins` | List registered plugins. | `read` |
+| POST | `/plugins` | Register a plugin. Triggers mechanical verification for Validator Plugins. | `plugin_register` |
+| GET | `/plugins/{plugin}` | Retrieve plugin details and version history. | `read` |
+| POST | `/plugins/{plugin}/deprecate` | Deprecate a plugin version. Historical Results remain valid. | `plugin_admin` |
 
 ## C.4 — Authentication and Authorization
 
@@ -208,15 +208,19 @@ convenience groupings, Permissions are the enforcement unit.
 
 The following operations produce Governance audit log entries as a side effect. These
 log entries are not separate API calls — they are automatically generated by the
-operation itself and queryable through `GET /projects/{project}/audit`.
+operation itself and queryable through `GET /projects/{project}/audit`. The Governed
+Action column uses the same identifiers as the Permission columns in §C.3 — these are
+the same four actions Chapter 4 and Volume XII name, not a fifth: creating and modifying
+a Contract are both instances of `contract_define`, since both are the same
+Governance-controlled act of setting what a Contract requires.
 
 | Operation | Governed Action (Volume XII) |
 |---|---|
-| `POST /contracts` | Contract definition |
-| `PUT /contracts/{contract}` | Contract modification |
-| `POST /baselines` | Baseline approval |
-| `POST /gates/{gate}/override` | Gate override |
-| `POST /releases` | Release Decision |
+| `POST /contracts` | `contract_define` |
+| `PUT /contracts/{contract}` | `contract_define` |
+| `POST /baselines` | `baseline_approve` |
+| `POST /gates/{gate}/override` | `gate_override` |
+| `POST /releases` | `release_decide` |
 
 ## C.6 — Pagination and Filtering
 
@@ -231,7 +235,78 @@ List operations SHOULD support filtering by common fields:
 - Audit log: by action type, actor, date range.
 - Baselines: by scenario, environment.
 
-## C.7 — Downstream Generation
+## C.7 — Result Response Shape
+
+Every Oracle produces a Result (Volume II), and Chapter 6's Decision Pipeline depends on
+distinctions this specification states in prose — an explicit Confidence-inapplicable
+declaration (Volume I, Chapter 3 — "Everything has Confidence"), and a Result that is
+not yet actionable (Volume I, Chapter 6 — Confidence Model) — without previously giving
+Result a concrete shape anywhere. This section is that shape; Appendix A and B specify
+configuration entities, but Result is runtime output, so it belongs here.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `oracle_type` | String | MUST | `validator`, `judge`, or `human_reviewer`. |
+| `verdict` | String or `null` | MUST | `pass` or `fail`. `null` only when `disposition` is `awaiting_review` or `oracle_unavailable` — no verdict has been reached yet. |
+| `confidence` | Float (0.0–1.0) or `"not_applicable"` | MUST | Never omitted and never bare `null`. `"not_applicable"` for every Validator Result (Volume V) and for any Result with no verdict yet. |
+| `disposition` | String | MUST | `actionable`, `inconclusive`, `awaiting_review`, or `oracle_unavailable`. See below. |
+| `supporting_evidence` | Any | MUST | What the Oracle based its judgment on — the Conversation, Artifacts, or specific excerpts, per Oracle type. |
+
+**Disposition** is what closes the gap between "a Result exists" and "a Result is safe
+to use in the Aggregation Model" — the distinction Chapter 6 already requires but never
+previously named as a field:
+
+- **`actionable`** — Confidence (where applicable) meets the Contract's threshold, or
+  the Result is a Validator's, which is always actionable. The Aggregation Model MAY use
+  this Result at face value.
+- **`inconclusive`** — a Judge or Human Reviewer Result whose Confidence is below the
+  Contract's `confidence_threshold` (Volume I, Chapter 6). Terminal for that specific
+  Result; it MAY trigger Human Review, which produces a separate Result under the Human
+  Reviewer Oracle, not a mutation of this one.
+- **`awaiting_review`** — a Human Reviewer Result has been requested (Volume VI — Human
+  Review) but not yet returned. `verdict` and `confidence` are absent because no
+  judgment has been made yet. Volume XII's Approval Workflow governs how long this MAY
+  persist; a Contract SHOULD specify a `review_timeout` (Appendix A) and an
+  `on_timeout` policy so an unattended pipeline (Volume XIII) cannot block indefinitely.
+  The default `on_timeout` policy, absent an explicit one, is to treat the Result as
+  blocking — the same fail-safe posture Deterministic Infrastructure and Independent
+  Oracles already assume elsewhere: an unresolved Oracle is not evidence of quality.
+- **`oracle_unavailable`** — the Judge or Human Reviewer could not be reached, or did
+  not respond, during Evaluation — a network timeout, a rate-limit response, a crash in
+  the Judge Engine itself, occurring after Validation already passed. This is the
+  Evaluation-stage counterpart to the infrastructure-level Retry Volume III already
+  scopes to the Execution stage; the same prohibition applies without exception: an
+  Oracle that could not be reached MUST NOT be silently retried until a favorable
+  verdict appears, and MUST NOT be treated as an implicit pass. `verdict` is absent.
+
+A Quality Gate (Volume I, Chapter 6) reading an aggregate that includes any Result whose
+`disposition` is not `actionable` MUST treat that Result as blocking by default, unless
+the Gate's own configuration explicitly states otherwise.
+
+## C.8 — Deletion and Referential Integrity
+
+Volume XVI already states the correct principle for one case: deprecating a plugin "MUST
+NOT silently invalidate Baselines or Results a retired version already produced." The
+same reasoning applies without exception to every `DELETE` operation this Appendix
+exposes, not only to plugin deprecation:
+
+- **`DELETE` MUST NOT silently invalidate a Baseline, a Snapshot, a Report, or an audit
+  record that references the deleted entity.** A Baseline's Traceability chain (Volume
+  XII) depends on being able to reconstruct the exact Environment, Dataset version, and
+  Contract version an Execution ran under — deleting an Environment a Baseline still
+  references MUST be rejected, or the reference MUST be preserved as a frozen historical
+  record (implementation-defined which, but not silently broken).
+- **`DELETE /projects/{project}` MUST NOT be permitted while the Project has Baselines,
+  Reports, or audit records unless the caller explicitly requests their retention or
+  their deletion is separately, explicitly authorized.** Deleting a Project's live
+  configuration and deleting its history are different, separately consequential
+  actions, and Governance (Volume XII) MUST be able to distinguish which one a request
+  is actually asking for.
+- **Every destructive operation in this Appendix requires a Permission** (Volume XII):
+  `project_delete`, `environment_delete`, `scenario_delete`, in addition to the
+  create/edit Permissions already listed per resource in §C.3.
+
+## C.9 — Downstream Generation
 
 This prose specification is the source from which a conformant implementation
 generates:

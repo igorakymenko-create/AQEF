@@ -230,6 +230,13 @@ referenced, not modified, during an Execution.
 subjective/semantic quality. Distinguished from Validation (the process of applying
 Validators). See Front Matter §8 for the full definition.
 
+**Evidence** — The collective term (Volume I, Chapter 4) for what an Oracle assesses: a
+Conversation plus zero or more Artifacts, produced together by an Execution. Not a
+separate Domain Model entity (Volume II) — a name for the pairing of two entities that
+already exist. Distinct from the Evidence Layer, below, which is the architectural
+layer responsible for capturing it, and from a Result's `supporting_evidence` field
+(Appendix C), which is what a specific Oracle cites from it.
+
 **Evidence Layer (Layer)** — The logical layer (Volume I, Chapter 4) responsible for
 capturing what actually happened during an Execution — housing Conversations and
 Artifacts.
@@ -495,8 +502,11 @@ the CLI and all language SDKs are derived. SDKs MUST NOT introduce independent l
 not present in the REST API.
 
 **Result** — The verdict (Volume II) produced by one Oracle applying one Contract
-clause to an Execution's evidence. A Result from a Validator carries no Confidence; a
-Result from a Judge MUST carry Confidence.
+clause to an Execution's Evidence. A Result from a Validator carries no Confidence
+value; a Result from a Judge MUST carry one. Every Result also carries a `disposition`
+(Appendix C §C.7) — `actionable`, `inconclusive`, `awaiting_review`, or
+`oracle_unavailable` — distinguishing a verdict safe to use at face value from one that
+is not yet, or may never be. See Appendix C §C.7 for the authoritative shape.
 
 **Retry** — A re-attempt (Volume III) triggered by an infrastructure-level failure
 that occurred before the subject produced a genuine Response. Re-running because a

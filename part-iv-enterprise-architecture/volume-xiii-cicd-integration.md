@@ -80,6 +80,13 @@ already, explicitly approved would misrepresent a decision that was actually mad
 same silent-versus-explicit distinction Approval Workflow exists to keep from getting
 lost downstream.
 
+An unattended Pipeline blocked on a Result still `awaiting_review` (Volume VI; Appendix
+C §C.7) has no person present to resolve it — the Pipeline SHOULD NOT wait
+indefinitely. Any Expectation that MAY be evaluated inside an automated Suite SHOULD
+carry a `review_timeout` (Appendix A §A.5) for exactly this reason; a Pipeline that
+times out waiting on an unset `review_timeout` MUST fail the same way it would for any
+other blocking Gate, not hang.
+
 ---
 
 With Volume XIII, a Quality Gate's status reaches as far as a deployment pipeline, not

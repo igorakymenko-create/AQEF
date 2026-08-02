@@ -143,20 +143,31 @@ VII).
 |---|---|---|---|
 | `validator` | String | MUST | Validator type: `schema`, `tool-call`, `structural`, `forbidden-content`, `latency`, `cost`, or a Custom Validator name. |
 | `target` | String | MUST | What to inspect: `response`, `conversation`, `artifacts.*`, or a specific path. |
-| `expected` | Any | MUST | The threshold, schema, pattern, or rule the Validator checks against. Structure varies by validator type. |
+| `expected` | Any | MUST | The threshold, schema, pattern(s), or rule the Validator checks against — for example, a `forbidden-content` Constraint's `patterns` list lives *inside* `expected`, not as a sibling field. Structure varies by validator type. |
 | `veto` | Boolean | MAY | If true, failure of this Constraint is a Hard Veto (Volume V). Default: `false`. |
 
-**Expectation** — a criteria-based, Judge-bound clause that carries a
-Confidence-qualified verdict (Volume VII).
+**Expectation** — a criteria-based clause bound to exactly one Oracle that carries a
+Confidence-qualified verdict (Volume VII). Unlike a Constraint, an Expectation MAY bind
+to any of the three concrete Oracle types, not just one.
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `criteria` | String | MUST | Explicit, inspectable criteria for the Judge to assess. |
-| `judge` | JudgeConfig | MUST (unless `multi_judge`) | Single Judge configuration. |
-| `multi_judge` | MultiJudgeConfig | MUST (unless `judge`) | Multi-Judge configuration (Volume VI). |
-| `confidence_threshold` | Float (0.0–1.0) | MUST | Minimum Confidence for the Result to be actionable at face value. |
+| `criteria` | String | MUST | Explicit, inspectable criteria for the Oracle to assess. |
+| `judge` | JudgeConfig | MUST (unless `multi_judge` or `human_reviewer`) | Single Judge configuration. |
+| `multi_judge` | MultiJudgeConfig | MUST (unless `judge` or `human_reviewer`) | Multi-Judge configuration (Volume VI). |
+| `human_reviewer` | HumanReviewerConfig | MUST (unless `judge` or `multi_judge`) | Routes this Expectation directly to Human Review (Volume VI) rather than a Judge. |
+| `confidence_threshold` | Float (0.0–1.0) | MUST if `judge`/`multi_judge`; MAY if `human_reviewer` | Minimum Confidence for the Result to be `actionable` (Appendix C — Result Response Shape) rather than `inconclusive`. A Human Reviewer Result MAY carry no Confidence value (Volume II), in which case this field does not apply and the Result is `actionable` once a verdict exists. |
+| `review_timeout` | Duration | MAY | How long a Result MAY sit at disposition `awaiting_review` before `on_timeout` applies. |
+| `on_timeout` | String | MAY | `block` or `escalate`. Default: `block` — an unresolved review is never silently treated as a pass. |
 
-An Expectation MUST specify exactly one of `judge` or `multi_judge`, not both.
+An Expectation MUST specify exactly one of `judge`, `multi_judge`, or `human_reviewer`.
+
+**HumanReviewerConfig**
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `role` | String | MUST | Role a reviewer MUST hold to resolve this Expectation (Volume XII). |
+| `captures_confidence` | Boolean | MAY | Whether the review interface asks for a Confidence rating alongside the verdict. Default: `false`. |
 
 **Policies**
 
@@ -171,7 +182,7 @@ Configuration for a single Judge (Volume VI).
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `model` | String | MUST | Model used for assessment. MUST NOT be the same family as the subject (Independent Oracles). |
+| `model` | String | MUST | Model used for assessment. MUST NOT be identical to the subject's model configuration, and SHOULD NOT be from the same model family where this can be avoided (Independent Oracles, Volume I, Chapter 3). |
 | `confidence_source` | String | MUST | How Confidence is derived: `self_rating`, `token_probability`, or `agreement`. |
 
 ## A.7 — MultiJudgeConfig
@@ -269,9 +280,10 @@ Quality Gate definitions for the Decision Pipeline (Volume I, Chapter 6).
 |---|---|---|---|
 | `name` | String | MUST | Gate identifier. |
 | `aggregate` | String | MUST | Quality Dimension or Metric to check: `safety`, `functional`, `semantic`, `operational`, `regression`, or implementation-defined. |
-| `threshold` | Float or ThresholdMap | MUST | Pass/fail threshold. |
+| `threshold` | Float or ThresholdMap | MUST | Pass/fail threshold. A ThresholdMap allows multiple named sub-thresholds under one Gate (e.g. several Operational metrics). |
+| `compare_against` | String | MAY | For a Regression Gate (`aggregate: regression`): which Baseline or Snapshot to compare against — a named Baseline, or `latest_approved` (Volume X). |
 | `on_failure` | String | MUST | `block_release` or `warn`. |
-| `override_requires` | String | MAY | Permission name required to override this Gate (Volume XII). |
+| `override_requires` | String | MAY | Permission name required to override this Gate (Volume XII). MAY be a project-defined Permission (e.g. `safety_override`) distinct from the four canonical governed actions (`contract_define`, `baseline_approve`, `gate_override`, `release_decide`) — a Project MAY require a stricter, Gate-specific Permission in addition to `gate_override`. |
 
 ```yaml
 quality_gates:

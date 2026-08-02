@@ -83,7 +83,9 @@ version that produced or assessed it, not just the plugin's name. Deprecating a 
 MUST NOT silently invalidate Baselines or Results a retired version already produced;
 those remain valid historical evidence even after the plugin that produced them is no
 longer installed, the same way a Dataset's older versions remain part of its history
-rather than being erased when a newer version is captured.
+rather than being erased when a newer version is captured. This is one instance of a
+principle Appendix C §C.8 states generally for every destructive operation this
+specification exposes, not a rule specific to plugins.
 
 ---
 

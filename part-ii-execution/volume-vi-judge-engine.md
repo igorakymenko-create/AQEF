@@ -127,9 +127,11 @@ Confidence are separate), not a correctness problem in the first.
 ## Human Review
 
 Human Review is the process that invokes the Human Reviewer Oracle (Volume II) — this
-Volume does not define a separate concept. Four distinct triggers converge on the same
-Oracle: a Contract MAY require Human Review routinely for a given Scenario
-(safety-critical or high-stakes Business Quality cases, Chapter 2); Chapter 6's
+Volume does not define a separate concept. Five distinct triggers converge on the same
+Oracle: an Expectation MAY bind directly to a Human Reviewer instead of a Judge, for
+Scenarios where policy requires human sign-off regardless of what any Judge would
+conclude (Volume VII); a Contract MAY require Human Review routinely for a given
+Scenario (safety-critical or high-stakes Business Quality cases, Chapter 2); Chapter 6's
 Confidence Model routes a Judge Result below its Contract's Confidence threshold to
 Human Review before it is allowed to affect an aggregate; unresolved Consensus
 disagreement among independent Judges is itself grounds for Human Review, above; and a
@@ -138,6 +140,25 @@ measure against. A Human Reviewer's own Result MAY carry a Confidence value (Vol
 assessed the same way a Judge's is, but a Human Reviewer is never itself subject to
 Calibration or Judge Drift tracking — those measure a Judge against a Human Reviewer as
 ground truth, not the reverse.
+
+A Result awaiting a Human Reviewer's response carries the disposition `awaiting_review`
+(Appendix C §C.7) — `verdict` and `confidence` are absent, not a placeholder value,
+because no judgment has been made yet. This MUST NOT persist indefinitely: an
+Expectation bound to Human Review SHOULD specify a `review_timeout` (Appendix A §A.5),
+after which the Contract's `on_timeout` policy applies. The default, absent an explicit
+policy, is to treat the Result as blocking — an unanswered review is never silently
+treated as a pass, the same posture Chapter 3's Deterministic Infrastructure and
+Independent Oracles principles already take toward anything unresolved or unverifiable.
+
+A Judge (or Human Reviewer interface) that cannot be reached at all — a network timeout,
+a provider rate limit, a crash in the Judge Engine, occurring after Validation has
+already passed — produces a Result with disposition `oracle_unavailable` rather than a
+low-Confidence verdict; no verdict was reached, so none is recorded. This is the
+Evaluation-stage counterpart to the infrastructure-level Retry Volume III scopes to the
+Execution stage, and the same prohibition carries over without exception: an
+Oracle that could not be reached MUST NOT be silently retried until a favorable verdict
+appears, and an Execution MUST NOT proceed as if Evaluation had passed simply because
+the Oracle never answered.
 
 ## Judge Drift
 

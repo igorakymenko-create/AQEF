@@ -3,8 +3,8 @@
 **Status:** confirmed (v0.1).
 
 Conceptual definitions, in dependency order (each term uses only terms already defined).
-Structural relationships for these same nouns are specified in
-`part-i-foundations/volume-ii-domain-model.md`.
+Structural relationships for these same nouns are specified in Volume II — Domain
+Model.
 
 **AI Quality Engineering**
 The engineering discipline concerned with establishing, executing, and governing

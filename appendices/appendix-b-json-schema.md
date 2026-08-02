@@ -27,6 +27,7 @@ to a Domain Model entity (Volume II):
 | Contract | A.5 | VII |
 | Constraint | A.5 | VII |
 | Expectation | A.5 | VII |
+| HumanReviewerConfig | A.5 | II, VI |
 | Policies | A.5 | VII |
 | JudgeConfig | A.6 | VI |
 | MultiJudgeConfig | A.7 | VI |
@@ -34,6 +35,7 @@ to a Domain Model entity (Volume II):
 | Dataset | A.8 | IV |
 | ExecutionConfig | A.9 | III |
 | QualityGate | A.10 | I, Ch. 6 |
+| Result | Appendix C §C.7 | II, I Ch. 3 &amp; 6 |
 | Baseline | A.11 | X, XII |
 | ReleaseDecision | A.12 | I, Ch. 6; XII |
 
@@ -113,10 +115,25 @@ properties:
   criteria:               { type: string, minLength: 1 }              # REQUIRED
   judge:                  { $ref: JudgeConfig }                       # CONDITIONAL
   multi_judge:            { $ref: MultiJudgeConfig }                  # CONDITIONAL
-  confidence_threshold:   { type: number, minimum: 0.0, maximum: 1.0 } # REQUIRED
+  human_reviewer:         { $ref: HumanReviewerConfig }                # CONDITIONAL
+  confidence_threshold:   { type: number, minimum: 0.0, maximum: 1.0 } # CONDITIONAL
+  review_timeout:         { type: string }                             # OPTIONAL
+  on_timeout:             { type: string, enum: [block, escalate],
+                            default: block }                           # OPTIONAL
 ```
 
-*Cross-field rule:* exactly one of `judge` or `multi_judge` MUST be present.
+*Cross-field rules:*
+- Exactly one of `judge`, `multi_judge`, or `human_reviewer` MUST be present.
+- `confidence_threshold` is REQUIRED when `judge` or `multi_judge` is present (a Judge
+  Result always carries Confidence). It is OPTIONAL when `human_reviewer` is present,
+  since a Human Reviewer Result MAY carry no Confidence value at all (Volume II).
+
+**HumanReviewerConfig**
+```
+properties:
+  role:                { type: string, minLength: 1 }   # REQUIRED
+  captures_confidence:  { type: boolean, default: false } # OPTIONAL
+```
 
 **JudgeConfig**
 ```
@@ -187,6 +204,7 @@ properties:
   name:                { type: string, minLength: 1 }               # REQUIRED
   aggregate:           { type: string, minLength: 1 }                # REQUIRED
   threshold:           { oneOf: [number, object] }                   # REQUIRED
+  compare_against:     { type: string }                              # OPTIONAL
   on_failure:          { type: string, enum: [block_release, warn] } # REQUIRED
   override_requires:   { type: string }                              # OPTIONAL
 ```
@@ -198,13 +216,17 @@ by a conformant implementation at configuration load time:
 
 | Rule | Source | Description |
 |---|---|---|
-| Independent Oracle | Volume I, Ch. 3 | A JudgeConfig's `model` SHOULD NOT be from the same model family as the Environment's `model_version`. |
+| Independent Oracle — identity | Volume I, Ch. 3 | A JudgeConfig's `model` MUST NOT be identical to the Environment's `model_version` (same weights/decision process as the subject). |
+| Independent Oracle — family | Volume I, Ch. 3 | A JudgeConfig's `model` SHOULD NOT be from the same model family as the Environment's `model_version`, where this can be avoided. |
 | Contract non-empty | Volume VII | A Contract with zero Constraints and zero Expectations is invalid. |
+| Expectation Oracle exclusivity | Volume VII | Exactly one of `judge`, `multi_judge`, `human_reviewer` MUST be present on an Expectation; `confidence_threshold` is REQUIRED for the first two and OPTIONAL for the third. |
 | Dataset version immutability | Volume IV | Two configurations referencing the same Dataset name + version MUST resolve to identical rows. |
 | Retry scope | Volume III | RetryConfig MUST NOT trigger on Result-level failures, only infrastructure failures. |
 | Baseline reproducibility | Volume X | A Baseline MUST reference a Dataset version and Contract version that are still recoverable. |
 | Composition conflict surfacing | Volume VII | When `extends` produces conflicting clause values, the implementation MUST surface the conflict, not silently resolve it. |
 | Multi-Judge purpose consistency | Volume VI | An independence-mode MultiJudge with judges from the same model family SHOULD produce a warning. |
+| Result disposition validity | Appendix C §C.7 | `verdict` MUST be `null` when `disposition` is `awaiting_review` or `oracle_unavailable`, and MUST be `pass` or `fail` otherwise. `confidence` MUST NOT be bare `null` under any disposition. |
+| Deletion referential integrity | Appendix C §C.8 | `DELETE` on an Environment, Dataset, or Contract still referenced by a Baseline, Snapshot, or Report MUST be rejected or preserved as a frozen record, never silently broken. |
 
 ## B.4 — Extensibility
 

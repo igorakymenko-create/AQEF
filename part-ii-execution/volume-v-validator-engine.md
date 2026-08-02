@@ -64,7 +64,7 @@ constraints, latency/cost thresholds:
   against an expected format or schema.
 - **Tool-Call Validator** — checks that a tool invocation (Artifact, Volume II) selected
   a valid tool and supplied arguments conforming to that tool's own schema.
-- **Structural / Step-Order Validator** — checks that a multi-step Conversation (AI
+- **Structural Validator** — checks that a multi-step Conversation (AI
   Agent, Chapter 7) includes all required steps in valid order.
 - **Forbidden-Content Validator** — checks for the presence of disallowed strings or
   patterns; this is the "hard, non-negotiable" half of Safety's dual enforcement
@@ -108,23 +108,13 @@ a separate set of rules.
 For a given Execution, the Validator Pipeline is the concrete sequence this Volume has
 now specified end to end:
 
-```
-Conversation + Artifact(s) (Volume III)
-          │
-          ▼
-   Resolve applicable Validators (from the Execution's Contract, Volume VII)
-          │
-          ▼
-   Run Validators in Execution Order (cheapest first)
-          │
-          ▼
-   Validator Composition → one Result (or Result set) per clause
-          │
-  fail ◄──┴──► pass
-    │            │
-    ▼            ▼
-Result recorded,   Handed to Judge Engine (Volume VI)
-short-circuits here
+```mermaid
+flowchart TD
+    CA["Conversation + Artifact(s) (Volume III)"] --> RAV["Resolve applicable Validators<br/>(from the Execution's Contract, Volume VII)"]
+    RAV --> RV["Run Validators in Execution Order<br/>(cheapest first)"]
+    RV --> VC["Validator Composition →<br/>one Result (or Result set) per clause"]
+    VC -->|fail| RF["Result recorded,<br/>short-circuits here"]
+    VC -->|pass| JE["Handed to Judge Engine (Volume VI)"]
 ```
 
 This is the same short-circuit Chapter 4's Information Flow diagram and Chapter 5's

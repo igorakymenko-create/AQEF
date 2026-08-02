@@ -71,11 +71,12 @@ Architecture (Volume XVI) mechanically enforces this by running a candidate Vali
 Plugin against a fixed input multiple times at registration — any variance rejects it.
 If you need probabilistic judgment, model it as a Judge and give it a Confidence value.
 
-**Use independent Judges.** A Judge MUST NOT share the same model family, weights, or
-decision process as the AI system it evaluates (Volume I, Chapter 3 — Independent
-Oracles). A GPT-4o system assessed by a GPT-4o Judge risks correlated blind spots where
-both miss the same failure mode. Use a different model family — if the subject is
-GPT-4o, assess with Gemini or Claude (see Appendix H, example H.2).
+**Use independent Judges.** A Judge MUST NOT share the same weights or decision process
+as the AI system it evaluates, and SHOULD NOT share the same model family where this can
+be avoided (Volume I, Chapter 3 — Independent Oracles). A GPT-4o system assessed by a
+GPT-4o Judge risks correlated blind spots where both miss the same failure mode. Prefer
+a different model family — if the subject is GPT-4o, assess with Gemini or Claude (see
+Appendix H, example H.2).
 
 **Declare Multi-Judge purpose explicitly.** Running multiple Judges against the same
 Conversation serves either of two distinct purposes that MUST be stated: independence
@@ -262,7 +263,7 @@ enough in practice to warrant direct naming.
 |---|---|---|
 | Discarding a bad Result and re-running until the test passes | Retry is for infra failures only. The original Result MUST stand. | Volume III |
 | Labeling an LLM-based check as a Validator | Probabilistic checks are Judges. Validators MUST be deterministic. | Volume V |
-| Using the same model family for subject and Judge | Correlated blind spots. Independent Oracles MUST use different families. | Volume I, Ch. 3 |
+| Using the same model family for subject and Judge | Correlated blind spots. Independent Oracles SHOULD use different families, and MUST NOT share weights. | Volume I, Ch. 3 |
 | Skipping the Confidence Model and aggregating raw pass/fail | Discards Oracle uncertainty, treating guesses as facts. | Volume I, Ch. 6 |
 | Averaging Safety failures into a weighted score | Safety is a hard veto. A good Semantic score cannot outvote a Safety violation. | Volume I, Ch. 6 |
 | Detecting regressions by literal string comparison | Probabilistic subjects produce different text for the same intent. Use Semantic Regression. | Volume X |

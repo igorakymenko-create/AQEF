@@ -152,7 +152,7 @@ sequenceDiagram
     else Judges disagree
         CO->>HR: Route to Human Reviewer
         HR-->>RS: Store human-qualified Result
-        note over HR,RS: Human verdict serves as ground truth for Calibration
+        note over CO,RS: Human verdict serves as<br/>ground truth for Calibration
     end
 ```
 
@@ -187,7 +187,7 @@ sequenceDiagram
             AW->>AW: Role-based review
             AW->>AW: Override logged
             AW-->>CI: Status: PASS (overridden)
-            note over CI: Pipeline status reflects the override decision, not the raw failure
+            note over Dev,AW: Pipeline status reflects the override decision, not the raw failure
             CI->>Dep: Proceed with deployment
         end
     end
@@ -213,7 +213,7 @@ sequenceDiagram
         VE-->>PR: Determinism confirmed
         PR->>PS: Register plugin (version-pinned)
         PS-->>PA: Plugin available for use
-        note over PS: Historical Results produced by v1.0.0 remain valid even if v2.0.0 is later registered or v1.0.0 is deprecated.
+        note over PA,PS: Historical Results produced by v1.0.0 remain valid<br/>even if v2.0.0 is later registered or v1.0.0 is deprecated
     else Any output differs
         VE-->>PR: REJECTED — not deterministic
         PR-->>PA: Rejection with evidence

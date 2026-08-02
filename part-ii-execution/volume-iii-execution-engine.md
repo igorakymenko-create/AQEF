@@ -20,23 +20,17 @@ infrastructure level along the way.
 An Execution moves through the same five stages regardless of Environment, Scenario
 pattern (Volume I, Chapter 7), or scale:
 
-```
-Suite/Scenario + Environment (Volume II)
-          │
-          ▼
-   Variable Resolution ◄──── Dataset Engine (Volume IV)
-          │
-          ▼
-   Prompt Construction
-          │
-          ▼
-   Conversation Engine ──► Conversation (one or more turns)
-          │
-          ▼
-   Artifact Collection ──► Artifact(s)
-          │
-          ▼
-   Execution complete ──► handed to Validator Engine (Volume V)
+```mermaid
+flowchart TD
+    SE["Suite/Scenario + Environment (Volume II)"] --> VR["Variable Resolution"]
+    DE["Dataset Engine (Volume IV)"] --> VR
+    VR --> PC["Prompt Construction"]
+    PC --> CE["Conversation Engine"]
+    CE -->|produces| CONV["Conversation (one or more turns)"]
+    CE --> AC["Artifact Collection"]
+    AC -->|produces| ART["Artifact(s)"]
+    AC --> DONE["Execution complete"]
+    DONE -->|"handed to"| VE["Validator Engine (Volume V)"]
 ```
 
 Variable Resolution and Prompt Construction happen once per Execution for a single-turn
@@ -113,6 +107,9 @@ without restoring any actual check — and Probabilistic Subject and Everything 
 (Chapter 3) rule it out here on the same basis. A Scenario accumulating an unusual number
 of infrastructure-level Retries is itself worth surfacing to Reporting (Volume XI) as a
 Reliability signal, independent of what any individual attempt's eventual Result was.
+Retry as specified here is scoped to the Execution stage; an Oracle call that fails
+during the later Evaluation stage — after Validation has already passed — is a related
+but distinct case Volume VI covers under `oracle_unavailable`, not this section.
 
 ## Timeouts
 

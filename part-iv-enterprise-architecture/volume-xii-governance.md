@@ -63,6 +63,15 @@ narrow "how did we get to this specific outcome" — the same underlying logged 
 queried differently. A Release Decision that cannot be traced this far back is not
 meaningfully audited, no matter how complete the Audit log around it otherwise is.
 
+Traceability is also what a destructive operation MUST NOT be allowed to break: deleting
+an Environment, Dataset, or Contract that a Baseline, Snapshot, or Report still
+references MUST be rejected or preserved as a frozen historical record, never silently
+broken (Appendix C §C.8) — the same non-invalidation principle Volume XVI already states
+for a deprecated plugin, generalized to every entity this specification allows deleting.
+A chain that Traceability could reconstruct yesterday and cannot today, because
+something it depended on was deleted with no record, is a Traceability failure regardless
+of how the deletion happened.
+
 ## Compliance
 
 Compliance is where Governance meets policy AQEF does not itself author — the privacy
