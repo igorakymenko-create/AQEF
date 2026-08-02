@@ -6,7 +6,7 @@
 
 Version 0.26 · 2026-08 · Working Draft, open for comment · by Igor Akymenko
 
-📖 **[Read the specification](index.md)** · 📄 **[Download PDF](https://github.com/<owner>/<repo>/releases/latest)** · 💬 **[Open an issue](https://github.com/<owner>/<repo>/issues)**
+📖 **[Read the specification](index.md)** · 📄 **[Download PDF](https://github.com/igorakymenko-create/AQEF/releases/latest)** · 💬 **[Open an issue](https://github.com/igorakymenko-create/AQEF/issues)**
 
 ---
 
