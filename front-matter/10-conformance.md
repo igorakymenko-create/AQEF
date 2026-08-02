@@ -9,6 +9,15 @@ performs against that assessment (its Release Decision, its Quality Gate status)
 completely separate question from whether the engine doing the assessing correctly
 implements this specification. This section defines the latter only.
 
+Conformance is likewise not a property of a person, a team, a process, or an
+organization. There is no such thing as a conformant tester, a conformant test strategy,
+or a conformant QA department under this specification, and no part of this document
+provides a basis for assessing one. A tool can be measured against the requirements
+below; a practitioner's judgment cannot, and this specification offers no criteria by
+which anyone could attempt it. Where a Project or a contract wishes to impose obligations
+on how people work, those obligations are its own — Governance (Volume XII) gives it the
+mechanism to express and audit them, without this specification supplying their content.
+
 ## What Conformance Requires
 
 An implementation is AQEF-conformant if it satisfies every applicable MUST-level

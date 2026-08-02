@@ -51,6 +51,23 @@ components; it governs the parts of a system where that assumption no longer hol
   recommend one model over another outside that context; it is not a benchmark or a
   leaderboard.
 
+- **Testing process, roles, and organizational structure.** AQEF specifies a model and a
+  vocabulary, not a methodology. It does not prescribe who performs testing, what
+  qualifications they hold, how a team is organized, how much testing is enough, what
+  documentation must be produced, or in what sequence a project's work should proceed.
+  Governance (Volume XII) specifies the mechanism by which a Project *can* express such
+  constraints — Roles, Permissions, Approval Workflow — precisely so that each Project
+  decides its own, rather than inheriting one from this specification.
+
+- **Judgment about what is worth testing.** A Quality Contract records an expectation
+  once someone has decided it matters; it does not decide that for them. Which Scenarios
+  are worth writing, which risks deserve attention, and when exploratory work will reveal
+  more than a codified check are questions of skill and context that Test Design (Volume
+  VIII) supports with technique and deliberately does not replace with rules. A
+  specification can make an expectation explicit, reviewable, and comparable over time;
+  it cannot supply the judgment that produced the expectation in the first place, and
+  AQEF does not attempt to.
+
 - **A CI/CD platform's or cloud provider's own native features.** Volume XIII names four
   platforms' integration patterns and Volume XVII names Cloud and Self-hosted
   Architecture as deployment choices, but a platform's own native primitives — a status

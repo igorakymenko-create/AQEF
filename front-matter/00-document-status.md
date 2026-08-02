@@ -7,7 +7,7 @@
 | Property | Value |
 |---|---|
 | Status | Working Draft |
-| Version | 0.25 |
+| Version | 0.26 |
 | Date | 2026-08 |
 | Maturity | Draft — not for implementation |
 
@@ -28,6 +28,20 @@
   step-by-step introduction.
 - Cross-references between Volumes have been verified for this draft but may shift as
   the specification evolves.
+
+## Authorship and Consensus
+
+This specification is the work of a single author. It has not been produced by a
+standards body, a working group, or an industry consortium, and it does not represent a
+consensus position of the software testing profession — no such consensus on AI quality
+currently exists, and this document does not claim to speak for one.
+
+What it offers instead is an argument made explicitly enough to be disagreed with
+precisely. Every cross-cutting design decision behind the terminology and the model is
+recorded with its reasoning rather than presented as settled fact, and each is open to
+being shown wrong. Where this document uses normative language (§9), MUST and SHOULD
+constrain an implementation that chooses to claim Conformance (§10) — they are not a
+claim of authority over how any person, team, or organization ought to work.
 
 ## Maturity Progression
 
