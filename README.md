@@ -112,7 +112,7 @@ Disagreement is more useful than agreement right now. The most valuable contribu
 - A place where the specification claims more consensus than actually exists
 - A real system whose quality problem the model fails to describe
 
-[Open an issue](https://github.com/<owner>/<repo>/issues) or start a discussion. Prose
+[Open an issue](https://github.com/igorakymenko-create/AQEF/issues) or start a discussion. Prose
 contributions welcome once the structure has stabilised.
 
 ## Citing this work
