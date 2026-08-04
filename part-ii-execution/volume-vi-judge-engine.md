@@ -55,6 +55,20 @@ satisfies everything the Glossary and Chapter 3 require of a Judge; nothing belo
 required for correctness, only for the specific concerns — independence, disagreement,
 drift — that scale introduces.
 
+The one-clause-one-Result correspondence above is a requirement on what a Result may
+claim, not merely a description of the common case. Where a Contract clause's criterion
+spans multiple independent assertions, the Judge necessarily reduces several internal
+verdicts to one score, and that reduction MUST be declared: the Result MUST state that it
+is an aggregate over multiple assertions rather than present its score as an atomic
+verdict on a single one. A faithfulness score of 0.92 over a dozen separable claims is
+not a verdict that the response is 92% faithful; it is a mean, and one load-bearing claim
+being wrong is exactly the failure it conceals. This is the same requirement
+"Everything has Confidence" (Chapter 3) makes one level up — a Result must be explicit
+about what it does and does not cover, rather than leaving a consumer to infer it from a
+number's shape. Volume VII's Expectations section states the authoring-side preference
+that follows from this: decompose the clause where the assertions differ in what their
+failure costs.
+
 ## Multi Judge
 
 Multi Judge runs more than one Judge against the same Conversation, but the reason

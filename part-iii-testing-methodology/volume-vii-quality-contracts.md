@@ -63,6 +63,17 @@ Judge's Architecture (Volume VI) to make them inspectable — the same "Contract
 Assertions" requirement that governs Constraints applies here too, just applied to
 criteria an Oracle assesses rather than a rule a Validator checks.
 
+An Expectation SHOULD be authored narrowly enough that one clause yields exactly one
+Result. A criterion broad enough to span several independent assertions — "the response
+is faithful to the retrieved context", over a response making a dozen separable claims —
+forces the Judge to reduce many internal verdicts into a single score before any Contract
+mechanism can act on them, and that reduction is an unweighted mean the Contract never
+specified and no consumer can see. Where the assertions differ in what their failure
+costs, they belong in separate Expectations, each independently weightable under Policies
+below. Where a broad criterion genuinely cannot be decomposed, Volume VI requires the
+Judge's Result to declare itself an aggregate rather than present the score as an atomic
+verdict.
+
 ## Confidence
 
 Confidence, in Contract language, is the threshold an Expectation clause sets for when a
@@ -89,6 +100,16 @@ Contract's failures should move an aggregate relative to others. A Policy does n
 itself produce a Result — it configures how Results produced elsewhere get combined,
 which is why it is specified here, alongside the clauses it governs, rather than in
 Volume V, VI, or Chapter 6, where it is actually applied.
+
+A Policy MAY set weight or criticality on an individual clause rather than on the
+Scenario as a whole. Scenario-level weighting answers "how much does this situation
+matter relative to others" and is what the Aggregation Model (Chapter 6) reads across
+Executions; clause-level weighting answers a different question — "within this one
+response, which expectations are load-bearing" — and Scenario-level weighting cannot
+express it, because every clause in a Contract attaches to the same Scenario. A Contract
+covering a response that must be both factually exact and appropriately worded is
+mis-specified if a wrong figure and an awkward register carry equal weight, and no
+Scenario-level criticality can separate them.
 
 ## Contract Composition
 
