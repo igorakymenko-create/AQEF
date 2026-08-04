@@ -4,7 +4,7 @@
 
 **An open specification for AI Quality Engineering as an engineering discipline.**
 
-Version 0.26 · 2026-08 · Working Draft, open for comment · by Igor Akymenko
+Version 0.27 · 2026-08 · Working Draft, open for comment · by Igor Akymenko
 
 📖 **[Read the specification](index.md)** · 📄 **[Download PDF](https://github.com/igorakymenko-create/AQEF/releases/latest)** · 💬 **[Open an issue](https://github.com/igorakymenko-create/AQEF/issues)**
 
@@ -119,7 +119,7 @@ contributions welcome once the structure has stabilised.
 
 If you reference or build on AQEF, please credit:
 
-> Igor Akymenko, *AQEF — AI Quality Engineering Framework*, Working Draft v0.26,
+> Igor Akymenko, *AQEF — AI Quality Engineering Framework*, Working Draft v0.27,
 > https://github.com/igorakymenko-create/AQEF
 
 ## License
