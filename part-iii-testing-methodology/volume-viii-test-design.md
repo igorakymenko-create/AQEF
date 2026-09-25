@@ -111,6 +111,32 @@ malformed tool argument (Chapter 7 — Tool Calling) is Negative Testing just as
 Constraint requiring refusal of a jailbreak attempt is, even though only the latter is
 safety-critical.
 
+## Seeded Controls
+
+A Seeded Control is a Scenario carrying a deliberately planted, known defect whose
+correct detection is known in advance. Its purpose is not to test the system. Its
+purpose is to prove that an Oracle can still detect that class of defect in the current
+run. This is fault seeding from classical testing, applied to the instrument rather than
+the product: before a run's Results are trusted, the run demonstrates that the Oracle
+producing them is not blind to the thing it is supposed to catch.
+
+A Seeded Control differs from Negative Testing, above, in what a failure means. A
+failed negative test is a defect in the system under test. A missed Seeded Control is
+a defect in the Oracle, and it says nothing about the system except that this run cannot
+be used to judge it. Because of this, when a Seeded Control's Oracle fails to detect the
+seeded defect, every other Result produced by that Oracle in the same run MUST take the
+disposition `inconclusive` rather than `actionable` (Chapter 6), and Seeded Control
+Results themselves MUST be excluded from Aggregation.
+
+A Project SHOULD maintain at least one Seeded Control for each Oracle whose Results feed
+a Quality Gate, SHOULD run Seeded Controls before that Oracle's other assessments in the
+same run, and SHOULD keep more than one Seeded Control per defect class, rotating them
+over time. A single fixed decoy invites tuning around it, especially by whoever adjusts
+a Judge's criteria while able to see it. Seeded Controls apply to Validators as well as
+Judges: a misconfigured pattern or an outdated schema blinds a Validator just as
+silently. They are most valuable for Judges, though, because a blind Judge still returns
+confident, plausible Results.
+
 ## Exploratory AI Testing
 
 Exploratory AI Testing is unscripted, human-led probing of the system to surface failure

@@ -138,6 +138,17 @@ to track its accuracy is miscalibrated regardless of how often it is individuall
 correct — miscalibration is an error in the second axis Chapter 6 named (verdict and
 Confidence are separate), not a correctness problem in the first.
 
+Calibration looks back: it can show that a Judge has become unreliable only after
+enough reviewed history has accumulated to reveal it, and every Result produced in the
+meantime is counted. It cannot catch a Judge that went blind today, whether through a
+changed prompt, a model version that resolves differently behind the same identifier,
+or a configuration error. That is the job of a Seeded Control (Volume VIII): a Scenario
+with a planted, known defect, run in the same Execution batch, that the Judge must
+detect before its other Results in that run are treated as `actionable`. The two
+mechanisms answer different questions. Calibration asks whether a Judge's Confidence
+tracks its accuracy over time. A Seeded Control asks whether the Judge can see this
+class of defect at all, right now.
+
 ## Human Review
 
 Human Review is the process that invokes the Human Reviewer Oracle (Volume II) — this

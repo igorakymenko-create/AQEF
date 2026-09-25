@@ -560,6 +560,13 @@ tool-call argument against an expected structural format.
 JavaScript/TypeScript, Go — derived from the REST API. SDKs MUST be generated from or
 validated against the REST API specification, not hand-authored independently.
 
+**Seeded Control** — A Scenario carrying a deliberately planted, known defect (Volume
+VIII), used to prove that an Oracle can still detect that class of defect in the current
+run. If its Oracle misses the seeded defect, that Oracle's other Results in the same run
+become `inconclusive`, and no Quality Gate may pass on aggregates they contributed to.
+Tests the Oracle, not the system. Distinct from Negative Testing (which tests the
+system) and from Calibration (which is retrospective and statistical).
+
 **Self-hosted Architecture** — A deployment model (Volume XVII) on infrastructure a
 Project itself controls, often driven by Compliance requirements for data that cannot
 leave a Project's own systems. Independent of topology choice.

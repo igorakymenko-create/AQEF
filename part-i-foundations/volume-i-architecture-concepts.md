@@ -626,6 +626,12 @@ A **Quality Gate** is a named, thresholded check against one or more aggregated 
 — attached to a Suite, Project, or a specific release candidate — that MUST pass for a
 Release Decision to authorize shipping. This chapter is its authoritative definition.
 
+A Quality Gate MUST NOT pass on any aggregate to which an Oracle contributed Results in
+a run where that Oracle missed a Seeded Control (Volume VIII). A missed Seeded Control
+does not mean the system failed. It means the instrument could not be shown to work in
+that run, so none of its Results in that run can support a decision to ship, including
+its passes.
+
 A Project typically runs several Quality Gates, each reading a different aggregate:
 
 - A **Safety Gate**, reading the hard-veto Safety aggregate from the previous section —
