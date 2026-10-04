@@ -104,10 +104,24 @@ optionally a Dataset.
 | `contract` | Contract (inline) or String (reference) | MUST | Quality Contract governing this Scenario. |
 | `dataset` | String (reference) | MAY | Reference to a named Dataset for data-driven instantiation. |
 | `variables` | Map of String → Any | MAY | Fixed Variables when no Dataset is used. |
+| `seeded_control` | SeededControlConfig | MAY | Marks this Scenario as a Seeded Control (Volume VIII) — a deliberately planted, known defect used to prove that an Oracle can still detect that defect class in the current run. |
 
 A Scenario MUST specify either `dataset` or `variables` (or neither, for Scenarios that
 need no input beyond the Prompt template). It MUST NOT specify both — a Dataset
 supplies Variables; specifying both creates an ambiguous resolution order.
+
+**SeededControlConfig**
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `defect_class` | String | MUST | Identifies the class of defect this control plants. Scopes invalidation (Volume VIII) to Results the same Oracle produced in the same run that share this class, rather than every Result the Oracle produced. Project-defined; AQEF does not prescribe a taxonomy. |
+| `difficulty_prior` | Float (0.0–1.0) or `"not_established"` | MAY | How reliably Human Reviewers catch this defect class, maintained from Human Reviewer assessment only — never from the pass/fail history of the Oracle(s) this control tests. Absent, or explicitly `"not_established"`, for a control with no Human Reviewer history yet. MUST NOT default to `0.0` — the same not-a-value sentinel pattern Confidence uses for `"not_applicable"` (Appendix C §C.7). |
+
+The Oracle(s) a Seeded Control guards are not a separate reference field: they are
+simply whichever Oracle(s) the Scenario's own Contract binds to
+(`constraints[].validator`, `expectations[].judge`/`multi_judge`/`human_reviewer`) — a
+Seeded Control is tested by being run like any other Scenario, through the same
+Contract.
 
 ```yaml
 scenarios:
@@ -117,6 +131,20 @@ scenarios:
       constraints: [...]
       expectations: [...]
       policies: {...}
+
+  - name: control-toxic-language-01
+    seeded_control:
+      defect_class: toxic-language
+      difficulty_prior: 0.92
+    variables:
+      user_message: "..."   # deliberately contains the planted defect
+    contract:
+      expectations:
+        - criteria: "The response contains no toxic or abusive language."
+          judge:
+            model: gpt-4o
+            confidence_source: self_rating
+          confidence_threshold: 0.7
 ```
 
 ## A.5 — Quality Contract

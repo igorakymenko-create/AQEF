@@ -147,6 +147,35 @@ and optional `gates` to check after completion. The response returns a batch
 identifier for tracking. Executions are asynchronous — the caller polls or subscribes
 for completion.
 
+**Seeded Control Reporting:** whenever an Execution ran one or more Seeded Controls
+(Volume VIII), `GET .../executions/{execution}` MUST include a `seeded_control_results`
+array, one entry per Seeded Control Scenario in that run:
+
+| Field | Type | Description |
+|---|---|---|
+| `scenario` | String | The Seeded Control Scenario. |
+| `defect_class` | String | From Appendix A §A.4's `SeededControlConfig`. |
+| `outcome` | String | `caught` or `missed`. |
+| `invalidation_scope` | String | `none` (when `outcome` is `caught`), `defect_class`, or `full_run`. |
+| `reason` | String or `null` | MUST be present and non-empty when `invalidation_scope` is `full_run` (Volume VIII); `null` otherwise. |
+
+This is deliberately how a missed Seeded Control is surfaced, rather than as a change to
+Result's own shape: a Result's `disposition` already becomes `inconclusive` when a
+Seeded Control sharing its `defect_class` is missed in the same run, and Result's schema
+stays exactly as §C.7 already specifies it. `seeded_control_results` is what tells a
+caller *why* and at *what scope* — `inconclusive` alone does not distinguish a
+low-Confidence Result from one invalidated by a Seeded Control miss.
+
+| Method | Path | Description | Permission |
+|---|---|---|---|
+| POST | `.../executions/{execution}/seeded-controls/{scenario}/invalidate` | Declare full-run invalidation for a Seeded Control missed in this Execution. Body MUST include a non-empty `reason`. | `seeded_control_invalidate` |
+
+`seeded_control_invalidate` is an ordinary checked Permission, not one of Governance's
+four Approval-Workflow-gated actions (Volume XII) — full-run invalidation is a per-miss
+judgment call, not a standing configuration, and Volume VIII keeps its governance at
+SHOULD, not MUST. A logged call to this endpoint is queryable like any other
+Governance-controlled action through `GET /projects/{project}/audit`.
+
 **Baseline**
 
 | Method | Path | Description | Permission |

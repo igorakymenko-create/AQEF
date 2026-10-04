@@ -205,6 +205,13 @@ probabilistic.
 across two Environments and checks that any behavioral difference is an intentional,
 reviewed change rather than an unnoticed regression.
 
+**Difficulty Prior** — How reliably Human Reviewers catch a Seeded Control's defect
+class (Volume VIII; Appendix A §A.4's `seeded_control.difficulty_prior`), established
+and maintained from Human Reviewer assessment only, never from the pass/fail history of
+the Oracle(s) the control tests. `"not_established"`, not `0.0`, is a newly authored
+control's default — the same absence-is-not-a-value treatment Confidence already gets
+(Appendix C §C.7).
+
 **Distributed Execution** — Parallelization (Volume III) scaled across multiple
 machines while maintaining Deterministic Infrastructure guarantees, ensuring no shared
 mutable state between Execution processes.
@@ -561,11 +568,14 @@ JavaScript/TypeScript, Go — derived from the REST API. SDKs MUST be generated 
 validated against the REST API specification, not hand-authored independently.
 
 **Seeded Control** — A Scenario carrying a deliberately planted, known defect (Volume
-VIII), used to prove that an Oracle can still detect that class of defect in the current
-run. If its Oracle misses the seeded defect, that Oracle's other Results in the same run
-become `inconclusive`, and no Quality Gate may pass on aggregates they contributed to.
-Tests the Oracle, not the system. Distinct from Negative Testing (which tests the
-system) and from Calibration (which is retrospective and statistical).
+VIII; Appendix A §A.4's `seeded_control.defect_class`), used to prove that an Oracle can
+still detect that class of defect in the current run. If its Oracle misses the seeded
+defect, that Oracle's other Results sharing the missed control's defect class become
+`inconclusive` (full-run invalidation requires an explicit, reasoned Project decision,
+Appendix C §C.3), and no Quality Gate may pass on aggregates they contributed to. MAY
+carry a Difficulty Prior. Tests the Oracle, not the system. Distinct from Negative
+Testing (which tests the system) and from Calibration (which is retrospective and
+statistical).
 
 **Self-hosted Architecture** — A deployment model (Volume XVII) on infrastructure a
 Project itself controls, often driven by Compliance requirements for data that cannot

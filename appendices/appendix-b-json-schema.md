@@ -24,6 +24,7 @@ to a Domain Model entity (Volume II):
 | Environment | A.2 | II |
 | Suite | A.3 | II |
 | Scenario | A.4 | II |
+| SeededControlConfig | A.4 | VIII |
 | Contract | A.5 | VII |
 | Constraint | A.5 | VII |
 | Expectation | A.5 | VII |
@@ -72,15 +73,28 @@ properties:
 **Scenario**
 ```
 properties:
-  name:       { type: string, minLength: 1 }        # REQUIRED
-  contract:   { oneOf: [Contract, string] }         # REQUIRED
-  dataset:    { type: string }                      # OPTIONAL
-  variables:  { type: object }                      # OPTIONAL
+  name:             { type: string, minLength: 1 }        # REQUIRED
+  contract:         { oneOf: [Contract, string] }         # REQUIRED
+  dataset:          { type: string }                      # OPTIONAL
+  variables:        { type: object }                      # OPTIONAL
+  seeded_control:   { $ref: SeededControlConfig }          # OPTIONAL
 ```
 
 *Cross-field rule:* `dataset` and `variables` are mutually exclusive. A schema SHOULD
 enforce this via a `oneOf` containing three shapes: dataset-only, variables-only, and
 neither.
+
+**SeededControlConfig**
+```
+properties:
+  defect_class:      { type: string, minLength: 1 }                    # REQUIRED
+  difficulty_prior:  { oneOf: [ { type: number, minimum: 0.0,
+                       maximum: 1.0 },
+                       { type: string, const: not_established } ] }    # OPTIONAL
+```
+
+Note: an absent `difficulty_prior` is equivalent to `"not_established"`, not to `0.0`.
+A schema MUST NOT default this field to `0.0`.
 
 **Contract**
 ```
@@ -226,6 +240,8 @@ by a conformant implementation at configuration load time:
 | Composition conflict surfacing | Volume VII | When `extends` produces conflicting clause values, the implementation MUST surface the conflict, not silently resolve it. |
 | Multi-Judge purpose consistency | Volume VI | An independence-mode MultiJudge with judges from the same model family SHOULD produce a warning. |
 | Result disposition validity | Appendix C §C.7 | `verdict` MUST be `null` when `disposition` is `awaiting_review` or `oracle_unavailable`, and MUST be `pass` or `fail` otherwise. `confidence` MUST NOT be bare `null` under any disposition. |
+| Seeded Control invalidation scope | Volume VIII; Appendix C §C.3 | A missed Seeded Control invalidates only the Results its Oracle produced in the same run sharing its `defect_class`, by default. Full-run invalidation requires a Project to declare it explicitly, with a recorded, non-empty reason. |
+| Difficulty prior provenance | Volume VIII | `difficulty_prior` MUST only be set or updated from Human Reviewer assessment, never from the pass/fail outcome of the Oracle(s) the control tests. |
 | Deletion referential integrity | Appendix C §C.8 | `DELETE` on an Environment, Dataset, or Contract still referenced by a Baseline, Snapshot, or Report MUST be rejected or preserved as a frozen record, never silently broken. |
 
 ## B.4 — Extensibility

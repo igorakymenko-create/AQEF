@@ -123,19 +123,39 @@ producing them is not blind to the thing it is supposed to catch.
 A Seeded Control differs from Negative Testing, above, in what a failure means. A
 failed negative test is a defect in the system under test. A missed Seeded Control is
 a defect in the Oracle, and it says nothing about the system except that this run cannot
-be used to judge it. Because of this, when a Seeded Control's Oracle fails to detect the
-seeded defect, every other Result produced by that Oracle in the same run MUST take the
-disposition `inconclusive` rather than `actionable` (Chapter 6), and Seeded Control
-Results themselves MUST be excluded from Aggregation.
+be used to judge Results sharing the missed control's defect class. Because of this,
+when a Seeded Control's Oracle fails to detect the seeded defect, every other Result the
+Oracle produced in the same run that shares that defect class MUST take the disposition
+`inconclusive` rather than `actionable` (Chapter 6); a miss does not by default reach
+Results outside that class, since the miss never put them in question. A Project MAY
+instead declare full-run invalidation for a given miss, but this is a deliberate
+decision, not the default, and MUST record a reason (Volume XII) — a narrow miss should
+not silently discard evidence it never disqualified. Seeded Control Results themselves
+MUST be excluded from Aggregation.
 
 A Project SHOULD maintain at least one Seeded Control for each Oracle whose Results feed
 a Quality Gate, SHOULD run Seeded Controls before that Oracle's other assessments in the
 same run, and SHOULD keep more than one Seeded Control per defect class, rotating them
 over time. A single fixed decoy invites tuning around it, especially by whoever adjusts
-a Judge's criteria while able to see it. Seeded Controls apply to Validators as well as
+a Judge's criteria while able to see it. For the same reason, a Project SHOULD keep
+authorship and rotation of its Seeded Controls independent of whoever tunes the Oracle
+those controls test — Governance's Role/Permission mechanism (Volume XII) is how a
+Project enforces this in practice; this Volume names the risk, Volume XII gives the
+Project the means to close it. Seeded Controls apply to Validators as well as
 Judges: a misconfigured pattern or an outdated schema blinds a Validator just as
 silently. They are most valuable for Judges, though, because a blind Judge still returns
 confident, plausible Results.
+
+A Seeded Control MAY carry a difficulty prior: how reliably Human Reviewers themselves
+catch the class of defect it plants, established and maintained from Human Reviewer
+assessment of that control — never from how the Oracle(s) it tests perform against it,
+since doing so would make the prior's trustworthiness depend on the same Oracles it
+exists to help judge. A newly authored control has no such history yet, and this MUST be
+represented as "not yet established," not as a prior of zero (Appendix A §A.4) — a
+control no one has assessed and a control everyone catches are different facts, and
+collapsing them would assert something about data that does not exist. How many Human
+Reviewer assessments make a prior trustworthy, and how it is statistically maintained,
+is left to a Project's own methodology.
 
 ## Exploratory AI Testing
 
