@@ -1,24 +1,11 @@
 # AQEF — AI Quality Engineering Framework
-### Master Index (Working Draft v0.30)
+### Master Index (Working Draft v0.30.1)
 
 Legend: ✅ drafted & confirmed · 🟨 partially drafted · ⬜ not yet drafted
 
 Structure: one file per Front Matter section / Volume / Appendix, so any future edit
 touches a single small file rather than the whole document. Working, non-reader-facing
 notes live in `_project-notes/` (currently: `decisions-log.md`).
-
-**Note on file organization:** Claude Projects flatten uploaded folders to a single
-level, so the working copies in this Project's knowledge base are flat (no
-`front-matter/`, `part-i-foundations/`, etc. prefixes) even though this index links to
-nested paths. This archive (and its `.zip`) is the canonical nested structure — treat it
-as the source of truth for organization (e.g., in a git repo or local folder), and
-re-flatten filenames only when re-uploading individual files into the Project's
-knowledge base.
-
-**Note on sync (2026-07-30):** this working copy was synchronized against
-`AQEF-Specification-v0.2.md` (uploaded as PDF) to bring Front Matter §0–3 and all
-Appendices up to date with the parallel drafting session. See the note at the bottom of
-this file for what that sync did and did not carry over.
 
 ---
 
@@ -96,42 +83,5 @@ this file for what that sync did and did not carry over.
 ---
 
 **Milestone:** the entire specification is now drafted — all 11 Front Matter sections,
-all seventeen Volumes, and all eleven Appendices (A–K). 41 cross-cutting decisions are
+all seventeen Volumes, and all eleven Appendices (A–K). 42 cross-cutting decisions are
 recorded in `_project-notes/decisions-log.md`.
-
-**Sync note (2026-07-30):** Front Matter §0–3 and Appendices A–K were pulled from
-`AQEF-Specification-v0.2.md` (a parallel drafting session, reconciled via its exported
-PDF), not drafted fresh in this thread. In reconstructing them from PDF text extraction,
-five categories of leftover artifacts from that session's own "remove internal
-development references" cleanup pass were found and corrected here:
-
-1. Appendix H's intro referenced "Appendix A (YAML Specification, when drafted)" even
-   though Appendix A exists in the same document — stale cross-reference, fixed.
-2. Volume I, Chapter 7 (RAG terminology note) retained a bare `(decision 6)` citation —
-   the one place the source's cleanup pass missed; not carried over here.
-3. Appendix B's cross-validation table and Appendix I's "Common Mistakes" table
-   retained bare `#13` / `#15` / `#16` / `#17` / `#25` fragments next to Volume
-   citations — not carried over; reconstructed as plain Volume references.
-4. Appendix D (Glossary) had four sentences ending in a dangling "per." where
-   "decisions-log #N" had been stripped but the sentence wasn't re-closed — fixed.
-5. Front Matter §6 (Scope)'s status line and Appendix D's own status line each had a
-   truncated sentence fragment from the same regex-based stripping — this thread's own
-   §6 and Appendix D were written independently and do not carry the defect.
-
-**Remaining task this sync has not yet completed:** none. The decisions-log citation
-cleanup across Volumes I–XVII and Front Matter §4–10 is complete — all ~70 inline
-`decisions-log #N` / bare `decision N` citations found across 21 files have been
-removed from reader-facing prose, file by file, preserving any reader-facing content in
-the same sentence rather than deleting it wholesale. `decisions-log.md` itself remains
-untouched as the working record; it is simply no longer cited by number from within the
-published prose, consistent with decisions-log #29's own scope note and with how the
-parallel v0.2 session treated it.
-
-**Recommended next step:** none strictly required — the specification is complete end
-to end (Front Matter, 17 Volumes, 11 Appendices) and internally consistent. Natural
-follow-ups if continuing: (a) a final read-through of Appendices E–G's Mermaid diagrams
-to confirm they render as intended in whatever viewer will display them, since they
-were reconstructed from a PDF where the originals rendered as images; (b) reconciling
-this thread's decisions-log.md (32 entries) against whatever the parallel v0.2 session's
-own working notes contain, if that session is still active, since the two have been
-resolving overlapping questions independently.
