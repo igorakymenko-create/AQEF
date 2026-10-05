@@ -1,7 +1,5 @@
 # Volume VII — Quality Contracts
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* How expected quality is specified.
 
 Chapter 3 named Contracts over Assertions as a founding principle, and the Glossary

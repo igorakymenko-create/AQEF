@@ -1,7 +1,5 @@
 # Volume VI — Judge Engine
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* How subjective quality is evaluated.
 
 Chapter 4 named the Judge Engine as the component that executes Judges (single or

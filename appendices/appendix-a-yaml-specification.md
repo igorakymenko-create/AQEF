@@ -1,7 +1,5 @@
 # Appendix A — AQEF YAML Specification
 
-**Status:** confirmed (v0.1).
-
 This appendix specifies the YAML configuration format for AQEF entities. It restates,
 in an implementation-oriented shape, the structures already established by Volume II
 (Domain Model) and Volume VII (Contract Language). It does not invent syntactic detail
@@ -310,8 +308,19 @@ Quality Gate definitions for the Decision Pipeline (Volume I, Chapter 6).
 | `aggregate` | String | MUST | Quality Dimension or Metric to check: `safety`, `functional`, `semantic`, `operational`, `regression`, or implementation-defined. |
 | `threshold` | Float or ThresholdMap | MUST | Pass/fail threshold. A ThresholdMap allows multiple named sub-thresholds under one Gate (e.g. several Operational metrics). |
 | `compare_against` | String | MAY | For a Regression Gate (`aggregate: regression`): which Baseline or Snapshot to compare against — a named Baseline, or `latest_approved` (Volume X). |
+| `min_basis` | MinBasis | MAY | Minimum Aggregate Basis (Volume I, Chapter 6) the aggregate must rest on for this Gate to pass. Where declared and not met, the Gate does not pass, with insufficient basis as the recorded reason. |
 | `on_failure` | String | MUST | `block_release` or `warn`. |
 | `override_requires` | String | MAY | Permission name required to override this Gate (Volume XII). MAY be a project-defined Permission (e.g. `safety_override`) distinct from the four canonical governed actions (`contract_define`, `baseline_approve`, `gate_override`, `release_decide`) — a Project MAY require a stricter, Gate-specific Permission in addition to `gate_override`. |
+
+**MinBasis**
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `results` | Integer | MAY | Minimum number of `actionable` Results. |
+| `scenarios` | Integer | MAY | Minimum number of distinct Scenarios those Results come from. |
+
+At least one of the two MUST be present. This specification does not say what values are
+adequate; they are a Project's own decision.
 
 ```yaml
 quality_gates:
@@ -346,7 +355,7 @@ The traceable output of the Decision Pipeline (Volume I, Chapter 6; Volume XII).
 | `environment` | String | MUST | Environment evaluated. |
 | `suite` | String | MUST | Suite that was run. |
 | `execution_batch_id` | String | MUST | Batch identifier for the Execution set. |
-| `gates` | Map of String → GateResult | MUST | Per-gate pass/fail/warn status with aggregate values. |
+| `gates` | Map of String → GateResult | MUST | Per-gate pass/fail/warn status with aggregate values and the Aggregate Basis each aggregate rested on (Appendix C §C.3). |
 | `decision` | String | MUST | `approved`, `rejected`, or `overridden`. |
 | `approved_by` | String | MUST | Person who made the decision. |
 | `approved_at` | DateTime | MUST | Timestamp. |

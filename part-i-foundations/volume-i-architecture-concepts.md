@@ -1,8 +1,5 @@
 # Volume I — Architecture & Concepts
 
-**Status:** confirmed (v0.1) — all 8 chapters drafted and consistent with the confirmed
-Glossary/Domain Model.
-
 *Question answered:* How should AI Quality Engineering be understood as an engineering
 discipline?
 
@@ -620,6 +617,37 @@ aggregates. Which dimensions a given Gate reads, and at what weight, is a proper
 that Gate's own configuration, not a fixed formula this chapter imposes uniformly on
 every Suite or Project.
 
+### Aggregate Basis
+
+An aggregate is a number computed from Results, and the same number can rest on very
+different amounts of evidence. A 95% pass rate over 20 Scenarios and a 95% pass rate over
+600 are different findings, and a threshold alone cannot tell them apart. Every aggregate
+a Quality Gate reads MUST therefore state its **Aggregate Basis**:
+
+- how many `actionable` Results it was computed from;
+- how many Results in the same scope were not `actionable` (Appendix C §C.7);
+- how many distinct Scenarios and how many distinct Executions those Results came from.
+
+Results and Scenarios are counted separately because they answer different questions.
+Repeated Executions of one Scenario (Consistency Testing, Volume VIII) add evidence about
+that Scenario's Reliability and none about breadth: thirty Results from one Scenario are
+not the evidence thirty Scenarios would be. Seeded Control Results are excluded from
+Aggregation (Volume VIII) and are not part of any Aggregate Basis.
+
+This is the requirement "Everything has Confidence" (Chapter 3) makes of a single Result,
+applied to many: a Result MUST be explicit about whether Confidence applies, and an
+aggregate MUST be explicit about what it rests on. The two must not be confused with each
+other. Confidence is an Oracle's certainty in one verdict. How precisely an aggregate
+estimates the system's behavior is a statistical question about the sample, commonly
+expressed as a margin of error at a confidence level. An implementation MAY report such
+an interval alongside an aggregate; it MUST NOT label it Confidence.
+
+This specification does not say how large an Aggregate Basis is enough, or which
+statistical method should derive one. That depends on the stakes, on how results are
+weighted, and on how independent the Scenarios are, and it is a Project's own decision
+(Scope, §6). What the specification requires is that the basis is always visible, and
+that a Project has a place to state its own minimum, below.
+
 ### Quality Gates
 
 A **Quality Gate** is a named, thresholded check against one or more aggregated Metrics
@@ -632,6 +660,13 @@ Project has declared full-run invalidation for that miss. A missed Seeded Contro
 not mean the system failed. It means the instrument could not be shown to work against
 that defect class in that run, so none of its Results in that class can support a
 decision to ship, including its passes.
+
+A Quality Gate MAY declare a minimum Aggregate Basis for the aggregate it reads. Where it
+does and the basis is not met, the Gate MUST NOT pass, and the reason MUST be recorded as
+insufficient basis rather than as a threshold failure. The two are different findings: a
+failed threshold says the system fell short, and an insufficient basis says there is not
+yet enough evidence to say either way. Where a Gate declares no minimum, it is evaluated
+on its threshold alone, and its Aggregate Basis is still reported.
 
 A Project typically runs several Quality Gates, each reading a different aggregate:
 

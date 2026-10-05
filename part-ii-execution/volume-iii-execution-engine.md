@@ -1,7 +1,5 @@
 # Volume III — Execution Engine
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* How tests are executed.
 
 Chapter 4 named the Execution Engine as the component that triggers Executions, manages

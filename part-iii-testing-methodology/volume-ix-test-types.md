@@ -1,7 +1,5 @@
 # Volume IX — Test Types
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* Standard AI testing taxonomy.
 
 Several of the categories below share vocabulary with concepts already defined

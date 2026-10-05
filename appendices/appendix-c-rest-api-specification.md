@@ -1,7 +1,5 @@
 # Appendix C — REST API Specification
 
-**Status:** confirmed (v0.1).
-
 This appendix specifies the REST API surface for an AQEF-conformant implementation. It
 restates, in API-oriented terms, the operations implied by the Domain Model (Volume
 II), the Execution Engine (Volume III), the Decision Pipeline (Volume I, Chapter 6),
@@ -192,6 +190,23 @@ Governance-controlled action through `GET /projects/{project}/audit`.
 | POST | `/projects/{project}/gates` | Define a Quality Gate. | `gate_define` |
 | POST | `/projects/{project}/gates/check` | Evaluate Gates against a set of Results. | `execute` |
 | POST | `/projects/{project}/gates/{gate}/override` | Override a failed Gate. Governed by Approval Workflow. | `gate_override` |
+
+**Aggregate Basis Reporting:** the response to `POST /projects/{project}/gates/check`,
+and every per-gate entry in a Release Decision, MUST include a `basis` object for the
+aggregate that Gate read (Volume I, Chapter 6):
+
+| Field | Type | Description |
+|---|---|---|
+| `results` | Integer | `actionable` Results the aggregate was computed from. |
+| `not_actionable` | Integer | Results in the same scope whose `disposition` is not `actionable` (§C.7). |
+| `scenarios` | Integer | Distinct Scenarios those Results came from. |
+| `executions` | Integer | Distinct Executions those Results came from. |
+| `min_basis_met` | Boolean or `"not_declared"` | Whether the Gate's `min_basis` (Appendix A §A.10) was met. `"not_declared"` when the Gate sets none. Never bare `null`. |
+
+`"not_declared"` follows the same pattern as `"not_applicable"` for Confidence (§C.7) and
+`"not_established"` for a difficulty prior: a Gate that set no minimum and a Gate whose
+minimum was met are different facts and MUST NOT be reported the same way. Seeded Control
+Results are not counted in any field above.
 
 **Report and Release Decision**
 

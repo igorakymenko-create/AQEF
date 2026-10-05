@@ -1,7 +1,5 @@
 # 7. Intended Audience
 
-**Status:** confirmed (v0.1).
-
 This specification addresses two distinct audiences, and conflating them is a common way
 a document like this gets misread: those who *use* an AQEF-conformant implementation to
 test AI systems, and those who *build* one.

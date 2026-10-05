@@ -1,7 +1,5 @@
 # Volume V — Validator Engine
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* How responses are validated.
 
 Chapter 4 named the Validator Engine as the component that executes Validators against

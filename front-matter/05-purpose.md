@@ -1,7 +1,5 @@
 # 5. Purpose
 
-**Status:** confirmed (v0.1).
-
 AQEF exists to give organizations building AI systems a governed, shared methodology
 for establishing, executing, and measuring confidence that those systems' behavior
 meets defined quality expectations — replacing ad hoc AI evaluation (Volume I, Chapter

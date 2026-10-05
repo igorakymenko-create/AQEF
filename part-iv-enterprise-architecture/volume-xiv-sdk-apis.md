@@ -1,7 +1,5 @@
 # Volume XIV — SDK & APIs
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* How AQEF gets called, from anything other than itself.
 
 Volume XIII's closing paragraph already named this Volume directly: every CI/CD

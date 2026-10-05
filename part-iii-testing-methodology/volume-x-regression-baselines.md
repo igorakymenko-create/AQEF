@@ -1,7 +1,5 @@
 # Volume X — Regression & Baselines
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* How degradation over time is detected.
 
 Chapter 1 already rejected literal output diffing as a regression check — it "breaks on

@@ -1,7 +1,5 @@
 # Appendix G — C4 Model
 
-**Status:** confirmed (v0.1).
-
 This appendix provides C4-style architectural views of an AQEF-conformant system at
 four levels of abstraction: Context, Container, Component, and Deployment. The C4 model
 (Simon Brown) uses progressively deeper views to show what a system is, what it is made

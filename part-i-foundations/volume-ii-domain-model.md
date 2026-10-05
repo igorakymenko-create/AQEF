@@ -1,7 +1,5 @@
 # Volume II — Domain Model
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* What are the building blocks of AQEF?
 
 Conceptual definitions for these same nouns are specified in

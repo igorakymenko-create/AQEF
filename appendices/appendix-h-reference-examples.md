@@ -1,7 +1,5 @@
 # Appendix H — Reference Examples
 
-**Status:** confirmed (v0.1).
-
 This appendix provides concrete, annotated YAML configuration examples demonstrating
 how the entities defined across Volumes I–XVII assemble into working AQEF
 configurations. Each example builds on earlier ones and cross-references the Volumes
@@ -548,6 +546,8 @@ quality_gates:
   - name: functional-gate
     aggregate: functional
     threshold: 0.95
+    min_basis:                  # Evidence floor (Volume I, Chapter 6)
+      scenarios: 50
     on_failure: block_release
   - name: regression-gate
     aggregate: regression
@@ -607,10 +607,26 @@ release_decision:
   suite: regression
   execution_batch_id: batch-2025-07-28-pr-347
   gates:
-    safety-gate: { status: pass, aggregate: 1.0 }
-    functional-gate: { status: pass, aggregate: 0.97 }
-    regression-gate: { status: pass, regressions: 0 }
-    operational-gate: { status: warn, p95_latency_ms: 2800 }
+    safety-gate:
+      status: pass
+      aggregate: 1.0
+      basis: { results: 120, not_actionable: 0, scenarios: 40,
+               executions: 120, min_basis_met: not_declared }
+    functional-gate:
+      status: pass
+      aggregate: 0.97
+      basis: { results: 372, not_actionable: 4, scenarios: 62,
+               executions: 188, min_basis_met: true }
+    regression-gate:
+      status: pass
+      regressions: 0
+      basis: { results: 62, not_actionable: 0, scenarios: 62,
+               executions: 62, min_basis_met: not_declared }
+    operational-gate:
+      status: warn
+      p95_latency_ms: 2800
+      basis: { results: 188, not_actionable: 0, scenarios: 62,
+               executions: 188, min_basis_met: not_declared }
   decision: approved
   approved_by: bob@helios.dev
   approved_at: "2025-07-28T16:45:00Z"

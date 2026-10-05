@@ -1,7 +1,5 @@
 # Volume XV — Reference UI
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* What a person actually looks at.
 
 Volume XIV's closing paragraph already named this Volume as the last in Part IV, built

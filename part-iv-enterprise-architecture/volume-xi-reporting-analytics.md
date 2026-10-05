@@ -1,7 +1,5 @@
 # Volume XI — Reporting & Analytics
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* How Results become visibility.
 
 Chapter 4 named Reporting & Analytics as the component that aggregates Results into
@@ -33,6 +31,9 @@ raw data a reader would have to reconstruct by hand:
   signal of rigor;
 - the status of every Quality Gate applicable to the Report's scope (Chapter 6),
   including which Gates passed, failed, or triggered a Governance-logged override.
+- the Aggregate Basis of every aggregate a Quality Gate read (Chapter 6): how many
+  Results, from how many distinct Scenarios and Executions, so a reader can tell a pass
+  rate over twenty Scenarios from the same pass rate over six hundred.
 
 A Report that omits these is not wrong, but it is incomplete in a way a reader has no way
 to notice from the Report alone — precisely the failure mode surfacing them by name is
@@ -72,6 +73,12 @@ sense the rest of its content is; a Report's is frozen at generation time, which
 exactly why a Quality Gate override MUST be logged rather than silently applied — a
 Report generated after the fact needs to be able to show that an override happened, not
 just a passing Gate indistinguishable from one that never failed.
+
+A Gate's displayed status MUST include the Aggregate Basis of the aggregate it read, and,
+where the Gate did not pass, whether it failed its threshold or fell short of a declared
+minimum basis (Chapter 6). A passing Gate shown without its basis invites exactly the
+reading this Volume exists to prevent: a number taken at face value with no way to see
+what it rests on.
 
 ## KPIs
 

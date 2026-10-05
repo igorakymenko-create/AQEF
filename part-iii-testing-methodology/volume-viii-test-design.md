@@ -1,7 +1,5 @@
 # Volume VIII — Test Design
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* How AI tests are created.
 
 Chapter 5 named Test Design as the lifecycle stage that turns prioritized Requirements

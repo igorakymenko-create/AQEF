@@ -1,7 +1,5 @@
 # Appendix I — Best Practices
 
-**Status:** confirmed (v0.1).
-
 This appendix collects the practical guidance, common pitfalls, and SHOULD-level
 recommendations distributed across all seventeen Volumes into a single,
 practitioner-oriented reference. Each practice cites the Volume or Chapter where its

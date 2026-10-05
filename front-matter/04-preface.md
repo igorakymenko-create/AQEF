@@ -1,7 +1,5 @@
 # 4. Preface
 
-**Status:** confirmed (v0.1).
-
 Chapter 1 already makes the case this document exists to make: that generative AI
 systems break the assumption classical software testing has relied on since testing
 existed — a fixed, deterministic oracle against which a single expected output can be

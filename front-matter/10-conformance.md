@@ -1,7 +1,5 @@
 # 10. Conformance
 
-**Status:** confirmed (v0.1).
-
 Conformance is a property of an AQEF *implementation* — the engine, tooling, or
 platform executing this specification — not of any AI system under test. An AI system
 does not "conform to AQEF"; it is assessed by an AQEF-conformant engine, and how well it

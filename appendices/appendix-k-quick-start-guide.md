@@ -1,7 +1,5 @@
 # Appendix K — Quick Start Guide
 
-**Status:** confirmed (v0.2).
-
 This appendix provides a practical, step-by-step path to running your first
 AQEF-governed quality check against an AI system. It assumes the reader has access to a
 conformant AQEF engine (Minimal or Enterprise, Volume XVII) and wants to understand what

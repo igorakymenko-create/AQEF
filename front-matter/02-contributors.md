@@ -1,7 +1,5 @@
 # 2. Contributors
 
-**Status:** current through v0.28.
-
 ## Authors
 
 Igor Akymenko — primary author. Architecture, design decisions, and editorial

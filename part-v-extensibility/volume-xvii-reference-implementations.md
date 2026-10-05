@@ -1,7 +1,5 @@
 # Volume XVII — Reference Implementations
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* How this specification becomes running software.
 
 Volume XVI's closing paragraph already named this Volume as the one that closes the

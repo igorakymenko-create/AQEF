@@ -1,7 +1,5 @@
 # Volume IV — Dataset Engine
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* How test data is generated and managed.
 
 Chapter 4 named the Dataset Engine as the component that manages Datasets (static,

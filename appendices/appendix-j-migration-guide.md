@@ -1,7 +1,5 @@
 # Appendix J — Migration Guide
 
-**Status:** confirmed (v0.1).
-
 This appendix describes how an organization adopts AQEF incrementally — from informal
 AI evaluation to a governed, specification-conformant quality process. It is organized
 as a sequence of stages, each self-contained: a team that stops at any stage still has

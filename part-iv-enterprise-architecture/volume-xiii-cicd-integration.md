@@ -1,7 +1,5 @@
 # Volume XIII — CI/CD Integration
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* How AQEF plugs into a deployment pipeline.
 
 Chapter 6 already anticipated this Volume directly: "the same Gate is what a Report

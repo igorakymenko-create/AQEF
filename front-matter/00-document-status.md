@@ -7,8 +7,8 @@
 | Property | Value |
 |---|---|
 | Status | Working Draft |
-| Version | 0.30 |
-| Date | 2026-09 |
+| Version | 0.31 |
+| Date | 2026-10 |
 | Maturity | Draft — not for implementation |
 
 > **Warning:** This document is a **Working Draft**. It has not undergone formal review

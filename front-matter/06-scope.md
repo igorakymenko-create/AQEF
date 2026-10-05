@@ -1,10 +1,8 @@
 # 6. Scope
 
-**Status:** confirmed (v0.1).
-
 ## In Scope
 
-Everything specified across this document's five Parts and ten Appendices: the Domain
+Everything specified across this document's five Parts and eleven Appendices: the Domain
 Model and Fundamental Principles (Part I); how a Scenario becomes a Result (Part II);
 what gets tested, how, and against what history (Part III); how AQEF is operated,
 reported on, and governed (Part IV); how it extends and how it gets built (Part V); and

@@ -1,7 +1,5 @@
 # 8. Terminology
 
-**Status:** confirmed (v0.1).
-
 Conceptual definitions, in dependency order (each term uses only terms already defined).
 Structural relationships for these same nouns are specified in Volume II — Domain
 Model.
@@ -70,6 +68,9 @@ an Oracle (typically a Judge) is in the Result it produced. Verdict and Confiden
 two separate axes — a Judge can report a failing verdict with low Confidence, or a
 passing verdict with high Confidence, and each combination is treated differently when
 Results are aggregated into a release-level decision (Volume I, Chapter 6).
+Confidence is a property of a single Result. It is not a statistical confidence level or
+confidence interval, which describes how precisely an aggregate over many Results
+estimates a system's behavior (Volume I, Chapter 6, Aggregate Basis).
 
 **Evaluation**
 The process of applying Judges to a Conversation to assess subjective/semantic quality,

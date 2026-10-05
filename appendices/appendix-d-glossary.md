@@ -1,7 +1,5 @@
 # Appendix D — Glossary
 
-**Status:** confirmed (v0.1).
-
 This appendix is the complete alphabetical glossary of AQEF terminology. It extends
 Front Matter §8 (Terminology), which defines twelve core Domain Model terms in
 dependency order. Where a term defined in §8 appears below, its entry provides a brief
@@ -28,6 +26,12 @@ hostile input. SHOULD draw on an independent source.
 **Agent** — A Pattern-Focused test type (Volume IX) testing AI-Agent-pattern-specific
 behavior — tool selection, argument construction, and reasoning trajectory — distinct
 from the AI Agent architectural pattern (Volume I, Chapter 7) it targets.
+
+**Aggregate Basis** — What an aggregate rests on (Volume I, Chapter 6): the number of
+`actionable` Results it was computed from, the number of Results in scope that were not
+`actionable`, and the number of distinct Scenarios and Executions behind them. MUST be
+stated for every aggregate a Quality Gate reads. A Gate MAY declare a minimum (Appendix A
+§A.10's `min_basis`). Not a statistical interval, and not Confidence.
 
 **Aggregation Model** — The mechanism (Volume I, Chapter 6) that combines individual
 Results into per-dimension aggregates while preserving Business Quality weights and
@@ -103,8 +107,9 @@ makes compliance obligations verifiable without enumerating what a Project must 
 with (see Scope, §6).
 
 **Confidence §8** — A normalized score expressing how certain an Oracle is in the
-Result it produced, independent of the pass/fail verdict itself. See Front Matter §8
-for the full definition.
+Result it produced, independent of the pass/fail verdict itself. A property of a single
+Result; distinct from a statistical confidence level or interval, which describes an
+aggregate (see Aggregate Basis). See Front Matter §8 for the full definition.
 
 **Confidence Model** — The step within the Decision Pipeline (Volume I, Chapter 6) that
 decides whether a Result's Confidence is high enough to trust at face value, low enough

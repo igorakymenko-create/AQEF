@@ -1,7 +1,5 @@
 # Appendix E — UML Diagrams
 
-**Status:** confirmed (v0.1).
-
 This appendix provides UML class diagrams visualizing the structural relationships
 defined across the specification. Each diagram restates — in visual form — what the
 referenced Volumes specify in prose; the Volumes remain authoritative. Diagrams use
@@ -87,11 +85,6 @@ classDiagram
     Oracle --> Result : produces
     Contract --> Oracle : specifies
 ```
-
-*Note: a rendering error in the source draft left this diagram blank in v0.2 — the
-cause was an edge label containing a colon, which breaks Mermaid's classDiagram parser.
-The offending edge (redundant with the `confidence` attribute already declared on
-`Result`, above) has been removed rather than re-escaped.*
 
 ## E.3 — Quality Dimensions
 

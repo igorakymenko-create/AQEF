@@ -1,7 +1,5 @@
 # Appendix F — Sequence Diagrams
 
-**Status:** confirmed (v0.1).
-
 This appendix provides sequence diagrams for the key runtime flows defined in the
 specification. Each diagram visualizes — in temporal order — what the referenced
 Volumes specify in prose; the Volumes remain authoritative. Diagrams use Mermaid syntax

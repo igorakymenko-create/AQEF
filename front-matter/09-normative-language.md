@@ -1,7 +1,5 @@
 # 9. Normative Language
 
-**Status:** confirmed (v0.1).
-
 This specification uses RFC 2119 keywords, restricted to a deliberately small set: five
 core words and two synonyms, not the full RFC 2119 vocabulary.
 

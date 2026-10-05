@@ -1,7 +1,5 @@
 # Volume XII — Governance
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* Who is allowed to do what, and how that stays provable.
 
 Chapter 4 already framed Governance as wrapping around AQEF's data flow rather than

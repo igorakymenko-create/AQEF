@@ -1,7 +1,5 @@
 # Volume XVI — Plugin Architecture
 
-**Status:** confirmed (v0.1).
-
 *Question answered:* How a Project extends AQEF without forking it.
 
 Volume XV's closing paragraph already named this Volume: how a Project extends AQEF's

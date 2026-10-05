@@ -1,7 +1,5 @@
 # Appendix B — AQEF JSON Schema
 
-**Status:** confirmed (v0.1).
-
 This appendix specifies the validation rules a conformant JSON Schema MUST enforce for
 AQEF configuration documents. It restates, in schema-oriented terms, the structures
 defined by Volume II (Domain Model), Volume VII (Contract Language), and Appendix A
@@ -36,6 +34,7 @@ to a Domain Model entity (Volume II):
 | Dataset | A.8 | IV |
 | ExecutionConfig | A.9 | III |
 | QualityGate | A.10 | I, Ch. 6 |
+| MinBasis | A.10 | I, Ch. 6 |
 | Result | Appendix C §C.7 | II, I Ch. 3 &amp; 6 |
 | Baseline | A.11 | X, XII |
 | ReleaseDecision | A.12 | I, Ch. 6; XII |
@@ -219,9 +218,19 @@ properties:
   aggregate:           { type: string, minLength: 1 }                # REQUIRED
   threshold:           { oneOf: [number, object] }                   # REQUIRED
   compare_against:     { type: string }                              # OPTIONAL
+  min_basis:           { $ref: MinBasis }                            # OPTIONAL
   on_failure:          { type: string, enum: [block_release, warn] } # REQUIRED
   override_requires:   { type: string }                              # OPTIONAL
 ```
+
+**MinBasis**
+```
+properties:
+  results:    { type: integer, minimum: 1 }   # OPTIONAL
+  scenarios:  { type: integer, minimum: 1 }   # OPTIONAL
+```
+
+*Cross-field rule:* at least one of `results` or `scenarios` MUST be present.
 
 ## B.3 — Cross-Type Validation Rules
 
@@ -242,6 +251,7 @@ by a conformant implementation at configuration load time:
 | Result disposition validity | Appendix C §C.7 | `verdict` MUST be `null` when `disposition` is `awaiting_review` or `oracle_unavailable`, and MUST be `pass` or `fail` otherwise. `confidence` MUST NOT be bare `null` under any disposition. |
 | Seeded Control invalidation scope | Volume VIII; Appendix C §C.3 | A missed Seeded Control invalidates only the Results its Oracle produced in the same run sharing its `defect_class`, by default. Full-run invalidation requires a Project to declare it explicitly, with a recorded, non-empty reason. |
 | Difficulty prior provenance | Volume VIII | `difficulty_prior` MUST only be set or updated from Human Reviewer assessment, never from the pass/fail outcome of the Oracle(s) the control tests. |
+| Aggregate Basis reporting | Volume I, Ch. 6; Appendix C §C.3 | Every aggregate a Quality Gate reads MUST be reported with its Aggregate Basis. Where `min_basis` is declared and not met, the Gate MUST NOT pass, and the reason MUST be reported as insufficient basis, not as a threshold failure. |
 | Deletion referential integrity | Appendix C §C.8 | `DELETE` on an Environment, Dataset, or Contract still referenced by a Baseline, Snapshot, or Report MUST be rejected or preserved as a frozen record, never silently broken. |
 
 ## B.4 — Extensibility
