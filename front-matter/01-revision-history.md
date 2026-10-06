@@ -1,6 +1,6 @@
 # 1. Revision History
 
-**Status:** current through v0.31.
+**Status:** current through v0.31.1.
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
@@ -15,3 +15,4 @@
 | 0.30 | 2026-09 | Igor Akymenko | Seeded Controls given a machine-readable schema: `seeded_control` on Scenario (Appendix A/B), defect-class-scoped vs. full-run invalidation reporting and a difficulty prior in the REST API (Appendix C); a difficulty prior MUST distinguish "not yet established" from 0 and is anchored exclusively to Human Reviewer assessment, never to the tested Oracle's own history. |
 | 0.30.1 | 2026-10 | Igor Akymenko | Editorial cleanup: per-file status lines removed (document version is stated only in Document Status and Revision History); appendix count corrected in Scope; internal drafting notes removed from Appendix E and the Master Index. No normative change. |
 | 0.31 | 2026-10 | Igor Akymenko | Aggregate Basis added (Volume I, Chapter 6): every aggregate a Quality Gate reads states how many Results, Scenarios and Executions it rests on; a Gate may declare a minimum basis. Confidence explicitly distinguished from a statistical confidence level (§8, Appendix D). Schema and API updated (Appendix A, B, C). |
+| 0.31.1 | 2026-10 | Igor Akymenko | Acknowledgement added for Roman Hurakov (external feedback behind v0.27). No normative change. |
