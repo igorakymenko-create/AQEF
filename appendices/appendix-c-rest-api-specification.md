@@ -153,8 +153,8 @@ array, one entry per Seeded Control Scenario in that run:
 |---|---|---|
 | `scenario` | String | The Seeded Control Scenario. |
 | `defect_class` | String | From Appendix A §A.4's `SeededControlConfig`. |
-| `outcome` | String | `caught` or `missed`. |
-| `invalidation_scope` | String | `none` (when `outcome` is `caught`), `defect_class`, or `full_run`. |
+| `outcome` | String | `caught`, `missed`, or `invalid` (the control's confirmation failed, Volume VIII). |
+| `invalidation_scope` | String | `none` (when `outcome` is `caught` or `invalid`), `defect_class`, or `full_run`. |
 | `reason` | String or `null` | MUST be present and non-empty when `invalidation_scope` is `full_run` (Volume VIII); `null` otherwise. |
 
 This is deliberately how a missed Seeded Control is surfaced, rather than as a change to
@@ -163,6 +163,11 @@ Seeded Control sharing its `defect_class` is missed in the same run, and Result'
 stays exactly as §C.7 already specifies it. `seeded_control_results` is what tells a
 caller *why* and at *what scope* — `inconclusive` alone does not distinguish a
 low-Confidence Result from one invalidated by a Seeded Control miss.
+
+Where the Oracle was not invoked for clauses after a miss (Volume VIII, failing fast),
+their Results carry `not_assessed` (§C.7). Where the Project's `on_seeded_control_miss`
+is `halt_run` (Appendix A §A.9), the entry's `invalidation_scope` is `full_run` and its
+`reason` is set automatically to the configured policy.
 
 | Method | Path | Description | Permission |
 |---|---|---|---|
@@ -291,10 +296,11 @@ configuration entities, but Result is runtime output, so it belongs here.
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `oracle_type` | String | MUST | `validator`, `judge`, or `human_reviewer`. |
-| `verdict` | String or `null` | MUST | `pass` or `fail`. `null` only when `disposition` is `awaiting_review` or `oracle_unavailable` — no verdict has been reached yet. |
+| `verdict` | String or `null` | MUST | `pass` or `fail`. `null` only when `disposition` is `awaiting_review`, `oracle_unavailable`, or `not_assessed` — no verdict has been reached. |
 | `confidence` | Float (0.0–1.0) or `"not_applicable"` | MUST | Never omitted and never bare `null`. `"not_applicable"` for every Validator Result (Volume V) and for any Result with no verdict yet. |
-| `disposition` | String | MUST | `actionable`, `inconclusive`, `awaiting_review`, or `oracle_unavailable`. See below. |
+| `disposition` | String | MUST | `actionable`, `inconclusive`, `awaiting_review`, `oracle_unavailable`, or `not_assessed`. See below. |
 | `supporting_evidence` | Any | MUST | What the Oracle based its judgment on — the Conversation, Artifacts, or specific excerpts, per Oracle type. |
+| `panel` | Object | MUST (Multi Judge Results); absent otherwise | `{ configured: Integer, counted: Integer }` — Judges configured in the panel, and Judges whose verdicts were counted after exclusions (Volume VI). |
 
 **Disposition** is what closes the gap between "a Result exists" and "a Result is safe
 to use in the Aggregation Model" — the distinction Chapter 6 already requires but never
@@ -322,6 +328,11 @@ previously named as a field:
   scopes to the Execution stage; the same prohibition applies without exception: an
   Oracle that could not be reached MUST NOT be silently retried until a favorable
   verdict appears, and MUST NOT be treated as an implicit pass. `verdict` is absent.
+- **`not_assessed`** — the Oracle was deliberately not invoked: it had missed a Seeded
+  Control of the clause's defect class earlier in the same run (Volume VIII), or a Multi
+  Judge panel fell below its quorum (Volume VI). `verdict` is absent. The Evidence is
+  kept, and a requalified Oracle MAY assess it later as a new Result; this Result is not
+  modified.
 
 A Quality Gate (Volume I, Chapter 6) reading an aggregate that includes any Result whose
 `disposition` is not `actionable` MUST treat that Result as blocking by default, unless

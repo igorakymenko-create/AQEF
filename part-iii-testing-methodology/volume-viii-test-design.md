@@ -131,29 +131,80 @@ decision, not the default, and MUST record a reason (Volume XII) — a narrow mi
 not silently discard evidence it never disqualified. Seeded Control Results themselves
 MUST be excluded from Aggregation.
 
-A Project SHOULD maintain at least one Seeded Control for each Oracle whose Results feed
-a Quality Gate, SHOULD run Seeded Controls before that Oracle's other assessments in the
-same run, and SHOULD keep more than one Seeded Control per defect class, rotating them
-over time. A single fixed decoy invites tuning around it, especially by whoever adjusts
-a Judge's criteria while able to see it. For the same reason, a Project SHOULD keep
-authorship and rotation of its Seeded Controls independent of whoever tunes the Oracle
-those controls test — Governance's Role/Permission mechanism (Volume XII) is how a
-Project enforces this in practice; this Volume names the risk, Volume XII gives the
-Project the means to close it. Seeded Controls apply to Validators as well as
-Judges: a misconfigured pattern or an outdated schema blinds a Validator just as
-silently. They are most valuable for Judges, though, because a blind Judge still returns
-confident, plausible Results.
+**Coverage and order.** A Project SHOULD maintain at least one Seeded Control for each
+Oracle whose Results feed a Quality Gate, and SHOULD run Seeded Controls before that
+Oracle's other assessments in the same run, so that a miss is known before the work it
+would invalidate is done. Seeded Controls apply to Validators as well as Judges: a
+misconfigured pattern or an outdated schema blinds a Validator just as silently. They
+are most valuable for Judges, though, because a blind Judge still returns confident,
+plausible Results.
 
-A Seeded Control MAY carry a difficulty prior: how reliably Human Reviewers themselves
-catch the class of defect it plants, established and maintained from Human Reviewer
-assessment of that control — never from how the Oracle(s) it tests perform against it,
-since doing so would make the prior's trustworthiness depend on the same Oracles it
-exists to help judge. A newly authored control has no such history yet, and this MUST be
-represented as "not yet established," not as a prior of zero (Appendix A §A.4) — a
-control no one has assessed and a control everyone catches are different facts, and
-collapsing them would assert something about data that does not exist. How many Human
-Reviewer assessments make a prior trustworthy, and how it is statistically maintained,
-is left to a Project's own methodology.
+**Which Results share a defect class.** A Constraint or Expectation MAY declare the
+defect classes it checks for (`defect_classes`, Appendix A §A.5). A miss affects the
+clauses assessed by the same Oracle that declare the missed class. A clause that
+declares no defect class is treated as covering every class its Oracle is tested on, and
+is affected by any miss of that Oracle: an undeclared clause cannot be shown to be
+outside the miss's reach.
+
+**Failing fast.** Once an Oracle has missed a Seeded Control in a run, it SHOULD NOT be
+invoked for the affected clauses for the rest of that run. Their Results take the
+disposition `not_assessed` (Appendix C §C.7): no verdict, no assessment cost, and the
+same blocking effect at a Quality Gate as `inconclusive`. Assessment by other Oracles,
+and of other defect classes, continues, and the Evidence of the skipped clauses is kept
+so that a requalified Oracle can assess it later. A Project MAY instead configure a miss
+to halt the run (`on_seeded_control_miss: halt_run`, Appendix A §A.9); a halt records a
+full-run invalidation with the configured policy as its reason.
+
+**Generation and exposure.** A Seeded Control SHOULD be produced by a generator rather
+than written by hand, and its individual instances SHOULD NOT be visible to anyone who
+tunes the Oracle it tests. A generator SHOULD vary the surface form of what it plants,
+so that an Oracle cannot learn to recognize the generator's habits instead of the
+defect. A control known to have been seen by someone who tunes the Oracle it tests is
+exposed and SHOULD NOT be used to gate that Oracle again; the more people a set of
+controls has been exposed to, the sooner it needs replacing. Hand-authored controls
+remain permitted; they are exposed by construction to whoever wrote them, which is why
+authorship SHOULD stay separate from tuning, through Governance's Role/Permission
+mechanism (Volume XII). An Oracle tuned to catch a defect class better in general is not
+tuned around its controls: that is the improvement Seeded Controls exist to verify.
+
+**Confirmed by construction.** A Seeded Control MUST record the defect it plants
+(`planted_defect`, Appendix A §A.4): a defect nobody can state is not a known defect. A
+control SHOULD also carry a confirmation, a Validator-bound check that the planted defect
+is actually present in the Evidence the Oracle receives. A control runs through the
+system under test like any other Scenario, and a defect planted in its input may not
+survive into the response. Where confirmation fails, the control is `invalid` for that
+run (Appendix C §C.3): it is neither caught nor missed, and nothing is inferred about the
+Oracle from it.
+
+**Difficulty prior.** A difficulty prior states how reliably independent reference
+Oracles catch a class of defect, so that a miss can be read correctly: a miss on a class
+that reference Oracles almost always catch says the Oracle under test went blind; a miss
+on a class they rarely catch says less. The prior belongs to the defect class
+(`defect_classes`, Appendix A §A.1), not to an individual control, because generated
+controls are seldom reused and a per-control prior would never be established. A control
+that is reused MAY carry its own prior, which takes precedence for that control. A prior
+MUST be established from reference Oracles independent of the Oracle under test
+(Independent Oracles, Chapter 3) or from Human Reviewers, and MUST NOT be updated from how
+the Oracle under test performs against the controls; doing so would make the prior
+depend on the instrument it exists to judge. A prior MUST state how many control
+instances it was established on, and a class or control with no such history MUST be
+represented as "not yet established", not as zero (Appendix A §A.4). A control that no
+reference Oracle catches is more likely broken than hard, and SHOULD NOT gate an Oracle
+until a Human Reviewer has confirmed it. Beyond that case, Human Reviewers are not
+required: the prior is a reference for reading a miss, not a measurement of people.
+
+**Requalification.** An Oracle that missed a Seeded Control is not used again for the
+missed defect class until it is requalified. The cause is diagnosed (a changed model,
+prompt, criteria, or configuration; or Judge Drift, Volume VI), the Oracle is corrected,
+and the corrected Oracle catches fresh controls of that class. Never the control it
+missed: the diagnosis exposed it. A requalified Oracle MAY then re-assess the stored
+Evidence of the affected run, without invoking the system under test again. The new
+Results are recorded against the corrected Oracle's configuration; the original
+`inconclusive` or `not_assessed` Results remain in the record unchanged. This is not a
+Retry (Volume III): the subject is not re-run, and the re-assessment is made by a
+different, requalified Oracle, not by the same Oracle asked again until it agrees. A
+Judge that missed a control inside a Multi Judge panel is handled by that panel's quorum
+(Volume VI, Consensus).
 
 ## Exploratory AI Testing
 

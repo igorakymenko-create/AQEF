@@ -1,6 +1,6 @@
 # 1. Revision History
 
-**Status:** current through v0.31.1.
+**Status:** current through v0.32.
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
@@ -16,3 +16,5 @@
 | 0.30.1 | 2026-10 | Igor Akymenko | Editorial cleanup: per-file status lines removed (document version is stated only in Document Status and Revision History); appendix count corrected in Scope; internal drafting notes removed from Appendix E and the Master Index. No normative change. |
 | 0.31 | 2026-10 | Igor Akymenko | Aggregate Basis added (Volume I, Chapter 6): every aggregate a Quality Gate reads states how many Results, Scenarios and Executions it rests on; a Gate may declare a minimum basis. Confidence explicitly distinguished from a statistical confidence level (§8, Appendix D). Schema and API updated (Appendix A, B, C). |
 | 0.31.1 | 2026-10 | Igor Akymenko | Acknowledgement added for Roman Hurakov (external feedback behind v0.27). No normative change. |
+| 0.31.2 | 2026-10 | Igor Akymenko | "Honest denominators" added as the informal name for the rule shared by Judge aggregate declaration and Aggregate Basis (Volume I, Chapter 6; Volume VI; Appendix D); phrase credited to Victor Ematin. No normative change. |
+| 0.32 | 2026-10 | Igor Akymenko | Seeded Controls revised (Volume VIII): controls are generated and retired on exposure; planted defects are recorded and confirmed by construction (`invalid` when absent from the Evidence); the difficulty prior moves to the defect class and is established by independent reference Oracles; an Oracle that misses stops being invoked for the affected clauses (`not_assessed`, new disposition) and is requalified before reuse; Multi Judge panels declare a quorum and report panel size. Clauses may declare `defect_classes`. Schema and API updated (Appendix A, B, C). Arising from external practitioner feedback. |

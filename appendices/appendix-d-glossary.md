@@ -197,6 +197,10 @@ Decision Pipeline.
 into a Release Decision by applying the Confidence Model, Aggregation Model, and
 Quality Gates in order.
 
+**Defect Class** — A Project-defined category of defect (Volume VIII; Appendix A §A.1)
+that Seeded Controls plant and that clauses MAY declare they check for. Scopes the effect
+of a missed Seeded Control, and holds the difficulty prior.
+
 **Definition Layer (Layer)** — The logical layer (Volume I, Chapter 4) responsible for
 defining what to test and what "acceptable" means — housing Scenarios, Contracts, and
 Datasets.
@@ -210,12 +214,12 @@ probabilistic.
 across two Environments and checks that any behavioral difference is an intentional,
 reviewed change rather than an unnoticed regression.
 
-**Difficulty Prior** — How reliably Human Reviewers catch a Seeded Control's defect
-class (Volume VIII; Appendix A §A.4's `seeded_control.difficulty_prior`), established
-and maintained from Human Reviewer assessment only, never from the pass/fail history of
-the Oracle(s) the control tests. `"not_established"`, not `0.0`, is a newly authored
-control's default — the same absence-is-not-a-value treatment Confidence already gets
-(Appendix C §C.7).
+**Difficulty Prior** — How reliably independent reference Oracles catch a Defect Class
+(Volume VIII; Appendix A §A.1), used to read a missed Seeded Control. Held by the Defect
+Class; a reused control MAY carry its own. Established from reference Oracles
+independent of the Oracle under test, or from Human Reviewers; never from the Oracle
+under test. States the number of instances it rests on. `"not_established"`, not `0.0`,
+when there is no history.
 
 **Distributed Execution** — Parallelization (Volume III) scaled across multiple
 machines while maintaining Deterministic Infrastructure guarantees, ensuring no shared
@@ -326,6 +330,11 @@ why a Trend moved, by correlating Metric changes against Environment, Dataset, a
 Contract version history over time. Distinct from Trend, which shows movement without
 explaining it.
 
+**Honest Denominators** — Informal name (Volume I, Chapter 6) for the rule that any
+number produced by dividing must say what it was divided by. Not a separate requirement:
+it names what the aggregate declaration of a Judge's Result (Volume VI) and Aggregate
+Basis (Volume I, Chapter 6) have in common. See Aggregate Basis.
+
 **Human Review** — The process (Volume VI) of invoking a Human Reviewer Oracle,
 triggered by Contract rules, low Confidence, Consensus disagreement, or Calibration
 needs.
@@ -400,7 +409,9 @@ change if a model provider silently updates what a stable identifier resolves to
 **Multi Judge** — A configuration (Volume VI) running more than one Judge against the
 same Conversation, serving either of two distinct purposes that MUST be declared:
 independence (different model families to catch blind spots) or stability (repeated
-sampling to reduce noise). Conflating these produces misleading signals.
+sampling to reduce noise). Conflating these produces misleading signals. A Judge that
+missed a Seeded Control is excluded for the affected clauses, subject to the panel's
+quorum; a panel's Result states how many Judges were configured and counted.
 
 **Multi-Agent (Pattern)** — An architectural pattern (Volume I, Chapter 7) where
 multiple AI subsystems interact, producing complex Conversations that may require
@@ -505,6 +516,11 @@ evidence for a Release Decision. Distinct from a Dashboard, which updates contin
 **Report Plugin** — A plugin (Volume XVI) introducing new Metric types or visual
 formats while maintaining strict traceability back to underlying Results.
 
+**Requalification** — Returning an Oracle to use for a Defect Class after it missed a
+Seeded Control (Volume VIII): diagnose, correct, and catch fresh controls of that class,
+never the missed one. A requalified Oracle MAY re-assess stored Evidence as new Results;
+the original Results are not modified. Not a Retry.
+
 **Requirements** — Explicit statements (Volume I, Chapter 5) of expected behavior that
 serve as the origin for Quality Contract clauses, produced during the earliest
 lifecycle stage.
@@ -516,8 +532,8 @@ not present in the REST API.
 **Result** — The verdict (Volume II) produced by one Oracle applying one Contract
 clause to an Execution's Evidence. A Result from a Validator carries no Confidence
 value; a Result from a Judge MUST carry one. Every Result also carries a `disposition`
-(Appendix C §C.7) — `actionable`, `inconclusive`, `awaiting_review`, or
-`oracle_unavailable` — distinguishing a verdict safe to use at face value from one that
+(Appendix C §C.7) — `actionable`, `inconclusive`, `awaiting_review`,
+`oracle_unavailable`, or `not_assessed` — distinguishing a verdict safe to use at face value from one that
 is not yet, or may never be. See Appendix C §C.7 for the authoritative shape.
 
 **Retry** — A re-attempt (Volume III) triggered by an infrastructure-level failure
@@ -573,14 +589,15 @@ JavaScript/TypeScript, Go — derived from the REST API. SDKs MUST be generated 
 validated against the REST API specification, not hand-authored independently.
 
 **Seeded Control** — A Scenario carrying a deliberately planted, known defect (Volume
-VIII; Appendix A §A.4's `seeded_control.defect_class`), used to prove that an Oracle can
-still detect that class of defect in the current run. If its Oracle misses the seeded
-defect, that Oracle's other Results sharing the missed control's defect class become
-`inconclusive` (full-run invalidation requires an explicit, reasoned Project decision,
-Appendix C §C.3), and no Quality Gate may pass on aggregates they contributed to. MAY
-carry a Difficulty Prior. Tests the Oracle, not the system. Distinct from Negative
-Testing (which tests the system) and from Calibration (which is retrospective and
-statistical).
+VIII; Appendix A §A.4), used to prove that an Oracle can still detect that Defect Class in
+the current run. SHOULD be generated, with instances hidden from the Oracle's tuner; MUST
+record its planted defect, and SHOULD confirm it is present in the Evidence (otherwise the
+control is `invalid` for that run). If its Oracle misses it, the Oracle's Results for
+clauses of that class become `inconclusive`, the Oracle SHOULD stop being invoked for
+them (`not_assessed`), and it needs Requalification before further use for that class.
+Full-run invalidation or a halt requires an explicit Project decision. Tests the Oracle,
+not the system. Distinct from Negative Testing (which tests the system) and from
+Calibration (which is retrospective and statistical).
 
 **Self-hosted Architecture** — A deployment model (Volume XVII) on infrastructure a
 Project itself controls, often driven by Compliance requirements for data that cannot

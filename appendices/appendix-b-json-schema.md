@@ -23,6 +23,7 @@ to a Domain Model entity (Volume II):
 | Suite | A.3 | II |
 | Scenario | A.4 | II |
 | SeededControlConfig | A.4 | VIII |
+| DefectClassConfig | A.1 | VIII |
 | Contract | A.5 | VII |
 | Constraint | A.5 | VII |
 | Expectation | A.5 | VII |
@@ -50,7 +51,25 @@ properties:
   environments:  { type: array, items: Environment, minItems: 1 }  # REQUIRED
   suites:        { type: array, items: Suite }                    # OPTIONAL
   execution:     { $ref: ExecutionConfig }                         # OPTIONAL
+  defect_classes: { type: array, items: DefectClassConfig }        # OPTIONAL
 ```
+
+**DefectClassConfig**
+```
+properties:
+  name:               { type: string, minLength: 1 }                    # REQUIRED
+  difficulty_prior:   { oneOf: [ { type: number, minimum: 0.0,
+                        maximum: 1.0 },
+                        { type: string, const: not_established } ] }    # OPTIONAL
+  prior_basis:        { type: integer, minimum: 1 }                     # CONDITIONAL
+  prior_source:       { type: string, enum: [reference_oracles,
+                        human_reviewer] }                               # CONDITIONAL
+  reference_oracles:  { type: array, items: JudgeConfig }               # OPTIONAL
+```
+
+*Cross-field rule:* `prior_basis` and `prior_source` are REQUIRED when `difficulty_prior`
+is a number. An absent `difficulty_prior` is equivalent to `"not_established"`; a schema
+MUST NOT default it to `0.0`.
 
 **Environment**
 ```
@@ -90,6 +109,9 @@ properties:
   difficulty_prior:  { oneOf: [ { type: number, minimum: 0.0,
                        maximum: 1.0 },
                        { type: string, const: not_established } ] }    # OPTIONAL
+  planted_defect:    { }                                               # REQUIRED
+  confirmation:      { $ref: Constraint }                              # OPTIONAL
+  generator:         { type: string }                                  # OPTIONAL
 ```
 
 Note: an absent `difficulty_prior` is equivalent to `"not_established"`, not to `0.0`.
@@ -116,6 +138,7 @@ properties:
   target:     { type: string, minLength: 1 }         # REQUIRED
   expected:   { }                                    # REQUIRED
   veto:       { type: boolean, default: false }      # OPTIONAL
+  defect_classes: { type: array, items: { type: string } }  # OPTIONAL
 ```
 
 Note: the `expected` field's shape is validator-specific. A schema MAY use a permissive
@@ -133,6 +156,7 @@ properties:
   review_timeout:         { type: string }                             # OPTIONAL
   on_timeout:             { type: string, enum: [block, escalate],
                             default: block }                           # OPTIONAL
+  defect_classes:         { type: array, items: { type: string } }     # OPTIONAL
 ```
 
 *Cross-field rules:*
@@ -172,6 +196,17 @@ properties:
 - When `purpose` is `stability`: `judge` and `samples` REQUIRED, `judges` MUST NOT
   appear.
 
+**ConsensusConfig**
+```
+properties:
+  method:           { type: string, minLength: 1 }                       # REQUIRED
+  threshold:        { type: string }                                     # OPTIONAL
+  min_agreement:    { type: number, minimum: 0.0, maximum: 1.0 }         # OPTIONAL
+  on_disagreement:  { type: string, enum: [human_review, fail, flag],
+                      default: human_review }                            # OPTIONAL
+  min_qualified:    { type: integer, minimum: 1 }                        # OPTIONAL
+```
+
 **Dataset**
 ```
 properties:
@@ -198,6 +233,8 @@ properties:
   retry:            { $ref: RetryConfig }                 # OPTIONAL
   scheduling:       { type: string }                      # OPTIONAL
   parallelization:  { type: integer, minimum: 1 }         # OPTIONAL
+  on_seeded_control_miss: { type: string, enum: [skip_class, halt_run],
+                            default: skip_class }         # OPTIONAL
 ```
 
 **RetryConfig**
@@ -248,9 +285,12 @@ by a conformant implementation at configuration load time:
 | Baseline reproducibility | Volume X | A Baseline MUST reference a Dataset version and Contract version that are still recoverable. |
 | Composition conflict surfacing | Volume VII | When `extends` produces conflicting clause values, the implementation MUST surface the conflict, not silently resolve it. |
 | Multi-Judge purpose consistency | Volume VI | An independence-mode MultiJudge with judges from the same model family SHOULD produce a warning. |
-| Result disposition validity | Appendix C §C.7 | `verdict` MUST be `null` when `disposition` is `awaiting_review` or `oracle_unavailable`, and MUST be `pass` or `fail` otherwise. `confidence` MUST NOT be bare `null` under any disposition. |
+| Result disposition validity | Appendix C §C.7 | `verdict` MUST be `null` when `disposition` is `awaiting_review`, `oracle_unavailable`, or `not_assessed`, and MUST be `pass` or `fail` otherwise. `confidence` MUST NOT be bare `null` under any disposition. |
 | Seeded Control invalidation scope | Volume VIII; Appendix C §C.3 | A missed Seeded Control invalidates only the Results its Oracle produced in the same run sharing its `defect_class`, by default. Full-run invalidation requires a Project to declare it explicitly, with a recorded, non-empty reason. |
-| Difficulty prior provenance | Volume VIII | `difficulty_prior` MUST only be set or updated from Human Reviewer assessment, never from the pass/fail outcome of the Oracle(s) the control tests. |
+| Difficulty prior provenance | Volume VIII | A `difficulty_prior` (on a DefectClassConfig or a SeededControlConfig) MUST be established from reference Oracles independent of the Oracle(s) the controls test, or from Human Reviewers, and MUST NOT be set or updated from the outcome of the Oracle(s) under test. |
+| Seeded Control confirmation | Volume VIII; Appendix C §C.3 | Where a SeededControlConfig's `confirmation` fails, the control's outcome MUST be reported as `invalid` for that run, not as `caught` or `missed`. |
+| Defect class reference | Volume VIII | Where a Project declares `defect_classes`, every `seeded_control.defect_class` and every clause-level `defect_classes` entry SHOULD name a declared class. |
+| Panel reporting | Volume VI; Appendix C §C.7 | A Result produced by a Multi Judge configuration MUST carry `panel`. Below `min_qualified` (or below the full panel when it is absent), the panel's Results for the affected clauses MUST be `not_assessed`. |
 | Aggregate Basis reporting | Volume I, Ch. 6; Appendix C §C.3 | Every aggregate a Quality Gate reads MUST be reported with its Aggregate Basis. Where `min_basis` is declared and not met, the Gate MUST NOT pass, and the reason MUST be reported as insufficient basis, not as a threshold failure. |
 | Deletion referential integrity | Appendix C §C.8 | `DELETE` on an Environment, Dataset, or Contract still referenced by a Baseline, Snapshot, or Report MUST be rejected or preserved as a frozen record, never silently broken. |
 

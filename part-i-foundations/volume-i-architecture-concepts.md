@@ -642,6 +642,13 @@ estimates the system's behavior is a statistical question about the sample, comm
 expressed as a margin of error at a confidence level. An implementation MAY report such
 an interval alongside an aggregate; it MUST NOT label it Confidence.
 
+Aggregate Basis and the aggregate declaration Volume VI requires of a Judge's Result are
+one rule applied at two levels, informally called **honest denominators**: any number
+produced by dividing must say what it was divided by. A Judge's score over a dozen
+separable claims must declare that it is a mean over those claims; a pass rate over a
+Suite must state how many Results and Scenarios it rests on. The phrase is a convenient
+name for the rule, not an additional requirement.
+
 This specification does not say how large an Aggregate Basis is enough, or which
 statistical method should derive one. That depends on the stakes, on how results are
 weighted, and on how independent the Scenarios are, and it is a Project's own decision
@@ -689,7 +696,8 @@ Workflow (Volume XII) is the only path through which a failing Gate can still re
 a "ship" outcome, and any such exception MUST be recorded as an explicit, auditable
 override rather than a quiet pass. A Gate reading an aggregate that includes any Result
 whose disposition is not `actionable` (Appendix C §C.7) — a Result still
-`awaiting_review`, or one whose Oracle was `oracle_unavailable` — MUST treat that Result
+`awaiting_review`, one whose Oracle was `oracle_unavailable`, or one `not_assessed`
+after a missed Seeded Control (Volume VIII) — MUST treat that Result
 as blocking by default; an unresolved or unreachable Oracle is not evidence of quality,
 regardless of how favorably every other Result in the aggregate reads. The same Gate is
 what a Report surfaces for human visibility (Volume XI) and what a CI/CD pipeline

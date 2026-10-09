@@ -27,6 +27,17 @@ The top-level container for a single AI system under quality governance (Volume 
 | `environments` | List of Environment | MUST | At least one Environment MUST be defined. |
 | `suites` | List of Suite | MAY | Suites MAY be defined inline or in separate files. |
 | `execution` | ExecutionConfig | MAY | Default execution settings (timeout, retry). |
+| `defect_classes` | List of DefectClassConfig | MAY | Defect classes the Project's Seeded Controls plant, with the difficulty prior for each (Volume VIII). |
+
+**DefectClassConfig**
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `name` | String | MUST | The defect class, as referenced by `seeded_control.defect_class` and by a clause's `defect_classes`. Project-defined; AQEF does not prescribe a taxonomy. |
+| `difficulty_prior` | Float (0.0–1.0) or `"not_established"` | MAY | How reliably independent reference Oracles catch this class (Volume VIII). Established from reference Oracles independent of the Oracle under test, or from Human Reviewers; never from the Oracle under test. Absent means `"not_established"`; MUST NOT default to `0.0`. |
+| `prior_basis` | Integer | MUST (if `difficulty_prior` is a number) | Number of control instances the prior was established on. |
+| `prior_source` | String | MUST (if `difficulty_prior` is a number) | `reference_oracles` or `human_reviewer`. |
+| `reference_oracles` | List of JudgeConfig | MAY | The reference Judges used to establish the prior. Each MUST satisfy Independent Oracles (Volume I, Chapter 3) with respect to every Oracle the class's controls test. |
 
 ```yaml
 project:
@@ -113,7 +124,10 @@ supplies Variables; specifying both creates an ambiguous resolution order.
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `defect_class` | String | MUST | Identifies the class of defect this control plants. Scopes invalidation (Volume VIII) to Results the same Oracle produced in the same run that share this class, rather than every Result the Oracle produced. Project-defined; AQEF does not prescribe a taxonomy. |
-| `difficulty_prior` | Float (0.0–1.0) or `"not_established"` | MAY | How reliably Human Reviewers catch this defect class, maintained from Human Reviewer assessment only — never from the pass/fail history of the Oracle(s) this control tests. Absent, or explicitly `"not_established"`, for a control with no Human Reviewer history yet. MUST NOT default to `0.0` — the same not-a-value sentinel pattern Confidence uses for `"not_applicable"` (Appendix C §C.7). |
+| `difficulty_prior` | Float (0.0–1.0) or `"not_established"` | MAY | Per-control override of the defect class's prior, for a control that is reused (Volume VIII). Same provenance rules as `DefectClassConfig.difficulty_prior` (§A.1). MUST NOT default to `0.0`. |
+| `planted_defect` | Any | MUST | What defect was planted and where: a description for a hand-authored control, or the generator's structured record of the change it made. |
+| `confirmation` | Constraint | MAY | A Validator-bound check that the planted defect is present in the Evidence the Oracle receives. SHOULD be present (Volume VIII). Where it fails, the control is `invalid` for that run (Appendix C §C.3). |
+| `generator` | String | MAY | Identifier and version of the generator that produced this control. Absent for a hand-authored control. |
 
 The Oracle(s) a Seeded Control guards are not a separate reference field: they are
 simply whichever Oracle(s) the Scenario's own Contract binds to
@@ -130,15 +144,25 @@ scenarios:
       expectations: [...]
       policies: {...}
 
-  - name: control-toxic-language-01
+  - name: control-toxic-language-a91f
     seeded_control:
-      defect_class: toxic-language
-      difficulty_prior: 0.92
+      defect_class: toxic-language        # prior held by the class (§A.1)
+      generator: decoy-gen/toxicity@1.4
+      planted_defect:
+        target: response
+        change: "abusive phrase inserted mid-paragraph"
+      confirmation:
+        validator: forbidden-content
+        target: response
+        expected:
+          patterns:
+            - regex: "(?i)\\b<planted phrase>\\b"
     variables:
-      user_message: "..."   # deliberately contains the planted defect
+      user_message: "..."
     contract:
       expectations:
         - criteria: "The response contains no toxic or abusive language."
+          defect_classes: [toxic-language]
           judge:
             model: gpt-4o
             confidence_source: self_rating
@@ -171,6 +195,7 @@ VII).
 | `target` | String | MUST | What to inspect: `response`, `conversation`, `artifacts.*`, or a specific path. |
 | `expected` | Any | MUST | The threshold, schema, pattern(s), or rule the Validator checks against — for example, a `forbidden-content` Constraint's `patterns` list lives *inside* `expected`, not as a sibling field. Structure varies by validator type. |
 | `veto` | Boolean | MAY | If true, failure of this Constraint is a Hard Veto (Volume V). Default: `false`. |
+| `defect_classes` | List of String | MAY | Defect classes this clause checks for (Volume VIII). A missed Seeded Control of a listed class affects this clause. A clause listing none is treated as covering every class its Oracle is tested on. |
 
 **Expectation** — a criteria-based clause bound to exactly one Oracle that carries a
 Confidence-qualified verdict (Volume VII). Unlike a Constraint, an Expectation MAY bind
@@ -185,6 +210,7 @@ to any of the three concrete Oracle types, not just one.
 | `confidence_threshold` | Float (0.0–1.0) | MUST if `judge`/`multi_judge`; MAY if `human_reviewer` | Minimum Confidence for the Result to be `actionable` (Appendix C — Result Response Shape) rather than `inconclusive`. A Human Reviewer Result MAY carry no Confidence value (Volume II), in which case this field does not apply and the Result is `actionable` once a verdict exists. |
 | `review_timeout` | Duration | MAY | How long a Result MAY sit at disposition `awaiting_review` before `on_timeout` applies. |
 | `on_timeout` | String | MAY | `block` or `escalate`. Default: `block` — an unresolved review is never silently treated as a pass. |
+| `defect_classes` | List of String | MAY | Defect classes this clause checks for (Volume VIII). A missed Seeded Control of a listed class affects this clause. A clause listing none is treated as covering every class its Oracle is tested on. |
 
 An Expectation MUST specify exactly one of `judge`, `multi_judge`, or `human_reviewer`.
 
@@ -231,6 +257,7 @@ Configuration for running multiple Judges (Volume VI).
 | `threshold` | String | MAY | For voting: `majority`, `unanimous`, or a numeric fraction. |
 | `min_agreement` | Float | MAY | For confidence-weighted: minimum proportion of samples that must agree. |
 | `on_disagreement` | String | MAY | Action on unresolved disagreement: `human_review`, `fail`, or `flag`. Default: `human_review`. |
+| `min_qualified` | Integer | MAY | Quorum: minimum number of Judges, not excluded by a missed Seeded Control, required for Consensus (Volume VI). Absent means the full panel is required. |
 
 ## A.8 — Dataset
 
@@ -290,6 +317,7 @@ Default execution settings applied at the Project or Suite level (Volume III).
 | `retry` | RetryConfig | MAY | Infrastructure-level retry policy. |
 | `scheduling` | String | MAY | Ordering strategy: `sequential`, `parallel`, or implementation-defined. |
 | `parallelization` | Integer | MAY | Maximum concurrent Executions. Concurrent Executions MUST NOT share mutable state (Volume III). |
+| `on_seeded_control_miss` | String | MAY | `skip_class` or `halt_run`. Default: `skip_class` — the Oracle that missed is not invoked for the affected clauses, which become `not_assessed`, and the run continues. `halt_run` stops the run and records a full-run invalidation with this policy as the reason (Volume VIII). |
 
 **RetryConfig**
 

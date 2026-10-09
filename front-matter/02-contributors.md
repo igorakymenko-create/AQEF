@@ -18,4 +18,6 @@ statement of what failure costs is what makes a score actionable.
 [Victor Ematin](https://www.linkedin.com/in/victor-ematin/) — external feedback that
 shaped Seeded Controls (Volume VIII, v0.28): the observation that evaluation tooling can
 stay green and silent on a known, deliberately planted defect motivated testing the
-Oracle itself, not only the system under test.
+Oracle itself, not only the system under test. The phrase "honest
+denominators" (Volume I, Chapter 6) is also his, as is the practice
+behind generated, exposure-retired Seeded Controls (Volume VIII, v0.32).

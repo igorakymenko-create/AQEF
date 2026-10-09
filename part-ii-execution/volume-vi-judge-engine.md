@@ -65,7 +65,8 @@ being wrong is exactly the failure it conceals. This is the same requirement
 about what it does and does not cover, rather than leaving a consumer to infer it from a
 number's shape. Volume VII's Expectations section states the authoring-side preference
 that follows from this: decompose the clause where the assertions differ in what their
-failure costs.
+failure costs. The same rule applies to aggregates across many Results (honest
+denominators, Volume I, Chapter 6 — Aggregate Basis).
 
 ## Multi Judge
 
@@ -94,6 +95,18 @@ how differs by the reason Multi Judge was configured (above): disagreement among
 independent Judges says something about the Conversation; variance among repeated
 samples of the same Judge says something about that Judge's own stability instead, and
 the latter is closer to a Calibration concern than a Consensus one.
+
+A Judge that has missed a Seeded Control (Volume VIII) does not take part in Consensus
+for the affected clauses in that run. A Multi Judge configuration MAY declare a quorum
+(`min_qualified`, Appendix A §A.7): the minimum number of qualified Judges the panel
+needs. At or above it, Consensus proceeds among the qualified Judges; below it, the
+panel's Results for the affected clauses are `not_assessed`. Without a declared quorum
+the full panel is required, so any exclusion falls below it. Either way, a Result
+produced by a panel MUST state how many Judges were configured and how many were counted
+(`panel`, Appendix C §C.7). A consensus of two out of three is a different finding from a
+consensus of three, and the honest-denominator rule (Volume I, Chapter 6) applies to a
+panel as it does to an aggregate. In a stability configuration, where one Judge is
+sampled repeatedly, a miss excludes every sample.
 
 ## Voting
 
@@ -150,7 +163,7 @@ class of defect at all, right now.
 ## Human Review
 
 Human Review is the process that invokes the Human Reviewer Oracle (Volume II) — this
-Volume does not define a separate concept. Five distinct triggers converge on the same
+Volume does not define a separate concept. Six distinct triggers converge on the same
 Oracle: an Expectation MAY bind directly to a Human Reviewer instead of a Judge, for
 Scenarios where policy requires human sign-off regardless of what any Judge would
 conclude (Volume VII); a Contract MAY require Human Review routinely for a given
@@ -159,7 +172,9 @@ Confidence Model routes a Judge Result below its Contract's Confidence threshold
 Human Review before it is allowed to affect an aggregate; unresolved Consensus
 disagreement among independent Judges is itself grounds for Human Review, above; and a
 Human Reviewer's Results serve as the reference Calibration and Judge Drift (below)
-measure against. A Human Reviewer's own Result MAY carry a Confidence value (Volume II),
+measure against. The sixth is narrower: a Human Reviewer settles a Seeded Control that
+no independent reference Oracle catches, before that control is used to gate an Oracle
+(Volume VIII). A Human Reviewer's own Result MAY carry a Confidence value (Volume II),
 assessed the same way a Judge's is, but a Human Reviewer is never itself subject to
 Calibration or Judge Drift tracking — those measure a Judge against a Human Reviewer as
 ground truth, not the reverse.
