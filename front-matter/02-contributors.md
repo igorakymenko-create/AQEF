@@ -21,3 +21,7 @@ stay green and silent on a known, deliberately planted defect motivated testing 
 Oracle itself, not only the system under test. The phrase "honest
 denominators" (Volume I, Chapter 6) is also his, as is the practice
 behind generated, exposure-retired Seeded Controls (Volume VIII, v0.32).
+
+[Tatyana Arbouzova](https://www.linkedin.com/in/tatyana-arbouzova-leader/) — a public
+discussion of AI agents acting outside their test environments that shaped the Action
+Boundary, Unauthorized Action, and Blocked-Path Testing (Volumes III, VIII, IX, v0.33).

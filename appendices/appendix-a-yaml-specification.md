@@ -63,6 +63,7 @@ during an Execution.
 | `model_version` | String | MUST | Pinned model identifier. |
 | `prompt_version` | String | MUST | Pinned prompt/instruction version. |
 | `tool_configuration` | ToolConfig or null | MUST | Tool set available to the subject. Null for Single LLM. |
+| `action_boundary` | ActionBoundary | MUST (if `tool_configuration` is not null) | What the subject may reach during an Execution (Volume III). Everything outside it is denied by default where the harness controls access. |
 | `infra_target` | String | MUST | Deployment target (region, cluster, endpoint). |
 
 ```yaml
@@ -86,6 +87,21 @@ environments:
 |---|---|---|---|
 | `name` | String | MUST | Tool identifier. |
 | `parameters` | Map of String → TypeDef | MUST | Parameter schema for tool-call validation. |
+
+**ActionBoundary**
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `enforced` | Boolean | MUST | `true` if the harness denies everything outside `entries`; `false` if it can only observe. A `false` boundary MUST be surfaced in Reports (Volume XI). |
+| `entries` | List of BoundaryEntry | MUST | Systems, endpoints, or tools the subject may reach. |
+
+**BoundaryEntry**
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `target` | String | MUST | Identifier or pattern of the system, endpoint, or tool. |
+| `kind` | String | MUST | `stub` (records only), `sandbox` (working copy, no effect outside the test), or `real`. |
+| `tripwire` | Boolean | MAY | Only for `kind: stub`. Marks a deliberate tempting shortcut (Volume VIII). Any touch is recorded and fails the Boundary Validator. Default: `false`. |
 
 ## A.3 — Suite
 
@@ -191,7 +207,7 @@ VII).
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `validator` | String | MUST | Validator type: `schema`, `tool-call`, `structural`, `forbidden-content`, `latency`, `cost`, or a Custom Validator name. |
+| `validator` | String | MUST | Validator type: `schema`, `tool-call`, `structural`, `forbidden-content`, `latency`, `cost`, `boundary`, or a Custom Validator name. |
 | `target` | String | MUST | What to inspect: `response`, `conversation`, `artifacts.*`, or a specific path. |
 | `expected` | Any | MUST | The threshold, schema, pattern(s), or rule the Validator checks against — for example, a `forbidden-content` Constraint's `patterns` list lives *inside* `expected`, not as a sibling field. Structure varies by validator type. |
 | `veto` | Boolean | MAY | If true, failure of this Constraint is a Hard Veto (Volume V). Default: `false`. |

@@ -1,6 +1,6 @@
 # 1. Revision History
 
-**Status:** current through v0.32.
+**Status:** current through v0.33.
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
@@ -18,3 +18,4 @@
 | 0.31.1 | 2026-10 | Igor Akymenko | Acknowledgement added for Roman Hurakov (external feedback behind v0.27). No normative change. |
 | 0.31.2 | 2026-10 | Igor Akymenko | "Honest denominators" added as the informal name for the rule shared by Judge aggregate declaration and Aggregate Basis (Volume I, Chapter 6; Volume VI; Appendix D); phrase credited to Victor Ematin. No normative change. |
 | 0.32 | 2026-10 | Igor Akymenko | Seeded Controls revised (Volume VIII): controls are generated and retired on exposure; planted defects are recorded and confirmed by construction (`invalid` when absent from the Evidence); the difficulty prior moves to the defect class and is established by independent reference Oracles; an Oracle that misses stops being invoked for the affected clauses (`not_assessed`, new disposition) and is requalified before reuse; Multi Judge panels declare a quorum and report panel size. Clauses may declare `defect_classes`. Schema and API updated (Appendix A, B, C). Arising from external practitioner feedback. |
+| 0.33 | 2026-10 | Igor Akymenko | Agents that act: an Environment with tools declares an Action Boundary (Volume III), denied by default outside it, with every crossing attempt recorded whether or not blocked; built-in Boundary Validator (Volume V); Unauthorized Action added as a Safety category (Volume IX); Blocked-Path Testing with Tripwires added (Volume VIII). Schema updated (Appendix A, B); example H.11. |

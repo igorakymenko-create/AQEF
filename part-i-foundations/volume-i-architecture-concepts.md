@@ -154,7 +154,8 @@ classical performance and load testing (Volume IX).
 
 Whether the system's behavior stays within acceptable bounds regardless of how it is
 prompted: refusing harmful requests, resisting prompt injection and jailbreak attempts,
-avoiding disallowed content categories. Safety is unusual among these six dimensions in
+avoiding disallowed content categories, and, for a system that acts, staying within the
+actions it is permitted to take (Volume IX, Unauthorized Action). Safety is unusual among these six dimensions in
 that it typically needs both concrete Oracle types working together — hard,
 non-negotiable rules that a Validator can enforce unconditionally, and nuanced,
 context-dependent judgment of borderline cases that only a Judge, often backed by a
@@ -857,6 +858,9 @@ most AI Agents call tools — but AQEF treats them as independent concerns so th
 Scenario can specify precisely which mechanisms actually apply to it, rather than
 inheriting an entire pattern's worth of assumptions from a superficially similar one.
 
+A Tool Calling or AI Agent Scenario runs in an Environment that declares an Action
+Boundary (Volume III): checking which tool was called and with what arguments says
+nothing about whether the call should have been possible at all.
 ### Hybrid Systems
 
 Real systems routinely combine several of the above within a single Project, or even a

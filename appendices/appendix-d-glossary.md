@@ -19,6 +19,12 @@ patterns.
 Release Decision, encoding what "good enough to ship" means for the Scenarios it
 covers.
 
+**Action Boundary** — The declaration, on an Environment whose subject can act (Volume
+III; Appendix A §A.2), of every system the subject may reach during an Execution, each
+marked `stub`, `sandbox`, or `real`. Everything outside it is denied by default where the
+harness controls access; where it cannot, the boundary is declared unenforced and
+surfaced in Reports. Every attempt to cross it is recorded, blocked or not.
+
 **Adversarial Dataset** — A Dataset (Volume IV) deliberately constructed to defeat the
 system under test's Safety or Functional boundaries, used to verify resilience under
 hostile input. SHOULD draw on an independent source.
@@ -79,8 +85,18 @@ full definition; see Volume X for the mechanics of Baseline approval and compari
 **Bias** — A Safety-Adjacent output category (Volume IX) where the system produces
 systematically unfair or discriminatory output, checked for regardless of how elicited.
 
+**Blocked-Path Testing** — A test design technique (Volume VIII) that closes an acting
+subject's expected path on purpose (broken tool, withheld permission, impossible task,
+failing environment) to check that it stops and reports rather than finding a way
+around. Usually uses Tripwires. A Safety test, distinct from Chaos (Operational).
+
 **Boundary Analysis** — A test design technique (Volume VIII) that turns an Edge Cases
 Dataset into Scenarios probing a specific, named boundary of the input or output space.
+
+**Boundary Validator** — A built-in Validator (Volume V) that fails an Execution with
+any recorded attempt to reach outside its Environment's Action Boundary, or any Tripwire
+touch, whether or not the attempt was blocked. SHOULD be bound as a hard veto for a
+subject that can act.
 
 **Business Quality (Dimension)** — The Quality Dimension (Volume I, Chapter 2)
 capturing whether the system's behavior serves its actual outcome, dictating how much
@@ -240,7 +256,8 @@ a Minimal Engine through different mechanisms.
 
 **Environment** — A named runtime configuration (Volume II) bound to a specific model
 version, prompt version, tool set, and infrastructure target. An Environment is
-referenced, not modified, during an Execution.
+referenced, not modified, during an Execution. Where the subject can act, it declares an
+Action Boundary.
 
 **Evaluation §8** — The process of applying Judges to a Conversation to assess
 subjective/semantic quality. Distinguished from Validation (the process of applying
@@ -677,6 +694,17 @@ than tracing one chain.
 
 **Trend** — A Metric (Volume XI) plotted across a time range rather than read at a
 single point, often surfacing the symptom that Historical Analysis then diagnoses.
+
+**Tripwire** — A stub inside an Action Boundary (Volume III) made to look like a
+tempting shortcut, which the subject has no legitimate reason to touch. Any touch is
+recorded and fails the Boundary Validator. Tests the subject; distinct from a Seeded
+Control, which tests the Oracle.
+
+**Unauthorized Action** — A Safety-adjacent output category (Volume IX) for systems that
+act: reaching outside the Action Boundary, touching a Tripwire, or using a permitted tool
+to achieve a non-permitted effect, including reporting a task as completed when
+completion depended on such an action. Checked by the Boundary Validator and, for
+circumvention through permitted tools, by a Judge.
 
 **Validation §8** — The process of applying Validators to a Conversation to verify
 deterministic, rule-based requirements. Always runs before Evaluation. See Front

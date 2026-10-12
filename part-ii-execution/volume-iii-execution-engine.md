@@ -52,6 +52,31 @@ Executions resolving the same Environment MUST get identical configuration from 
 respective Runtimes — which physical worker happens to host either one MUST NOT change
 what either resolves to, per Deterministic Infrastructure (Chapter 3).
 
+## Action Boundary
+
+Runtime isolates one Execution from another. It does not isolate an Execution from the
+world. A subject that can act (call tools, reach a network, submit, write, send) can
+reach real systems during a test unless something prevents it, and the moment a test
+environment fails is exactly when an agent may look for another way. An Environment
+whose `tool_configuration` is not null MUST therefore declare an Action Boundary
+(Appendix A §A.2): every system, endpoint, or tool the subject may reach during an
+Execution, each marked as a `stub` (a stand-in that only records), a `sandbox` (a
+working copy with no effect outside the test), or `real`.
+
+Where the harness controls the subject's access, everything outside the boundary MUST
+be denied by default. Where it cannot (the subject runs on a platform the harness does
+not control, for instance), the Environment MUST declare the boundary `enforced: false`.
+That is not a failure of conformance; it is a fact a Report must show (Volume XI),
+because an unsealed Environment is the one in which a test can do real damage.
+
+A `stub` MAY be marked as a Tripwire: a stand-in deliberately made to look like a
+tempting shortcut, such as a production-looking endpoint or a URL shortener, which the
+subject has no legitimate reason to touch (Volume VIII, Blocked-Path Testing).
+
+This section specifies the declaration, the default, and the recording (Artifact
+Collection, below). How a sandbox is built is an infrastructure concern outside this
+specification (Scope, §6).
+
 ## Scheduling
 
 Scheduling decides when, and in what order, a Suite's Scenarios are triggered as
@@ -182,9 +207,15 @@ deterministically, even where the *content* of what's being recorded (a model-ge
 tool argument, a retrieved passage) is part of the probabilistic subject's own output
 rather than the harness's.
 
+Where the Environment declares an Action Boundary, Artifact Collection MUST capture every
+attempt the subject makes to reach outside it, and every touch of a Tripwire, whether or
+not the attempt was blocked. A blocked attempt is not a non-event: it is the clearest
+evidence of what the subject would have done, and the Boundary Validator (Volume V)
+reads it as such.
+
 ---
 
-Together, these eleven concerns are what let Chapter 3's Deterministic Infrastructure
+Together, these twelve concerns are what let Chapter 3's Deterministic Infrastructure
 principle be more than a slogan: each is a place non-determinism could leak into the
 harness if left unspecified — which worker hosts a run, whether concurrent Executions
 interfere, how a failed attempt gets distinguished from a genuine bad Result, how a

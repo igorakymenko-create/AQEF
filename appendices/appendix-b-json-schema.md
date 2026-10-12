@@ -20,6 +20,8 @@ to a Domain Model entity (Volume II):
 |---|---|---|
 | Project | A.1 | II |
 | Environment | A.2 | II |
+| ActionBoundary | A.2 | III |
+| BoundaryEntry | A.2 | III |
 | Suite | A.3 | II |
 | Scenario | A.4 | II |
 | SeededControlConfig | A.4 | VIII |
@@ -78,8 +80,28 @@ properties:
   model_version:       { type: string, minLength: 1 }        # REQUIRED
   prompt_version:      { type: string, minLength: 1 }        # REQUIRED
   tool_configuration:  { oneOf: [ToolConfig, null] }         # REQUIRED
+  action_boundary:     { $ref: ActionBoundary }              # CONDITIONAL
   infra_target:        { type: string, minLength: 1 }        # REQUIRED
 ```
+
+*Cross-field rule:* `action_boundary` is REQUIRED when `tool_configuration` is not null.
+
+**ActionBoundary**
+```
+properties:
+  enforced:  { type: boolean }                                   # REQUIRED
+  entries:   { type: array, items: BoundaryEntry, minItems: 1 }  # REQUIRED
+```
+
+**BoundaryEntry**
+```
+properties:
+  target:    { type: string, minLength: 1 }                      # REQUIRED
+  kind:      { type: string, enum: [stub, sandbox, real] }       # REQUIRED
+  tripwire:  { type: boolean, default: false }                   # OPTIONAL
+```
+
+*Cross-field rule:* `tripwire: true` is valid only when `kind` is `stub`.
 
 **Suite**
 ```
@@ -292,6 +314,9 @@ by a conformant implementation at configuration load time:
 | Defect class reference | Volume VIII | Where a Project declares `defect_classes`, every `seeded_control.defect_class` and every clause-level `defect_classes` entry SHOULD name a declared class. |
 | Panel reporting | Volume VI; Appendix C §C.7 | A Result produced by a Multi Judge configuration MUST carry `panel`. Below `min_qualified` (or below the full panel when it is absent), the panel's Results for the affected clauses MUST be `not_assessed`. |
 | Aggregate Basis reporting | Volume I, Ch. 6; Appendix C §C.3 | Every aggregate a Quality Gate reads MUST be reported with its Aggregate Basis. Where `min_basis` is declared and not met, the Gate MUST NOT pass, and the reason MUST be reported as insufficient basis, not as a threshold failure. |
+| Action Boundary presence | Volume III | An Environment with a non-null `tool_configuration` MUST declare `action_boundary`. |
+| Boundary attempt capture | Volume III; Volume V | Every attempt to reach outside an Action Boundary, and every Tripwire touch, MUST be captured as an Artifact whether or not it was blocked, and MUST fail a bound Boundary Validator. |
+| Unenforced boundary reporting | Volume III; Volume XI | An Environment declaring `enforced: false` MUST be identified in every Report whose scope includes it. |
 | Deletion referential integrity | Appendix C §C.8 | `DELETE` on an Environment, Dataset, or Contract still referenced by a Baseline, Snapshot, or Report MUST be rejected or preserved as a frozen record, never silently broken. |
 
 ## B.4 — Extensibility

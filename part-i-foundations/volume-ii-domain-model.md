@@ -49,6 +49,9 @@ v2"). *Relationships:* owns Environments and Suites; scopes Baselines, Snapshots
 A named runtime configuration bound to a specific model version, prompt version, tool
 configuration, and infra target (e.g. `staging`, `prod-shadow-claude`). *Relationships:*
 belongs to a Project; every Execution MUST run inside exactly one Environment.
+Where the subject can act (it has a tool configuration), the Environment also declares an
+Action Boundary: which systems the subject may reach, and whether each is a stand-in or
+real (Volume III).
 
 **Suite**
 A named, curated collection of Scenarios grouped by testing purpose (e.g. "Regression

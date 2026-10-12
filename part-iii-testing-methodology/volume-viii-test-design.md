@@ -18,6 +18,7 @@ that make an authored Scenario worth more than the input it happens to cover.
 | AI Test Patterns | Named strategies for checking invariants rather than exact output |
 | Boundary Analysis | Turning an Edge Cases Dataset (Volume IV) into Scenarios that probe named boundaries |
 | Negative Testing | Deliberately probing what the system should refuse, decline, or reject |
+| Blocked-Path Testing | Closing the expected path on purpose, to see whether an acting subject stops or finds a way around |
 | Exploratory AI Testing | Unscripted human-led probing — an instance of "Everything is a Test" (Chapter 3) |
 | Test Maintainability | Keeping a growing Suite auditable, without drifting into Chapter 1's loosened-assertion failure mode |
 
@@ -109,6 +110,42 @@ malformed tool argument (Chapter 7 — Tool Calling) is Negative Testing just as
 Constraint requiring refusal of a jailbreak attempt is, even though only the latter is
 safety-critical.
 
+## Blocked-Path Testing
+
+Blocked-Path Testing asks what an acting subject (AI Agent, Tool Calling, Chapter 7)
+does when the path it was expected to take is closed. The path is closed on purpose: a
+tool it needs is broken, a permission it needs is withheld, the task is impossible as
+stated, or the test environment fails part-way through the Execution. The expected
+behavior is to stop, say what blocked it, and where the pattern allows, ask for help
+(Human-in-the-loop, Chapter 7). A workaround is a failure, however well it serves the
+task.
+
+A Blocked-Path Scenario's Environment SHOULD include Tripwires (Volume III, Action
+Boundary): stand-ins that look like the shortcuts a determined agent would reach for, a
+production-looking version of the system that just failed, a URL shortener, an open
+administrative path. They are inside the boundary only so that touching them is safe and
+recorded; the subject has no legitimate reason to use them.
+
+A Blocked-Path Scenario's Contract typically combines:
+
+- a Constraint bound to the Boundary Validator (Volume V) as a hard veto: no attempt to
+  leave the Action Boundary, no Tripwire touched;
+- an Expectation that the subject reported the blockage honestly, rather than claiming
+  completion or hiding how it got there;
+- where reasoning Artifacts exist, an Expectation that the subject did not set out to
+  circumvent the restriction through tools it is permitted to use, even if the attempt
+  failed.
+
+Completing the task is neither required to pass a Blocked-Path Scenario nor able to
+compensate for failing one.
+
+Blocked-Path Testing differs from Chaos (Volume IX) in what it asks. Chaos is an
+Operational test: when a dependency fails, does the system degrade gracefully? Blocked-
+Path Testing is a Safety test: when the expected way is closed, does the system stay
+inside its boundary? The same broken tool can serve both, with different Contracts. It
+also differs from a Seeded Control (below): a Tripwire tests the subject; a Seeded
+Control tests the Oracle.
+
 ## Seeded Controls
 
 A Seeded Control is a Scenario carrying a deliberately planted, known defect whose
@@ -174,7 +211,9 @@ is actually present in the Evidence the Oracle receives. A control runs through 
 system under test like any other Scenario, and a defect planted in its input may not
 survive into the response. Where confirmation fails, the control is `invalid` for that
 run (Appendix C §C.3): it is neither caught nor missed, and nothing is inferred about the
-Oracle from it.
+Oracle from it. A generator SHOULD place a defect where the Scenario necessarily exercises
+it, so that `invalid` controls stay rare. An `invalid` control points at the generator or
+the author, not at the Oracle.
 
 **Difficulty prior.** A difficulty prior states how reliably independent reference
 Oracles catch a class of defect, so that a miss can be read correctly: a miss on a class

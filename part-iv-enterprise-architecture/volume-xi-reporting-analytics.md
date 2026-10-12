@@ -34,7 +34,10 @@ raw data a reader would have to reconstruct by hand:
 - the Aggregate Basis of every aggregate a Quality Gate read (Chapter 6): how many
   Results, from how many distinct Scenarios and Executions, so a reader can tell a pass
   rate over twenty Scenarios from the same pass rate over six hundred.
-
+- every Environment in the Report's scope whose Action Boundary is declared
+  `enforced: false` (Volume III), and every recorded attempt to cross a boundary or
+  touch a Tripwire, blocked or not: an unsealed Environment and a contained attempt are
+  both things a reader must not have to discover from raw Artifacts.
 A Report that omits these is not wrong, but it is incomplete in a way a reader has no way
 to notice from the Report alone — precisely the failure mode surfacing them by name is
 meant to prevent.

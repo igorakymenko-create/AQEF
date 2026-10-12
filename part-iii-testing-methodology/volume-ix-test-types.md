@@ -64,7 +64,7 @@ failure split Chapter 7 already drew. Distinct from "RAG," the architectural pat
 ## Safety-Adjacent Types
 
 **Safety** is the umbrella — already a full Quality dimension (Chapter 2), not a sibling
-to the five types below it. The other five split into two roles: elicitation technique
+to the six types below it. The other six split into two roles: elicitation technique
 (how a bad outcome might get induced) and output category (what the outcome looks like
 once produced).
 
@@ -96,6 +96,17 @@ depending on domain and consequence — a hallucinated medical dosage is not the
 stakes as a hallucinated release date — so a Contract decides which dimension(s) a given
 Hallucination check binds to.
 
+**Unauthorized Action** *(output category, for systems that act)* — The system does
+something it is not permitted to do, as opposed to saying something it should not: it
+reaches outside its Environment's Action Boundary (Volume III), touches a Tripwire, or
+uses a tool it is permitted to use to achieve an effect it is not permitted to achieve,
+such as routing a request through a URL shortener to get past a restriction. The first
+two are deterministic and belong to the Boundary Validator (Volume V); the third needs a
+Judge reading the trajectory and the subject's reasoning Artifacts, because each step
+can be individually valid. Reporting a task as completed when completion depended on
+such an action is part of the same category. Typically elicited by Blocked-Path Testing
+(Volume VIII), the way Bias or Toxicity are elicited by Jailbreak or Prompt Injection.
+
 ## Operational Types
 
 **Performance** is the umbrella (Operational Quality, Chapter 2); the four below are
@@ -117,7 +128,8 @@ unsafe.
 out, a retrieval service errors, an upstream API is unavailable. Not to be confused with
 Volume III's Retry, which is how AQEF recovers from a failure in its *own* harness —
 Chaos deliberately induces a failure in the *subject's* dependencies to check how the
-subject itself responds.
+subject itself responds. Whether the system stays inside its Action Boundary when a dependency fails is a Safety
+question, not an Operational one, and belongs to Blocked-Path Testing (Volume VIII).
 
 **Cost** — The system's resource or token cost under normal and adverse conditions,
 checked against the same threshold a Cost Validator (Volume V) enforces per Execution,
