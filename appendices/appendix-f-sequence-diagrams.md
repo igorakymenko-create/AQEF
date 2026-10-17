@@ -211,7 +211,7 @@ sequenceDiagram
         VE-->>PR: Repeatability check passed (evidence, not proof)
         PR->>PS: Register plugin (version-pinned)
         PS-->>PA: Plugin available for use
-        note over PA,PS: Historical Results produced by v1.0.0 remain valid<br/>even if v2.0.0 is later registered or v1.0.0 is deprecated
+        note over PA,PS: Results from v1.0.0 stay valid after a new version or deprecation
     else Any output differs
         VE-->>PR: REJECTED — not deterministic
         PR-->>PA: Rejection with evidence

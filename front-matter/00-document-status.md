@@ -7,7 +7,7 @@
 | Property | Value |
 |---|---|
 | Status | Working Draft |
-| Version | 0.38 |
+| Version | 0.39 |
 | Date | 2026-10 |
 | Maturity | Draft — not for implementation |
 
@@ -37,9 +37,9 @@ consensus position of the software testing profession — no such consensus on A
 currently exists, and this document does not claim to speak for one.
 
 What it offers instead is an argument made explicitly enough to be disagreed with
-precisely. Every cross-cutting design decision behind the terminology and the model is
-recorded with its reasoning rather than presented as settled fact, and each is open to
-being shown wrong. Where this document uses normative language (§9), MUST and SHOULD
+precisely. The design decisions behind the terminology and the model were made
+deliberately, the text gives their reasons where a reader needs them, and each is open
+to being shown wrong. Where this document uses normative language (§9), MUST and SHOULD
 constrain an implementation that chooses to claim Conformance (§10) — they are not a
 claim of authority over how any person, team, or organization ought to work.
 

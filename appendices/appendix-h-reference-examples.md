@@ -139,10 +139,14 @@ environments:
     model_version: gpt-4o-2025-06-01
     prompt_version: v3.1.0-rag
     tool_configuration:
-      retriever:
-        index: helios-kb-v2
-        top_k: 5
-        similarity_threshold: 0.72
+      tools:
+        - name: retrieve            # Retrieval exposed to the subject as a tool
+          parameters: { query: string, top_k: integer }
+    action_boundary:              # Required whenever tools are configured (Volume III)
+      enforced: true
+      entries:
+        - target: "kb://helios-kb-v2"
+          kind: real              # Read-only knowledge base, pinned index version
     infra_target: us-east-1
 ```
 
@@ -241,6 +245,15 @@ environments:
           parameters: { email: string }
         - name: create_ticket
           parameters: { subject: string, priority: [low, medium, high] }
+    action_boundary:              # Required whenever tools are configured (Volume III)
+      enforced: true
+      entries:
+        - target: lookup_account
+          kind: sandbox           # Test copy of the account directory
+        - target: reset_password
+          kind: stub              # Records the call; resets no real account
+        - target: create_ticket
+          kind: stub
     infra_target: us-east-1
 ```
 
