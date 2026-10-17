@@ -159,11 +159,11 @@ array, one entry per Seeded Control Scenario in that run:
 | `reason` | String or `null` | MUST be present and non-empty when `invalidation_scope` is `full_run` (Volume VIII); `null` otherwise. |
 
 This is deliberately how a missed Seeded Control is surfaced, rather than as a change to
-Result's own shape: a Result's `disposition` already becomes `inconclusive` when a
-Seeded Control sharing its `defect_class` is missed in the same run, and Result's schema
-stays exactly as §C.7 already specifies it. `seeded_control_results` is what tells a
-caller *why* and at *what scope* — `inconclusive` alone does not distinguish a
-low-Confidence Result from one invalidated by a Seeded Control miss.
+the Results it affects: the Results an Oracle produced in the run for the affected
+clauses are invalidated (Volume VIII), but every one of them stays exactly as recorded.
+`seeded_control_results` is where the invalidation is recorded, once, and what tells a
+caller *why* and at *what scope*; each affected Result's derived `invalidated_by` field
+(§C.7) points back to the entry here.
 
 Where the Oracle was not invoked for clauses after a miss (Volume VIII, failing fast),
 their Results carry `not_assessed` (§C.7). Where the Project's `on_seeded_control_miss`
@@ -217,8 +217,8 @@ aggregate that Gate read (Volume I, Chapter 6):
 
 | Field | Type | Description |
 |---|---|---|
-| `results` | Integer | `actionable` Results the aggregate was computed from. |
-| `not_actionable` | Integer | Results in the same scope whose `disposition` is not `actionable` (§C.7). |
+| `results` | Integer | Effective Results whose effective state is `actionable` that the aggregate was computed from. |
+| `not_actionable` | Integer | Effective Results in the same scope whose effective state is not `actionable` (§C.7), invalidated ones included. |
 | `scenarios` | Integer | Distinct Scenarios those Results came from. |
 | `executions` | Integer | Distinct Executions those Results came from. |
 | `min_basis_met` | Boolean or `"not_declared"` | Whether the Gate's `min_basis` (Appendix A §A.10) was met. `"not_declared"` when the Gate sets none. Never bare `null`. |
@@ -234,7 +234,7 @@ Results are not counted in any field above.
 |---|---|---|---|
 | GET | `/projects/{project}/reports` | List Reports. | `read` |
 | GET | `/projects/{project}/reports/{report}` | Retrieve a frozen Report. | `read` |
-| POST | `/projects/{project}/releases` | Record a Release Decision. MUST be rejected if a Contract or Quality Gate in its scope changed after its `snapshot_id` was captured (Volume I, Chapter 6). Governed by Approval Workflow. | `release_decide` |
+| POST | `/projects/{project}/releases` | Record a Release Decision. MUST be rejected if a Contract, Quality Gate, or Environment in its scope differs from its `snapshot_id`, or if no Quality Gate applies to its scope (Volume I, Chapter 6). Governed by Approval Workflow. | `release_decide` |
 | GET | `/projects/{project}/releases` | List Release Decisions. | `read` |
 
 **Governance**
@@ -253,7 +253,7 @@ Results are not counted in any field above.
 | Method | Path | Description | Permission |
 |---|---|---|---|
 | GET | `/plugins` | List registered plugins. | `read` |
-| POST | `/plugins` | Register a plugin. Triggers mechanical verification for Validator Plugins. | `plugin_register` |
+| POST | `/plugins` | Register a plugin. Triggers the repeatability check for Validator Plugins (Volume XVI). | `plugin_register` |
 | GET | `/plugins/{plugin}` | Retrieve plugin details and version history. | `read` |
 | POST | `/plugins/{plugin}/deprecate` | Deprecate a plugin version. Historical Results remain valid. | `plugin_admin` |
 
@@ -322,11 +322,13 @@ configuration entities, but Result is runtime output, so it belongs here.
 | `clause` | String | MUST | The Contract clause applied: a stable reference to the clause within the Contract version in force for that Execution. |
 | `resolves` | String | MAY | The `id` of an earlier Result for the same `execution` and `clause` that this Result resolves (Volume I, Chapter 6 — Result Resolution). Absent otherwise. |
 | `oracle_type` | String | MUST | `validator`, `judge`, or `human_reviewer`. |
+| `oracle` | String | MUST | Which Oracle configuration produced this Result, with its version: a Validator's name and version (a plugin's included), a Judge's model and criteria configuration, or, for a Human Reviewer, the review role. The reviewing Person is recorded in `supporting_evidence`. What "the same Oracle" and "a requalified Oracle" mean (Volume I, Chapter 6; Volume VIII) is decided against this field. |
 | `verdict` | String or `null` | MUST | `pass` or `fail`. `null` only when `disposition` is `awaiting_review`, `oracle_unavailable`, or `not_assessed` — no verdict has been reached. |
 | `confidence` | Float (0.0–1.0) or `"not_applicable"` | MUST | Never omitted and never bare `null`. `"not_applicable"` for every Validator Result (Volume V), for a Human Reviewer Result whose review captures no Confidence (Volume II; Appendix A §A.5, `captures_confidence`), and for any Result with no verdict yet. |
 | `disposition` | String | MUST | `actionable`, `inconclusive`, `awaiting_review`, `oracle_unavailable`, or `not_assessed`. See below. |
 | `supporting_evidence` | Any | MUST | What the Oracle based its judgment on — the Conversation, Artifacts, or specific excerpts, per Oracle type. |
 | `panel` | Object | MUST (Multi Judge Results); absent otherwise | `{ configured: Integer, counted: Integer }` — Judges configured in the panel, and Judges whose verdicts were counted after exclusions (Volume VI). |
+| `invalidated_by` | String | Read-only, derived | Present in a response when a missed Seeded Control invalidates this Result for its run: the control's Scenario (§C.3, `seeded_control_results`). Never stored on the Result, and never set by a client. |
 
 **Disposition** is what closes the gap between "a Result exists" and "a Result is safe
 to use in the Aggregation Model" — the distinction Chapter 6 already requires but never
@@ -363,11 +365,13 @@ previously named as a field:
   kept, and a requalified Oracle MAY assess it later as a new Result, which resolves this
   one; this Result is not modified.
 
-A Quality Gate (Volume I, Chapter 6) reading an aggregate that includes any effective
-Result whose `disposition` is not `actionable` MUST treat that Result as blocking by
-default, unless the Gate's own configuration explicitly states otherwise. A Result that
-another Result `resolves` is not counted again (Volume I, Chapter 6 — Result
-Resolution).
+A Result's **effective state** is `invalidated` when `invalidated_by` is present, and its
+`disposition` otherwise (Volume I, Chapter 6 — Result Resolution). A Quality Gate
+reading an aggregate that includes any effective Result whose effective state is not
+`actionable` MUST treat that Result as blocking. There is no configuration that turns
+this off: the way past a non-`actionable` Result is to resolve it, or, for a blocking
+Gate, an override approved for that one Gate Result (Volume XII). A Result that another
+Result `resolves` is not counted again.
 
 ## C.8 — Deletion and Referential Integrity
 

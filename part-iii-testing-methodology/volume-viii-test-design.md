@@ -160,8 +160,11 @@ failed negative test is a defect in the system under test. A missed Seeded Contr
 a defect in the Oracle, and it says nothing about the system except that this run cannot
 be used to judge Results sharing the missed control's defect class. Because of this,
 when a Seeded Control's Oracle fails to detect the seeded defect, every other Result the
-Oracle produced in the same run that shares that defect class MUST take the disposition
-`inconclusive` rather than `actionable` (Chapter 6); a miss does not by default reach
+Oracle produced in the same run that shares that defect class is invalidated for that
+run: its recorded verdict and disposition stay as they were, but no Quality Gate counts
+it as `actionable` (Chapter 6 — Result Resolution). This applies to a Validator's Results
+as much as to a Judge's: `inconclusive` is reserved for an Oracle unsure of its own
+verdict, and a Validator never is; a miss does not by default reach
 Results outside that class, since the miss never put them in question. A Project MAY
 instead declare full-run invalidation for a given miss, but this is a deliberate
 decision, not the default, and MUST record a reason (Volume XII) — a narrow miss should
@@ -188,7 +191,7 @@ outside the miss's reach.
 **Failing fast.** Once an Oracle has missed a Seeded Control in a run, it SHOULD NOT be
 invoked for the affected clauses for the rest of that run. Their Results take the
 disposition `not_assessed` (Appendix C §C.7): no verdict, no assessment cost, and the
-same blocking effect at a Quality Gate as `inconclusive`. Assessment by other Oracles,
+same blocking effect at a Quality Gate as an invalidated Result. Assessment by other Oracles,
 and of other defect classes, continues, and the Evidence of the skipped clauses is kept
 so that a requalified Oracle can assess it later. A Project MAY instead configure a miss
 to halt the run (`on_seeded_control_miss: halt_run`, Appendix A §A.9); a halt records a
@@ -270,7 +273,7 @@ prompt, criteria, or configuration; or Judge Drift, Volume VI), the Oracle is co
 and the corrected Oracle catches fresh controls of that class. Never the control it
 missed: the diagnosis exposed it. A requalified Oracle MAY then re-assess the stored
 Evidence of the affected run, without invoking the system under test again. The new Results are recorded against the corrected Oracle's configuration; the original
-`inconclusive` or `not_assessed` Results remain in the record unchanged. The new Results
+invalidated or `not_assessed` Results remain in the record unchanged. The new Results
 resolve the original ones (Chapter 6 — Result Resolution), and a Quality Gate MAY be
 evaluated again on them; a Gate Result or Release Decision already recorded stays in the
 record. This is not a

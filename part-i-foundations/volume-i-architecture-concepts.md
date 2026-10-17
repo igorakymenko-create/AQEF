@@ -608,17 +608,34 @@ clause, the Aggregation Model reads the **effective Result**: the last Result in
 chain. Every earlier Result stays in the record, visible to Audit and Traceability
 (Volume XII), and is not counted again by any aggregate or Quality Gate.
 
-Only two kinds of Result may resolve another:
+A Result can also lose its standing without being modified. When an Oracle misses a
+Seeded Control (Volume VIII), the Results it produced in that run for the affected
+clauses are **invalidated**: their recorded verdict and disposition stay exactly as
+they were, but no aggregate or Quality Gate counts them as `actionable`. Invalidation is
+a fact about the run, recorded once (Appendix C §C.3), not something written into each
+Result. The **effective state** of an effective Result is therefore `invalidated` where
+such a miss reaches it, and its recorded disposition otherwise. The two kinds of
+"not usable" stay distinct: `inconclusive` says an Oracle was unsure of its verdict;
+`invalidated` says the Oracle itself could not be shown to work.
+
+The chain of resolutions is linear. A Result MAY resolve only the current effective
+Result for its Execution and clause, and only while that Result's effective state is not
+`actionable`. Once a resolution is recorded, a second attempt to resolve the same Result
+is rejected; a Result that is already `actionable` is not reopened by resolution. Three
+kinds of Result may resolve another:
 
 - a Human Reviewer's Result, resolving an `inconclusive` Result or a Multi Judge
   panel's Result that Consensus left unresolved (Volume VI);
 - a Result from a requalified Oracle re-assessing stored Evidence (Volume VIII),
-  resolving a Result invalidated by a missed Seeded Control.
+  resolving an invalidated or `not_assessed` Result left by a missed Seeded Control;
+- a Result from the same Oracle configuration, resolving an `oracle_unavailable` Result
+  once that Oracle can be reached again (Volume VI). No verdict existed, so this is not
+  asking again for a better one.
 
-The same Oracle asked again resolves nothing: that is a retry until a favorable verdict
-appears, which Volume III prohibits. An effective Result that is itself not
-`actionable` (a review that timed out, a reviewer who could not be reached) blocks
-exactly as the Result it resolved did.
+Apart from that last case, the same Oracle asked again resolves nothing: that is a retry
+until a favorable verdict appears, which Volume III prohibits. An effective Result whose
+effective state is not `actionable` (a review that timed out, a reviewer who could not be
+reached) blocks exactly as the Result it resolved did.
 
 ### Aggregation Model
 
@@ -690,7 +707,9 @@ that a Project has a place to state its own minimum, below.
 
 A **Quality Gate** is a named, thresholded check against one or more aggregated Metrics,
 declared on a Project or on a Suite (Appendix A §A.1, §A.3). The Gates applicable to a
-Release Decision are those declared on its Project and on the Suite it covers. A blocking
+Release Decision are those declared on its Project and on the Suite it covers, and a
+Release Decision requires at least one. Where none applies, there is nothing for a
+Release Decision to rest on, and the Decision layer ends in a Report (Chapter 4). A blocking
 Gate MUST pass for a Release Decision to authorize shipping; an advisory Gate is evaluated
 and reported but does not by itself prevent shipping (below). This chapter is its
 authoritative definition.
@@ -745,10 +764,10 @@ explicit, auditable override rather than a quiet pass. An override applies to ex
 one Gate Result — one Gate, evaluated once, for one batch of Executions — and MUST NOT
 authorize any other, including a later evaluation of the same Gate for a different
 batch. A Gate reading an aggregate that includes any effective Result (Result
-Resolution, above) whose disposition is not `actionable` (Appendix C §C.7) — a Result still
-`awaiting_review`, one whose Oracle was `oracle_unavailable`, or one `not_assessed`
-after a missed Seeded Control (Volume VIII) — MUST treat that Result
-as blocking by default; an unresolved or unreachable Oracle is not evidence of quality,
+Resolution, above) whose effective state is not `actionable` (Appendix C §C.7) — a Result still
+`awaiting_review`, one whose Oracle was `oracle_unavailable`, one `inconclusive` and not
+yet resolved, or one invalidated or `not_assessed` after a missed Seeded Control (Volume
+VIII) — MUST treat that Result as blocking, and MUST record why (Appendix A §A.12); an unresolved or unreachable Oracle is not evidence of quality,
 regardless of how favorably every other Result in the aggregate reads. The same Gate is
 what a Report surfaces for human visibility (Volume XI) and what a CI/CD pipeline
 queries to decide whether a deployment may proceed (Volume XIII) — one mechanism, viewed
@@ -763,7 +782,9 @@ Release Decision MUST NOT be recorded until its Gates are evaluated again agains
 current configuration. Where only a Gate definition changed, no new Execution is needed:
 the same Results are evaluated against the new definition. Where a Contract changed,
 those Results were produced against requirements no longer in force, and the affected
-clauses need new Results. A change elsewhere in the Project, outside the decision's
+clauses need new Results. Where the Environment changed — a model version, a prompt
+version, a tool configuration, an infrastructure target — the subject itself may now
+behave differently, and its Scenarios need new Executions. A change elsewhere in the Project, outside the decision's
 scope, does not affect it. This is a consistency check, not a safeguard against anyone
 in particular: a shared Contract fragment can be changed, correctly and with approval,
 by a Role that has no part in this release, and days can pass between the Report a

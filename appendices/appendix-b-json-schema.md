@@ -367,8 +367,9 @@ properties:
 properties:
   status:     { type: string, enum: [pass, fail] }                       # REQUIRED
   blocking:   { type: boolean }                                          # REQUIRED
-  reason:     { type: string, enum: [threshold, insufficient_basis,
-                seeded_control_miss] }                                   # CONDITIONAL
+  reasons:    { type: array, minItems: 1, uniqueItems: true,
+                items: { type: string, enum: [threshold, insufficient_basis,
+                non_actionable_results, seeded_control_miss] } }         # CONDITIONAL
   value:      { oneOf: [ { type: number },
                 { type: object, additionalProperties: { type: number } },
                 { type: string, const: not_computed } ] }                # REQUIRED
@@ -377,8 +378,8 @@ properties:
   override:   { type: string, minLength: 1 }                             # CONDITIONAL
 ```
 
-*Cross-field rules:* `reason` is REQUIRED when `status` is `fail` and MUST NOT appear
-when it is `pass`. `override` MAY appear only when `status` is `fail` and `blocking` is
+*Cross-field rules:* `reasons` is REQUIRED when `status` is `fail` and MUST NOT appear
+when it is `pass`; it lists every reason that applies. `override` MAY appear only when `status` is `fail` and `blocking` is
 `true`.
 
 **Basis**
@@ -402,6 +403,7 @@ properties:
   environments:   { type: object, additionalProperties: Environment }    # REQUIRED
   contracts:      { type: object,
                     additionalProperties: { type: string } }             # REQUIRED
+  inline_contracts: { type: object, additionalProperties: Contract }     # REQUIRED
   quality_gates:  { type: array, items: QualityGate }                    # REQUIRED
   baselines:      { type: array, items: { type: string } }               # OPTIONAL
   release_label:  { type: string }                                       # OPTIONAL
@@ -439,12 +441,15 @@ by a conformant implementation at configuration load time:
 | Boundary attempt capture | Volume III; Volume V | Every attempt to reach outside an Action Boundary, and every Tripwire touch, MUST be captured as an Artifact whether or not it was blocked, and MUST fail a bound Boundary Validator. |
 | Unenforced boundary reporting | Volume III; Volume XI | An Environment declaring `enforced: false` MUST be identified in every Report whose scope includes it. |
 | Deletion referential integrity | Appendix C §C.8 | `DELETE` on an Environment, Dataset, or Contract still referenced by a Baseline, Snapshot, or Report MUST be rejected or preserved as a frozen record, never silently broken. |
-| Result resolution | Volume I, Ch. 6; Appendix C §C.7 | `resolves` MUST reference an earlier Result with the same `execution` and `clause`. Only a Human Reviewer Result, or a Result from a requalified Oracle re-assessing stored Evidence, MAY resolve another. A Result from the same Oracle configuration as the Result it would resolve MUST NOT. |
-| Effective Result | Volume I, Ch. 6 | Aggregation and Quality Gates read only the effective Result per Execution and clause. A resolved Result MUST NOT be counted again, including in `basis.not_actionable`. |
+| Result resolution | Volume I, Ch. 6; Appendix C §C.7 | `resolves` MUST reference the current effective Result for the same `execution` and `clause`, and that Result's effective state MUST NOT be `actionable`. A second Result resolving the same Result MUST be rejected. Resolvers: a Human Reviewer Result (for `inconclusive`, or a panel's unresolved Result); a requalified Oracle's Result (for invalidated or `not_assessed`); a Result from the same `oracle` (only for `oracle_unavailable`). |
+| Effective Result | Volume I, Ch. 6 | Aggregation and Quality Gates read only the effective Result per Execution and clause, by its effective state. A resolved Result MUST NOT be counted again, including in `basis.not_actionable`. |
+| Invalidation is derived | Volume I, Ch. 6; Volume VIII | A missed Seeded Control MUST NOT change any recorded Result. Its effect is derived from `seeded_control_results`: the affected effective Results have effective state `invalidated`. |
+| Gate reasons | Volume I, Ch. 6; Appendix A §A.12 | A failed GateResult MUST list every applicable reason. A Gate whose aggregate includes an effective Result that is not `actionable` MUST fail, with `non_actionable_results` or `seeded_control_miss`. |
 | Gate Result override | Volume XII | An `override` MUST reference an approved `gate_override` record made for that GateResult. One override record MUST NOT be referenced by more than one GateResult. |
 | Release Decision coverage | Volume I, Ch. 6 | `gates` MUST contain a GateResult for every Quality Gate, blocking or advisory, applicable to the decision's scope. |
 | Release Decision outcome | Volume I, Ch. 6; Volume XII | `decision: approved` requires every blocking GateResult to have `status: pass`; `decision: overridden` requires every blocking GateResult with `status: fail` to carry `override`. |
-| Release Decision currency | Volume I, Ch. 6 | A Release Decision MUST NOT be recorded if a Contract or Quality Gate in its scope changed after the Snapshot named by `snapshot_id` was captured. |
+| Release Decision currency | Volume I, Ch. 6 | A Release Decision MUST NOT be recorded if any Contract (Reusable or inline), Quality Gate, or Environment in its scope differs from the configuration captured in the Snapshot named by `snapshot_id`. |
+| Release Decision requires a Gate | Volume I, Ch. 6 | A Release Decision MUST NOT be recorded for a scope to which no Quality Gate applies. |
 | Approval Permissions | Volume XII | A Baseline's `approval_role` MUST hold `baseline_approve`; a Release Decision's MUST hold `release_decide`. |
 | Human approval | Volume XII | `baseline_approve` and `gate_override` MUST be approved by a Person. A `contract_define` applied by a Service Account MUST name the approving Person and reference the external review. |
 | Automatic release | Volume XII | A Release Decision whose `approved_by` is a Service Account MUST carry `release_policy`, and its `decision` MUST be `approved` (every blocking GateResult `pass`, no `override`) or `rejected`. |

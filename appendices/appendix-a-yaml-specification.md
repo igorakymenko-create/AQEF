@@ -442,7 +442,7 @@ The traceable output of the Decision Pipeline (Volume I, Chapter 6; Volume XII).
 | `environment` | String | MUST | Environment evaluated. |
 | `suite` | String | MUST | Suite that was run. |
 | `execution_batch_id` | String | MUST | Batch identifier for the Execution set. |
-| `gates` | Map of String → GateResult | MUST | One GateResult per Quality Gate applicable to the decision's scope, blocking and advisory alike, keyed by Gate name (below). |
+| `gates` | Map of String → GateResult | MUST | One GateResult per Quality Gate applicable to the decision's scope, blocking and advisory alike, keyed by Gate name (below). At least one: a Release Decision requires an applicable Quality Gate (Volume I, Chapter 6). |
 | `decision` | String | MUST | `approved`, `rejected`, or `overridden`. |
 | `approved_by` | String | MUST | Principal who recorded the decision: a Person, or a Service Account acting under `release_policy` (Volume XII — Principals). |
 | `release_policy` | String | MUST (if `approved_by` is a Service Account) | Reference to the standing release policy a Person approved. With it, `decision` MAY only be `approved` (every blocking GateResult `pass`, none overridden) or `rejected`. |
@@ -454,9 +454,9 @@ The traceable output of the Decision Pipeline (Volume I, Chapter 6; Volume XII).
 
 `decision: approved` requires every blocking GateResult to have `status: pass`.
 `decision: overridden` requires every blocking GateResult with `status: fail` to carry
-an `override`. A Release Decision MUST NOT be recorded if a Contract or Quality Gate in
-its scope changed after the Snapshot named by `snapshot_id` was captured (Volume I,
-Chapter 6).
+an `override`. A Release Decision MUST NOT be recorded if a Contract, Quality Gate, or
+Environment in its scope differs from the configuration captured in the Snapshot named
+by `snapshot_id` (Volume I, Chapter 6).
 
 **GateResult**
 
@@ -466,7 +466,7 @@ The outcome of evaluating one Quality Gate once (Volume I, Chapter 6).
 |---|---|---|---|
 | `status` | String | MUST | `pass` or `fail`: the Gate's state only. What a failure does is `blocking`. |
 | `blocking` | Boolean | MUST | `true` for a Gate with `on_failure: block_release`, `false` for `warn`. |
-| `reason` | String | MUST (if `status` is `fail`) | `threshold`, `insufficient_basis` (its `min_basis` was not met), or `seeded_control_miss` (the aggregate included Results invalidated by a missed Seeded Control, Volume VIII). Where more than one applies, `seeded_control_miss` takes precedence over `insufficient_basis`, and both over `threshold`. Absent when `status` is `pass`. |
+| `reasons` | List of String | MUST (if `status` is `fail`) | Every reason that applies, none omitted: `threshold` (the value fell short), `insufficient_basis` (its `min_basis` was not met), `non_actionable_results` (the aggregate included effective Results that are not `actionable` for a reason other than a Seeded Control — `inconclusive`, `awaiting_review`, `oracle_unavailable`, or `not_assessed` below a panel's quorum), `seeded_control_miss` (it included Results invalidated, or left `not_assessed`, by a missed Seeded Control, Volume VIII). Absent when `status` is `pass`. |
 | `value` | Float, Map of String → Float, or `"not_computed"` | MUST | The aggregate the Gate read; a Map for a Gate with a ThresholdMap. `"not_computed"` when no aggregate could be computed, for example a run halted by a missed Seeded Control. Never bare `null`. |
 | `threshold` | Float or ThresholdMap | MUST | The threshold the Gate was evaluated against, copied at evaluation time, so the record stays checkable if the Gate definition changes later. |
 | `basis` | Basis | MUST | The Aggregate Basis the aggregate rested on (Appendix C §C.3). |
@@ -485,7 +485,8 @@ MAY be captured explicitly for Snapshot Comparison. Never modified once captured
 | `project` | String | MUST | Project name. |
 | `suites` | List of String | MUST | Suites in scope. |
 | `environments` | Map of String → Environment | MUST | The Environments in scope, as resolved at capture time. |
-| `contracts` | Map of String → String | MUST | Every Contract in scope, by name, with the version captured. |
+| `contracts` | Map of String → String | MUST | Every Reusable Contract in scope, by name, with the version captured. |
+| `inline_contracts` | Map of String → Contract | MUST | Every inline Contract in scope, in full, keyed by where it is attached: `project`, `suite:<suite>`, or `scenario:<suite>/<scenario>`. An inline Contract has no name or version of its own, so the Snapshot keeps its content; any difference from the current content is a change. Empty when there are none. |
 | `quality_gates` | List of QualityGate | MUST | The Gate definitions in scope, as they stood at capture time. |
 | `baselines` | List of String | MAY | Baselines included, for Snapshot Comparison (Volume X). |
 | `release_label` | String | MAY | Human-readable release identifier. |

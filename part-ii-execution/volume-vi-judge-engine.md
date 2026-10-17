@@ -209,7 +209,10 @@ Evaluation-stage counterpart to the infrastructure-level Retry Volume III scopes
 Execution stage, and the same prohibition carries over without exception: an
 Oracle that could not be reached MUST NOT be silently retried until a favorable verdict
 appears, and an Execution MUST NOT proceed as if Evaluation had passed simply because
-the Oracle never answered.
+the Oracle never answered. Once the Oracle can be reached again, it MAY assess the stored
+Evidence as a new, recorded Result that resolves the `oracle_unavailable` one (Volume I,
+Chapter 6 — Result Resolution). No verdict existed, so this is not a retry toward a
+favorable one; whatever the new Result says stands.
 
 ## Judge Drift
 

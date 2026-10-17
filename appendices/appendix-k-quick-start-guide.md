@@ -172,6 +172,7 @@ result:
   execution: exec-0001
   clause: basic-correctness@1/expectations[0]
   oracle_type: judge
+  oracle: judge:claude-sonnet-4-20250514@basic-correctness-1
   verdict: pass
   confidence: 0.91
   disposition: actionable        # 0.91 meets the 0.8 threshold
@@ -211,7 +212,9 @@ flowchart TD
     RES --> REP["Report / Decision"]
 ```
 
-This is a single pass through the Quality Lifecycle (Volume I, Chapter 5). As your test
+This is a single pass through the Quality Lifecycle (Volume I, Chapter 5). Without
+Quality Gates, the loop ends in a Report; a formal Release Decision needs at least one
+Gate (Step 8, item 4). As your test
 suite grows, each pass feeds the next: failures become new Scenarios, Results become
 Baselines, and the loop closes.
 

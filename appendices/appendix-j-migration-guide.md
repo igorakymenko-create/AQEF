@@ -66,7 +66,8 @@ Engine (Volume XVII).
   not replace it.
 
 **Relevant Volumes:** I (Chapters 1–5), II, III, IV (Static only), V (built-in
-Validators), XVII (Minimal Engine).
+Validators), VII (Contracts and Constraints), XII (Approval Workflow, for defining a
+Contract), XVII (Minimal Engine).
 
 ## Stage 2 — Assessment: Adding Judges and Baselines
 
@@ -85,8 +86,8 @@ comparison (Baselines).
    different Judge (Volume VI — Calibration).
 3. Approve initial Baselines. For each Scenario, designate a specific Execution's
    Result as the reference standard through an explicit approval action (Volume X).
-   This is the first Governance-controlled act — even a lightweight one-person
-   approval satisfies the requirement.
+   Like defining a Contract in Stage 1, this is a Governance-controlled act — even
+   a lightweight one-person approval satisfies the requirement.
 4. Run the Suite again and compare against Baselines. The first comparison will
    establish whether the current system meets, exceeds, or falls short of the
    reference. This is where Semantic Regression detection begins.
@@ -100,7 +101,7 @@ comparison (Baselines).
   much that verdict should be trusted.
 
 **Relevant Volumes:** VI, VII (Constraints + Expectations), X (Baselines, Semantic
-Regression).
+Regression), XII (Approval Workflow, for approving a Baseline).
 
 ## Stage 3 — Automation: Quality Gates and CI/CD
 
@@ -176,11 +177,11 @@ degradation.
 
 **What to do**
 
-1. Implement full Governance. Define Teams, Roles, and Permissions (Volume XII).
-   Separate organizational boundaries (Teams scope access) from capabilities (Roles
-   scope actions). Ensure every Governance-controlled action — Baseline approval, Gate
-   override, Contract modification, Release Decision — flows through the Approval
-   Workflow.
+1. Expand Governance across Teams. Every Governance-controlled action — Contract
+   definition, Baseline approval, Gate override, Release Decision — has gone through the
+   Approval Workflow since the stage that first used it. What changes here is scale:
+   Teams to scope access, differentiated Roles to scope actions, and Service Accounts for
+   automation (Volume XII).
 2. Deploy Custom Plugins. Build Validator Plugins for domain-specific deterministic
    checks (e.g., regulatory compliance patterns) and Judge Plugins for domain-specific
    semantic assessment (e.g., medical accuracy). Follow the Extension Lifecycle (Volume
@@ -230,10 +231,16 @@ Evidence → Assessment → Decision) and respects the seven Fundamental Princip
 conformant for the capability it offers. Each subsequent stage extends the claimed
 capability set, and with it the Volumes whose requirements become applicable.
 
-| Stage | Claimed Capability | Applicable Volumes |
+The table below shows where each stage's work is specified, not a boundary on what
+applies. Which requirements apply is decided by the capabilities an implementation
+offers (§10), whatever stage it has reached: an implementation that lets anyone define a
+Contract or approve a Baseline is subject to Volume XII's Approval Workflow from the
+first time it does, however simple its Governance otherwise is.
+
+| Stage | Claimed Capability | Volumes most involved |
 |---|---|---|
-| 1 | Basic loop, Validators only | I, II, III, IV (Static), V, XVII |
-| 2 | + Judges, Baselines | + VI, VII, X |
-| 3 | + Quality Gates, CI/CD | + XI, XII, XIII |
+| 1 | Basic loop, Validators only | I, II, III, IV (Static), V, VII, XII (Approval Workflow), XVII |
+| 2 | + Judges, Baselines | + VI, X |
+| 3 | + Quality Gates, CI/CD | + XI, XIII |
 | 4 | + Full Datasets, Multi-Judge, Drift | + IV (full), VIII, IX |
-| 5 | + Governance, Plugins, Enterprise | + XIV, XV, XVI, XVII (Enterprise) |
+| 5 | + Teams and Roles at scale, Plugins, Enterprise | + XII (Teams, Roles, Service Accounts), XIV, XV, XVI, XVII (Enterprise) |

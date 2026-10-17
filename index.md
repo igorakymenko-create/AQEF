@@ -1,11 +1,10 @@
 # AQEF — AI Quality Engineering Framework
-### Master Index (Working Draft v0.34)
+### Master Index (Working Draft v0.35)
 
 Legend: ✅ drafted & confirmed · 🟨 partially drafted · ⬜ not yet drafted
 
 Structure: one file per Front Matter section / Volume / Appendix, so any future edit
-touches a single small file rather than the whole document. Working, non-reader-facing
-notes live in `_project-notes/` (currently: `decisions-log.md`).
+touches a single small file rather than the whole document.
 
 ---
 
@@ -75,13 +74,6 @@ notes live in `_project-notes/` (currently: `decisions-log.md`).
 
 ---
 
-## Working notes (not part of the published document)
-
-- [_project-notes/decisions-log.md](_project-notes/decisions-log.md) — cross-cutting
-  terminology/model decisions every Volume must stay consistent with.
-
----
 
 **Milestone:** the entire specification is now drafted — all 11 Front Matter sections,
-all seventeen Volumes, and all eleven Appendices (A–K). 61 cross-cutting decisions are
-recorded in `_project-notes/decisions-log.md`.
+all seventeen Volumes, and all eleven Appendices (A–K).

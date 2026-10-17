@@ -9,9 +9,9 @@ every SDK and the CLI, consumes AQEF's own REST API surface rather than reimplem
 AQEF's logic independently — and one requirement was already made explicit
 before this Volume existed to enforce it: a Custom Validator's determinism and absence
 of a Confidence value MUST be enforced at the SDK level, not merely documented as a
-convention. This Volume specifies how: four plugin types, the Authentication every one
-of them operates under, and the Extension Lifecycle that governs how a plugin is
-installed, verified, and retired.
+convention. This Volume specifies how: four plugin types, how a plugin is invoked, the
+Authentication every one of them operates under, and the Extension Lifecycle that
+governs how a plugin is installed, verified, and retired.
 
 ## Validator Plugins
 
@@ -63,6 +63,31 @@ a Report Plugin that presents an opaque score with no path back to underlying Re
 would be exactly the unauditable summary Chapter 3's Contracts over Assertions already
 rules out, regardless of how the plugin computed it.
 
+## Plugin Invocation
+
+How an implementation hosts a plugin — in its own process, as a separate process, as a
+remote service — is its own choice, and so is the transport between them. Portability
+of a plugin from one AQEF implementation to another is not a goal of this specification.
+What every implementation MUST hold to is the logical shape of one assessment:
+
+- **Input.** The plugin receives the target Evidence its clause names (the
+  Conversation, Artifacts, or both — Volume II), the clause's own content (a
+  Constraint's `expected`, an Expectation's `criteria`), its own versioned configuration,
+  and the identifiers of the Execution and clause it is assessing. A Validator Plugin
+  receives nothing else (Volume V — Validator SDK).
+- **Output.** A Result for exactly that Execution and clause, in the shape Appendix C
+  §C.7 specifies, with `oracle` naming the plugin and its version. The implementation
+  validates the Result before recording it.
+- **Failure.** A plugin that crashes, times out, or returns a Result that fails
+  validation has assessed nothing: the recorded Result is `oracle_unavailable`, never
+  `fail`. A broken check is not evidence about the subject.
+- **Scope.** While assessing, a plugin changes nothing in AQEF other than the Result it
+  returns.
+
+A Dataset or Report Plugin follows the same pattern for its own output: a versioned
+Dataset (Volume IV), or a Metric traceable to the Results it was computed from (Volume
+XI).
+
 ## Authentication
 
 A plugin authenticates against AQEF the same way any other caller of the REST API does
@@ -97,5 +122,5 @@ and every extension point inherits the same constraints its built-in counterpart
 carries, mechanically where that's possible and by Contract-time judgment where it
 isn't. Volume XVII (Reference Implementations) closes the document: it specifies the
 Minimal Engine and Enterprise Engine shapes Chapter 4 already distinguished, and how the
-seventeen Volumes and ten Appendices this specification comprises actually come together
+seventeen Volumes and eleven Appendices this specification comprises actually come together
 as running software.

@@ -267,8 +267,8 @@ from Fuzzing (undirected) and Data Mutation (intent-preserving).
 
 **Effective Result** — For one Execution and one Contract clause, the last Result in a
 chain of Results resolving one another (Volume I, Chapter 6 — Result Resolution). The
-only Result Aggregation and Quality Gates read for that clause; earlier ones stay in the
-record.
+only Result Aggregation and Quality Gates read for that clause, by its effective state
+(`invalidated`, or its recorded disposition); earlier ones stay in the record.
 
 **Enterprise Engine** — A deployment topology (Volume XVII) running AQEF's logical
 layers as independently scaled services. Satisfies the same normative requirements as
@@ -355,8 +355,8 @@ unexpected behavior or breaking points, without preserving the original input's
 intent. Distinct from Data Mutation (intent-preserving) and Edge Cases (targeted).
 
 **Gate Result** — The outcome of evaluating one Quality Gate once (Appendix A §A.12):
-`pass` or `fail`, whether it blocks, the reason for a failure (threshold, insufficient
-basis, or Seeded Control miss), the value and threshold compared, and its Aggregate
+`pass` or `fail`, whether it blocks, every reason for a failure (threshold, insufficient
+basis, non-actionable Results, Seeded Control miss), the value and threshold compared, and its Aggregate
 Basis. An override applies to exactly one Gate Result.
 
 **Generated Dataset** — A Dataset (Volume IV) expanded or created by an AI model.
@@ -404,6 +404,12 @@ single system under test, composed non-exclusively.
 Oracle must not use the same system, weights, or decision process as the AI system it
 evaluates, to avoid correlated blind spots. Extended as a SHOULD to Dataset generation
 sources.
+
+**Invalidated Result** — A Result whose Oracle missed a Seeded Control of a class its
+clause covers, in the same run (Volume VIII; Volume I, Chapter 6). Its record is
+unchanged, but its effective state is `invalidated`, and no Quality Gate counts it as
+`actionable`. Distinct from `inconclusive`, which means the Oracle was unsure of its
+verdict, not that the Oracle could not be shown to work.
 
 **Jailbreak** — A Safety-Adjacent elicitation technique (Volume IX) attempting to
 bypass safety boundaries through direct conversational manipulation. Distinguished from
@@ -497,6 +503,11 @@ Gate. The unit of enforcement, bundled into Roles for convenience.
 XIII) that invokes AQEF and consumes its Quality Gate status. Distinct from AQEF's own
 internal pipelines (Execution Pipeline, Validator Pipeline, Decision Pipeline), which
 always carry a qualifier.
+
+**Plugin Invocation** — The logical shape of one plugin assessment (Volume XVI): Evidence,
+clause content, versioned configuration, and identifiers in; one Result in the shape of
+Appendix C §C.7 out; a crash, timeout, or invalid Result recorded as
+`oracle_unavailable`, never as `fail`. Hosting and transport are implementation-defined.
 
 **Policy** — A Contract-level rule (Volume VII) governing how a Contract's own clauses
 combine — Validator Composition logic, Business Quality weighting — rather than a
@@ -595,8 +606,10 @@ resolve it (Result Resolution). See Appendix C §C.7 for the authoritative shape
 
 **Result Resolution** — The rule (Volume I, Chapter 6) by which a later Result settles
 what an earlier one left open without modifying it: the later Result names the earlier
-one it `resolves`. Only a Human Reviewer's Result or a requalified Oracle's re-assessment
-may resolve another; the same Oracle asked again may not.
+one it `resolves`. The chain is linear: only the current effective Result, and only while it is not
+`actionable`, may be resolved, once. Resolvers: a Human Reviewer, a requalified Oracle,
+or the same Oracle only for an `oracle_unavailable` Result; otherwise the same Oracle
+asked again may not.
 
 **Retry** — A re-attempt (Volume III) triggered by an infrastructure-level failure
 that occurred before the subject produced a genuine Response. Re-running because a
@@ -656,7 +669,7 @@ the current run. SHOULD be generated, with instances hidden from the Oracle's tu
 record its planted defect and confirm it reached the Evidence the Oracle received — by a
 Validator, a Human Reviewer, or by construction (Fixed Evidence) — otherwise the control
 is `invalid` for that run. If its Oracle misses it, the Oracle's Results for
-clauses of that class become `inconclusive`, the Oracle SHOULD stop being invoked for
+clauses of that class are invalidated for the run (their records unchanged), the Oracle SHOULD stop being invoked for
 them (`not_assessed`), and it needs Requalification before further use for that class.
 Full-run invalidation or a halt requires an explicit Project decision. Tests the Oracle,
 not the system. Distinct from Negative Testing (which tests the system) and from

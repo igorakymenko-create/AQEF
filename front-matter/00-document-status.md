@@ -7,7 +7,7 @@
 | Property | Value |
 |---|---|
 | Status | Working Draft |
-| Version | 0.34 |
+| Version | 0.35 |
 | Date | 2026-10 |
 | Maturity | Draft — not for implementation |
 

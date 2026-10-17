@@ -100,8 +100,8 @@ are implementation choices, not conformance levels. Both satisfy the identical n
 bar through different mechanisms — a Minimal Engine's single-click Approval Workflow and
 an Enterprise Engine's multi-Role review chain are equally conformant realizations of
 the same Governance requirement (Volume XII), not a stricter and a looser version of it.
-Decision 27 already settled this; this section does not reopen it, only confirms that
-Conformance itself is not a second place the same question could be relitigated.
+This section only confirms that Conformance itself is not a second place where that
+question could be reopened.
 
 ## Deviating from a SHOULD
 
@@ -115,11 +115,3 @@ approved or a Quality Gate overridden is the natural place a SHOULD-level deviat
 own justification would live, if a Project chooses to record one. Conformance does not
 require recording that justification; it requires only that the deviation was a choice,
 not an oversight nobody noticed.
-
----
-
-With Conformance defined, this section closes the last piece of Front Matter that
-depended on content existing before it could be written meaningfully.
-Preface, Purpose, and Scope are the natural next sections — each can now draw on the
-complete seventeen-Volume argument instead of pre-stating it, the same benefit decision
-7 already anticipated.

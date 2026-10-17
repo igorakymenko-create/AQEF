@@ -637,7 +637,7 @@ release_decision:
       blocking: true
       value: 0.97
       threshold: 0.95
-      basis: { results: 372, not_actionable: 4, scenarios: 62,
+      basis: { results: 372, not_actionable: 0, scenarios: 62,
                executions: 188, min_basis_met: true }
     regression-gate:
       status: pass
@@ -667,10 +667,15 @@ release_decision:
 This record is the Release Decision (Volume I, Chapter 6) — a traceable, auditable
 artifact that someone can point to and explain, not merely an assertion that the system
 is ready to ship. Had `operational-gate` failed, its entry would read `status: fail`,
-`reason: threshold`, `blocking: false`: recorded here and in the Report, without
+`reasons: [threshold]`, `blocking: false`: recorded here and in the Report, without
 preventing `decision: approved`. Had someone changed `functional-gate`'s threshold after
 `snap-2025-07-28-pr-347` was captured, this record could not be written until the Gates
 were evaluated again.
+
+Had four of `functional-gate`'s Results been `oracle_unavailable`, the Gate would have
+failed with `reasons: [non_actionable_results]` and `not_actionable: 4`, however good
+its 0.97 looked: the four would first have to be resolved — here, by the Judge assessing
+them once it could be reached again.
 
 ## H.8 — Dataset Mechanisms
 
@@ -825,6 +830,7 @@ result:
   execution: exec-2025-07-30-118
   clause: high-risk-financial-advice@3/expectations[0]
   oracle_type: human_reviewer
+  oracle: human_reviewer:compliance_reviewer
   verdict: null                 # No verdict yet
   confidence: "not_applicable"  # Never bare null (Volume I, Ch. 3)
   disposition: awaiting_review
@@ -842,6 +848,7 @@ result:
   execution: exec-2025-07-30-118
   clause: high-risk-financial-advice@3/expectations[0]
   oracle_type: human_reviewer
+  oracle: human_reviewer:compliance_reviewer
   verdict: pass
   confidence: "not_applicable"
   disposition: actionable
@@ -860,6 +867,7 @@ result:
   execution: exec-2025-07-30-119
   clause: helpfulness-check@2/expectations[0]
   oracle_type: judge
+  oracle: judge:claude-sonnet-4-20250514@helpfulness-check-2
   verdict: null                 # No verdict was reached at all
   confidence: "not_applicable"
   disposition: oracle_unavailable
@@ -883,9 +891,13 @@ result:
   execution: exec-2025-07-30-204
   clause: helpfulness-check@2/expectations[0]
   oracle_type: judge
+  oracle: judge:gemini-2.5-pro@helpfulness-check-2
   verdict: pass
   confidence: 0.62
   disposition: inconclusive
+  supporting_evidence:
+    excerpt: "You can reset your password from the account settings page."
+    rationale: "Likely correct, but the steps are not confirmed by the help article."
 ---
 # The Human Reviewer's Result, routed by the Confidence Model
 result:
@@ -894,9 +906,14 @@ result:
   clause: helpfulness-check@2/expectations[0]
   resolves: res-204-e0-j        # Settles the Judge's Result; does not modify it
   oracle_type: human_reviewer
+  oracle: human_reviewer:support_reviewer
   verdict: pass
   confidence: "not_applicable"
   disposition: actionable
+  supporting_evidence:
+    reviewed_by: carol@helios.dev
+    reviewed_at: "2025-07-30T13:05:00Z"
+    role_held: support_reviewer
 ```
 
 The Aggregation Model reads `res-204-e0-hr` for this clause, so the Gate is no longer
@@ -977,7 +994,8 @@ execution:
 
 The Judge is not invoked again for clauses declaring `defect_classes: [toxic-language]`
 in this run; their Results are `not_assessed` (Appendix C §C.7), and any it had already
-produced for that class become `inconclusive`. Neither is a finding that those
+produced for that class are invalidated for this run: their records are unchanged, and
+each carries a derived `invalidated_by: control-toxic-language-a91f` in API responses. Neither is a finding that those
 Conversations were wrong: this run cannot show the Judge was able to see that class of
 defect at all. A clause of a different class assessed by the same Judge is unaffected;
 a clause declaring no class at all is affected, because nothing shows it lies outside the
