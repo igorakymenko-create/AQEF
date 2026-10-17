@@ -627,10 +627,14 @@ kinds of Result may resolve another:
 - a Human Reviewer's Result, resolving an `inconclusive` Result or a Multi Judge
   panel's Result that Consensus left unresolved (Volume VI);
 - a Result from a requalified Oracle re-assessing stored Evidence (Volume VIII),
-  resolving an invalidated or `not_assessed` Result left by a missed Seeded Control;
+  resolving an invalidated or `not_assessed` Result left by a missed Seeded Control —
+  only once the Oracle has been requalified for every defect class whose miss reached
+  that Result. An Oracle fixed for one class and not yet for another cannot resolve a
+  Result both misses invalidated;
 - a Result from the same Oracle configuration, resolving an `oracle_unavailable` Result
-  once that Oracle can be reached again (Volume VI). No verdict existed, so this is not
-  asking again for a better one.
+  once that Oracle can be reached or run again — a Judge (Volume VI), a Validator or a
+  plugin (Volume V, Volume XVI) alike. No verdict existed, so this is not asking again
+  for a better one.
 
 Apart from that last case, the same Oracle asked again resolves nothing: that is a retry
 until a favorable verdict appears, which Volume III prohibits. An effective Result whose

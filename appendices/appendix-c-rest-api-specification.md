@@ -328,14 +328,13 @@ configuration entities, but Result is runtime output, so it belongs here.
 | `disposition` | String | MUST | `actionable`, `inconclusive`, `awaiting_review`, `oracle_unavailable`, or `not_assessed`. See below. |
 | `supporting_evidence` | Any | MUST | What the Oracle based its judgment on — the Conversation, Artifacts, or specific excerpts, per Oracle type. |
 | `panel` | Object | MUST (Multi Judge Results); absent otherwise | `{ configured: Integer, counted: Integer }` — Judges configured in the panel, and Judges whose verdicts were counted after exclusions (Volume VI). |
-| `invalidated_by` | String | Read-only, derived | Present in a response when a missed Seeded Control invalidates this Result for its run: the control's Scenario (§C.3, `seeded_control_results`). Never stored on the Result, and never set by a client. |
+| `invalidated_by` | List of `{ scenario: String, defect_class: String }` | Read-only, derived | Present in a response when one or more missed Seeded Controls invalidate this Result for its run: one entry per control (§C.3, `seeded_control_results`). The Result stays invalidated while any entry remains applicable; it leaves that state only by being resolved (Volume I, Chapter 6). Never stored on the Result, and never set by a client. |
 
 **Disposition** is what closes the gap between "a Result exists" and "a Result is safe
 to use in the Aggregation Model" — the distinction Chapter 6 already requires but never
 previously named as a field:
 
-- **`actionable`** — Confidence (where applicable) meets the Contract's threshold, or
-  the Result is a Validator's, which is always actionable. The Aggregation Model MAY use
+- **`actionable`** — Confidence (where applicable) meets the Contract's threshold, or the Result is a Validator's that reached a verdict, which is always actionable. The Aggregation Model MAY use
   this Result at face value.
 - **`inconclusive`** — a Judge or Human Reviewer Result whose Confidence is below the
   Contract's `confidence_threshold` (Volume I, Chapter 6). Terminal for that specific
@@ -352,9 +351,11 @@ previously named as a field:
   The default `on_timeout` policy, absent an explicit one, is to treat the Result as
   blocking — the same fail-safe posture Deterministic Infrastructure and Independent
   Oracles already assume elsewhere: an unresolved Oracle is not evidence of quality.
-- **`oracle_unavailable`** — the Judge or Human Reviewer could not be reached, or did
-  not respond, during Evaluation — a network timeout, a rate-limit response, a crash in
-  the Judge Engine itself, occurring after Validation already passed. This is the
+- **`oracle_unavailable`** — the Oracle could not be reached, did not respond, or could
+  not complete its check — a network timeout, a rate-limit response, a crash in the
+  Judge Engine, in a Validator, or in a plugin (Volume XVI — Plugin Invocation). For a
+  Judge or Human Reviewer this happens during Evaluation, after Validation passed; for a
+  Validator, during Validation, which then has not passed (Volume V — Validator SDK). This is the
   Evaluation-stage counterpart to the infrastructure-level Retry Volume III already
   scopes to the Execution stage; the same prohibition applies without exception: an
   Oracle that could not be reached MUST NOT be silently retried until a favorable
@@ -365,8 +366,8 @@ previously named as a field:
   kept, and a requalified Oracle MAY assess it later as a new Result, which resolves this
   one; this Result is not modified.
 
-A Result's **effective state** is `invalidated` when `invalidated_by` is present, and its
-`disposition` otherwise (Volume I, Chapter 6 — Result Resolution). A Quality Gate
+A Result's **effective state** is `invalidated` when `invalidated_by` has at least one
+entry, and its `disposition` otherwise (Volume I, Chapter 6 — Result Resolution). A Quality Gate
 reading an aggregate that includes any effective Result whose effective state is not
 `actionable` MUST treat that Result as blocking. There is no configuration that turns
 this off: the way past a non-`actionable` Result is to resolve it, or, for a blocking

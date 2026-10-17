@@ -104,10 +104,16 @@ Chapter 3 reserves for deterministic ones.
 
 The Validator SDK is the interface a Custom Validator implementation MUST satisfy to be
 runnable by the Validator Engine: given the target evidence it declares (a Conversation,
-one or more Artifacts, or both — Volume II), it MUST return a Result carrying a
-pass/fail verdict, an explicit Confidence-inapplicable declaration, and supporting
-evidence sufficient for a Report (Volume XI) to explain the verdict without re-running
-the check. The SDK does not itself grant any exemption from Validator Architecture's
+one or more Artifacts, or both — Volume II), a Validator that completes its check MUST
+return a Result carrying a pass/fail verdict, an explicit Confidence-inapplicable
+declaration, and supporting evidence sufficient for a Report (Volume XI) to explain the
+verdict without re-running the check. A Validator that cannot complete it — it crashes,
+times out, or lacks something it needs — has reached no verdict: its Result is
+`oracle_unavailable` (Appendix C §C.7), never `fail`, because a broken check says nothing
+about the subject. Validation has then not passed, so the Execution short-circuits
+exactly as it does for a failure (Validator Pipeline, below), and the same Validator MAY
+assess the stored Evidence once it works again (Volume I, Chapter 6 — Result
+Resolution). The SDK does not itself grant any exemption from Validator Architecture's
 constraints — it is the mechanical contract those constraints are expressed through, not
 a separate set of rules. The SDK SHOULD hand a Custom Validator its target evidence and
 configuration as its only inputs, and SHOULD NOT give it a clock, a random source, or

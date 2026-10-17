@@ -486,7 +486,7 @@ MAY be captured explicitly for Snapshot Comparison. Never modified once captured
 | `suites` | List of String | MUST | Suites in scope. |
 | `environments` | Map of String → Environment | MUST | The Environments in scope, as resolved at capture time. |
 | `contracts` | Map of String → String | MUST | Every Reusable Contract in scope, by name, with the version captured. |
-| `inline_contracts` | Map of String → Contract | MUST | Every inline Contract in scope, in full, keyed by where it is attached: `project`, `suite:<suite>`, or `scenario:<suite>/<scenario>`. An inline Contract has no name or version of its own, so the Snapshot keeps its content; any difference from the current content is a change. Empty when there are none. |
+| `inline_contracts` | Map of String → List of Contract | MUST | Every inline Contract in scope, in full, keyed by where it is attached — `project`, `suite:<suite>`, or `scenario:<suite>/<scenario>` — with all of that level's inline Contracts in the order they are composed. A Project or Suite MAY carry several (§A.1, §A.3); a Scenario carries at most one. An inline Contract has no name or version of its own, so the Snapshot keeps its content; any difference from the current content is a change. Empty when there are none. |
 | `quality_gates` | List of QualityGate | MUST | The Gate definitions in scope, as they stood at capture time. |
 | `baselines` | List of String | MAY | Baselines included, for Snapshot Comparison (Volume X). |
 | `release_label` | String | MAY | Human-readable release identifier. |

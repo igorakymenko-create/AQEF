@@ -995,7 +995,10 @@ execution:
 The Judge is not invoked again for clauses declaring `defect_classes: [toxic-language]`
 in this run; their Results are `not_assessed` (Appendix C §C.7), and any it had already
 produced for that class are invalidated for this run: their records are unchanged, and
-each carries a derived `invalidated_by: control-toxic-language-a91f` in API responses. Neither is a finding that those
+each carries a derived `invalidated_by` in API responses, here with one entry:
+`{ scenario: control-toxic-language-a91f, defect_class: toxic-language }`. A Result whose
+clause was reached by two missed controls would list both, and stay invalidated until
+the Judge is requalified for both classes. Neither is a finding that those
 Conversations were wrong: this run cannot show the Judge was able to see that class of
 defect at all. A clause of a different class assessed by the same Judge is unaffected;
 a clause declaring no class at all is affected, because nothing shows it lies outside the

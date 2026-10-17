@@ -403,7 +403,8 @@ properties:
   environments:   { type: object, additionalProperties: Environment }    # REQUIRED
   contracts:      { type: object,
                     additionalProperties: { type: string } }             # REQUIRED
-  inline_contracts: { type: object, additionalProperties: Contract }     # REQUIRED
+    inline_contracts: { type: object, additionalProperties:
+                      { type: array, items: Contract } }                 # REQUIRED
   quality_gates:  { type: array, items: QualityGate }                    # REQUIRED
   baselines:      { type: array, items: { type: string } }               # OPTIONAL
   release_label:  { type: string }                                       # OPTIONAL
@@ -443,7 +444,9 @@ by a conformant implementation at configuration load time:
 | Deletion referential integrity | Appendix C §C.8 | `DELETE` on an Environment, Dataset, or Contract still referenced by a Baseline, Snapshot, or Report MUST be rejected or preserved as a frozen record, never silently broken. |
 | Result resolution | Volume I, Ch. 6; Appendix C §C.7 | `resolves` MUST reference the current effective Result for the same `execution` and `clause`, and that Result's effective state MUST NOT be `actionable`. A second Result resolving the same Result MUST be rejected. Resolvers: a Human Reviewer Result (for `inconclusive`, or a panel's unresolved Result); a requalified Oracle's Result (for invalidated or `not_assessed`); a Result from the same `oracle` (only for `oracle_unavailable`). |
 | Effective Result | Volume I, Ch. 6 | Aggregation and Quality Gates read only the effective Result per Execution and clause, by its effective state. A resolved Result MUST NOT be counted again, including in `basis.not_actionable`. |
-| Invalidation is derived | Volume I, Ch. 6; Volume VIII | A missed Seeded Control MUST NOT change any recorded Result. Its effect is derived from `seeded_control_results`: the affected effective Results have effective state `invalidated`. |
+| Invalidation is derived | Volume I, Ch. 6; Volume VIII | A missed Seeded Control MUST NOT change any recorded Result. Its effect is derived from `seeded_control_results`: the affected effective Results have effective state `invalidated`, with one `invalidated_by` entry per missed control that reaches them. |
+| Requalification covers every invalidation | Volume I, Ch. 6; Volume VIII | A requalified Oracle's Result MAY resolve an invalidated Result only if that Oracle has been requalified for every `defect_class` in the Result's `invalidated_by`. |
+| Validator unavailable | Volume V; Appendix C §C.7 | A Validator that cannot complete its check MUST produce `oracle_unavailable`, never `fail`, and Validation for that Execution has not passed. |
 | Gate reasons | Volume I, Ch. 6; Appendix A §A.12 | A failed GateResult MUST list every applicable reason. A Gate whose aggregate includes an effective Result that is not `actionable` MUST fail, with `non_actionable_results` or `seeded_control_miss`. |
 | Gate Result override | Volume XII | An `override` MUST reference an approved `gate_override` record made for that GateResult. One override record MUST NOT be referenced by more than one GateResult. |
 | Release Decision coverage | Volume I, Ch. 6 | `gates` MUST contain a GateResult for every Quality Gate, blocking or advisory, applicable to the decision's scope. |

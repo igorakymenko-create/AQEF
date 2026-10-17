@@ -408,7 +408,8 @@ sources.
 **Invalidated Result** — A Result whose Oracle missed a Seeded Control of a class its
 clause covers, in the same run (Volume VIII; Volume I, Chapter 6). Its record is
 unchanged, but its effective state is `invalidated`, and no Quality Gate counts it as
-`actionable`. Distinct from `inconclusive`, which means the Oracle was unsure of its
+`actionable`, for as long as any of the misses that reached it is unresolved; more than
+one can. Distinct from `inconclusive`, which means the Oracle was unsure of its
 verdict, not that the Oracle could not be shown to work.
 
 **Jailbreak** — A Safety-Adjacent elicitation technique (Volume IX) attempting to
