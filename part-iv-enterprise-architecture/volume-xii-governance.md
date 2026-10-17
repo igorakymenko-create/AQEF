@@ -66,6 +66,9 @@ governed actions this means:
   only as `approved` when every blocking Gate Result passed without an override and the
   configuration has not changed since the Snapshot (Chapter 6), or as `rejected`. The
   record MUST reference the policy. An override, or any other decision, needs a Person.
+  A standing release policy (Appendix A §A.14) names the Suites, Environments, and
+  Service Accounts it covers. It is not modified once approved; it is revoked, and a
+  different one approved in its place.
 
 ## Audit
 
@@ -126,8 +129,10 @@ mechanism they were deferring to.
 Defining a Contract includes defining or changing a Quality Gate: its threshold, its
 minimum basis, or whether its failure blocks a release (Chapter 6). A Gate states what a
 release must show just as a Contract does, and loosening either one has the same effect,
-so both go through the same governed action (`contract_define`). The four governed
-actions remain four.
+so both go through the same governed action (`contract_define`). This holds whichever
+operation carries the change: an inline Contract edited together with its Scenario, or
+Gates replaced together with their Project, is still `contract_define` (Appendix C
+§C.5). The four governed actions remain four.
 
 An approved Quality Gate override applies to exactly one Gate Result (Appendix A §A.12)
 — one Gate, evaluated once, for one batch of Executions — and is recorded against it. It

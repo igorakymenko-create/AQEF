@@ -27,6 +27,7 @@ The top-level container for a single AI system under quality governance (Volume 
 | `environments` | List of Environment | MUST | At least one Environment MUST be defined. |
 | `suites` | List of Suite | MAY | Suites MAY be defined inline or in separate files. |
 | `execution` | ExecutionConfig | MAY | Default execution settings (timeout, retry). |
+| `datasets` | List of Dataset | MAY | Datasets (§A.8) the Project's Scenarios draw on. A Dataset MAY instead be registered through Appendix C §C.3; either way a Scenario references it by name and version (§A.4). |
 | `defect_classes` | List of DefectClassConfig | MAY | Defect classes the Project's Seeded Controls plant, with the difficulty prior for each (Volume VIII). |
 | `contracts` | List of Contract (inline) or String (reference) | MAY | Contracts that apply to every Scenario in every Suite of the Project, composed with Suite- and Scenario-level Contracts (Volume VII — Contract Composition). |
 | `quality_gates` | List of QualityGate | MAY | Quality Gates (§A.10) that apply to every Release Decision in the Project. |
@@ -133,7 +134,7 @@ optionally a Dataset.
 | `name` | String | MUST | Unique within the Suite. |
 | `contract` | Contract (inline) or String (reference) | MUST (unless the Project or Suite supplies one) | This Scenario's own Contract, composed with the Project's and the Suite's (Volume VII — Contract Composition). The effective Contract MUST contain at least one clause. |
 | `prompt` | PromptDef | MUST (unless `dataset` is a `production_replay` Dataset, or the Scenario carries `evidence`) | The stimulus sent to the subject (Volume II — Prompt). For a multi-turn Scenario, the opening turn. |
-| `dataset` | String (reference) | MAY | Reference to a named Dataset for data-driven instantiation. |
+| `dataset` | String (reference) | MAY | The Dataset (§A.8) that supplies this Scenario's Variables, written `name@version`. The version MUST be given: a reference without one does not pin the rows an Execution draws from (Volume IV — Versioning). |
 | `variables` | Map of String → Any | MAY | Fixed Variables when no Dataset is used. |
 | `seeded_control` | SeededControlConfig | MAY | Marks this Scenario as a Seeded Control (Volume VIII) — a deliberately planted, known defect used to prove that an Oracle can still detect that defect class in the current run. |
 | `evidence` | FixedEvidence | MAY | Only on a Seeded Control with `confirmed_by: construction`, and then REQUIRED. Recorded Evidence with the defect already in it; the subject is not invoked (Volume III). Excludes `prompt`, `dataset`, and `variables`. |
@@ -186,7 +187,7 @@ control.
 ```yaml
 scenarios:
   - name: greeting-response
-    dataset: greeting-inputs
+    dataset: greeting-inputs@1.0.0
     prompt:
       template: "{{query}}"
     contract:
@@ -248,6 +249,8 @@ VII).
 | `target` | String | MUST | What to inspect: `response`, `conversation`, `artifacts.*`, or a specific path. |
 | `expected` | Any | MUST | The threshold, schema, pattern(s), or rule the Validator checks against — for example, a `forbidden-content` Constraint's `patterns` list lives *inside* `expected`, not as a sibling field. Structure varies by validator type. |
 | `veto` | Boolean | MAY | If true, failure of this Constraint is a Hard Veto (Volume V). Default: `false`. |
+| `id` | String | MAY | Identifies this clause across Contract Composition (Volume VII). Two contributed clauses are the same clause only when they declare the same `id`: identical content is one clause, differing content is a composition conflict. A clause without `id` is never the same clause as another, and simply applies. Unique within one Contract. Where present, a Result's `clause` uses it (Appendix C §C.7). |
+| `dimension` | String | MAY | The Quality Dimension whose aggregate this clause's Results count toward (Volume I, Chapter 6): `functional`, `semantic`, `operational`, or `safety`. Default by Validator type: `functional` for `schema`, `tool-call`, and `structural`; `operational` for `latency` and `cost`; `safety` for `forbidden-content` and `boundary`. MUST be given for a Custom Validator. A clause that belongs to two dimensions is written as two clauses. |
 | `defect_classes` | List of String | MAY | Defect classes this clause checks for (Volume VIII). A missed Seeded Control of a listed class affects this clause. A clause listing none is treated as covering every class its Oracle is tested on. |
 
 **Expectation** — a criteria-based clause bound to exactly one Oracle that carries a
@@ -263,6 +266,8 @@ to any of the three concrete Oracle types, not just one.
 | `confidence_threshold` | Float (0.0–1.0) | MUST if `judge`/`multi_judge`; MAY if `human_reviewer` | Minimum Confidence for the Result to be `actionable` (Appendix C — Result Response Shape) rather than `inconclusive`. A Human Reviewer Result MAY carry no Confidence value (Volume II), in which case this field does not apply and the Result is `actionable` once a verdict exists. |
 | `review_timeout` | Duration | MAY | How long a Result MAY sit at disposition `awaiting_review` before `on_timeout` applies. |
 | `on_timeout` | String | MAY | `block` or `escalate`. Default: `block` — an unresolved review is never silently treated as a pass. |
+| `id` | String | MAY | As for a Constraint, above. |
+| `dimension` | String | MAY | As for a Constraint, above. Default: `semantic`. |
 | `defect_classes` | List of String | MAY | Defect classes this clause checks for (Volume VIII). A missed Seeded Control of a listed class affects this clause. A clause listing none is treated as covering every class its Oracle is tested on. |
 
 An Expectation MUST specify exactly one of `judge`, `multi_judge`, or `human_reviewer`.
@@ -324,7 +329,7 @@ A named, versioned collection of input data (Volume II, Volume IV).
 | `rows` | List of Row | MUST (if `static`) | The actual data rows. |
 | `generator` | GeneratorConfig | MUST (if `generated`) | AI-generation configuration. |
 | `capture` | CaptureConfig | MUST (if `production_replay`) | Production capture configuration. |
-| `base_dataset` | String | MAY | Reference to a parent Dataset for Data Mutation or Fuzzing. |
+| `base_dataset` | String | MAY | Reference to a parent Dataset for Data Mutation or Fuzzing, written `name@version` as in §A.4. |
 | `mechanisms` | List of MechanismConfig | MAY | Coverage mechanisms applied to this Dataset. |
 
 **Row**
@@ -390,7 +395,7 @@ Gate is governed by Approval Workflow under `contract_define` (Volume XII).
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `name` | String | MUST | Gate identifier. |
-| `aggregate` | String | MUST | Quality Dimension or Metric to check: `safety`, `functional`, `semantic`, `operational`, `regression`, or implementation-defined. |
+| `aggregate` | String | MUST | Quality Dimension or Metric to check: `safety`, `functional`, `semantic`, `operational`, `regression`, or implementation-defined. A dimension's aggregate reads the Results of every clause whose `dimension` (§A.5) is that dimension. |
 | `threshold` | Float or ThresholdMap | MUST | Pass/fail threshold. A ThresholdMap allows multiple named sub-thresholds under one Gate (e.g. several Operational metrics). |
 | `compare_against` | String | MAY | For a Regression Gate (`aggregate: regression`): which Baseline or Snapshot to compare against — a named Baseline, or `latest_approved` (Volume X). |
 | `min_basis` | MinBasis | MAY | Minimum Aggregate Basis (Volume I, Chapter 6) the aggregate must rest on for this Gate to pass. Where declared and not met, the Gate does not pass, with insufficient basis as the recorded reason. |
@@ -438,6 +443,7 @@ The traceable output of the Decision Pipeline (Volume I, Chapter 6; Volume XII).
 
 | Field | Type | Required | Description |
 |---|---|---|---|
+| `id` | String | MUST | Unique identifier of this Release Decision. |
 | `project` | String | MUST | Project name. |
 | `environment` | String | MUST | Environment evaluated. |
 | `suite` | String | MUST | Suite that was run. |
@@ -445,7 +451,7 @@ The traceable output of the Decision Pipeline (Volume I, Chapter 6; Volume XII).
 | `gates` | Map of String → GateResult | MUST | One GateResult per Quality Gate applicable to the decision's scope, blocking and advisory alike, keyed by Gate name (below). At least one: a Release Decision requires an applicable Quality Gate (Volume I, Chapter 6). |
 | `decision` | String | MUST | `approved`, `rejected`, or `overridden`. |
 | `approved_by` | String | MUST | Principal who recorded the decision: a Person, or a Service Account acting under `release_policy` (Volume XII — Principals). |
-| `release_policy` | String | MUST (if `approved_by` is a Service Account) | Reference to the standing release policy a Person approved. With it, `decision` MAY only be `approved` (every blocking GateResult `pass`, none overridden) or `rejected`. |
+| `release_policy` | String | MUST (if `approved_by` is a Service Account) | The `id` of the standing release policy (§A.14) the Service Account acts under. The policy MUST be in force when the decision is recorded, list that Service Account, and cover the decision's Suite and Environment. With it, `decision` MAY only be `approved` (every blocking GateResult `pass`, none overridden) or `rejected`. |
 | `approved_at` | DateTime | MUST | Timestamp. |
 | `approval_role` | String | MUST | Role held. |
 | `report_id` | String | MUST | Reference to the frozen Report (Volume XI). |
@@ -464,9 +470,10 @@ The outcome of evaluating one Quality Gate once (Volume I, Chapter 6).
 
 | Field | Type | Required | Description |
 |---|---|---|---|
+| `id` | String | MUST | Unique identifier of this GateResult. An override names the GateResult it applies to by this `id` (Appendix C §C.3). |
 | `status` | String | MUST | `pass` or `fail`: the Gate's state only. What a failure does is `blocking`. |
 | `blocking` | Boolean | MUST | `true` for a Gate with `on_failure: block_release`, `false` for `warn`. |
-| `reasons` | List of String | MUST (if `status` is `fail`) | Every reason that applies, none omitted: `threshold` (the value fell short), `insufficient_basis` (its `min_basis` was not met), `non_actionable_results` (the aggregate included effective Results that are not `actionable` for a reason other than a Seeded Control — `inconclusive`, `awaiting_review`, `oracle_unavailable`, or `not_assessed` below a panel's quorum), `seeded_control_miss` (it included Results invalidated, or left `not_assessed`, by a missed Seeded Control, Volume VIII). Absent when `status` is `pass`. |
+| `reasons` | List of String | MUST (if `status` is `fail`) | Every reason that applies, none omitted: `threshold` (the value fell short), `insufficient_basis` (its `min_basis` was not met), `non_actionable_results` (the aggregate included effective Results that are not `actionable` for a reason other than a Seeded Control — `inconclusive`, `awaiting_review`, `oracle_unavailable`, or `not_assessed` below a panel's quorum), `seeded_control_miss` (it included Results invalidated, or left `not_assessed`, by a missed Seeded Control, Volume VIII), `stale_results` (it included Results produced under an Environment, or for a clause of a Contract, other than the one its Snapshot captures, Volume I, Chapter 6). Absent when `status` is `pass`. |
 | `value` | Float, Map of String → Float, or `"not_computed"` | MUST | The aggregate the Gate read; a Map for a Gate with a ThresholdMap. `"not_computed"` when no aggregate could be computed, for example a run halted by a missed Seeded Control. Never bare `null`. |
 | `threshold` | Float or ThresholdMap | MUST | The threshold the Gate was evaluated against, copied at evaluation time, so the record stays checkable if the Gate definition changes later. |
 | `basis` | Basis | MUST | The Aggregate Basis the aggregate rested on (Appendix C §C.3). |
@@ -490,6 +497,31 @@ MAY be captured explicitly for Snapshot Comparison. Never modified once captured
 | `quality_gates` | List of QualityGate | MUST | The Gate definitions in scope, as they stood at capture time. |
 | `baselines` | List of String | MAY | Baselines included, for Snapshot Comparison (Volume X). |
 | `release_label` | String | MAY | Human-readable release identifier. |
+
+## A.14 — Release Policy
+
+A standing authorization, approved by a Person, under which a Service Account MAY record
+Release Decisions (Volume XII — Principals). Defining or revoking a Release Policy is
+governed under `release_decide`.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `id` | String | MUST | Policy identifier, as referenced by a Release Decision's `release_policy`. |
+| `project` | String | MUST | Project name. |
+| `suites` | List of String | MUST | Suites whose Release Decisions the policy covers. |
+| `environments` | List of String | MUST | Environments whose Release Decisions the policy covers. |
+| `service_accounts` | List of String | MUST | Service Accounts that MAY record Release Decisions under this policy. |
+| `approved_by` | String | MUST | Person who approved the policy. MUST be a Person (Volume XII — Principals). |
+| `approval_role` | String | MUST | Role the approver held. MUST have `release_decide` Permission. |
+| `approved_at` | DateTime | MUST | Timestamp of approval. |
+| `revoked_at` | DateTime | MAY | When the policy was revoked. A revoked policy authorizes no further Release Decision; those already recorded under it stand. |
+| `revoked_by` | String | MUST (if `revoked_at` is present) | Person who revoked the policy, holding `release_decide`. |
+
+A Release Policy is not modified once approved, except by being revoked: changing what
+it allows means approving a new one. It authorizes nothing beyond what Volume XII
+already permits a Service Account: `decision: approved` only when every blocking Gate
+Result passed without an override and the configuration is current, or
+`decision: rejected`.
 
 ## Type Reference
 

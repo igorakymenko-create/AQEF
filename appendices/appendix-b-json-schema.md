@@ -46,6 +46,7 @@ to a Domain Model entity (Volume II):
 | GateResult | A.12 | I, Ch. 6 |
 | Basis | Appendix C §C.3 | I, Ch. 6 |
 | Snapshot | A.13 | II, X |
+| ReleasePolicy | A.14 | XII |
 
 ## B.2 — Property Constraints
 
@@ -58,6 +59,7 @@ properties:
   environments:  { type: array, items: Environment, minItems: 1 }  # REQUIRED
   suites:        { type: array, items: Suite }                    # OPTIONAL
   execution:     { $ref: ExecutionConfig }                         # OPTIONAL
+  datasets:       { type: array, items: Dataset }                  # OPTIONAL
   defect_classes: { type: array, items: DefectClassConfig }        # OPTIONAL
   contracts:      { type: array, items: { oneOf: [Contract, string] } }  # OPTIONAL
   quality_gates:  { type: array, items: QualityGate }              # OPTIONAL
@@ -126,7 +128,7 @@ properties:
   name:             { type: string, minLength: 1 }        # REQUIRED
   contract:         { oneOf: [Contract, string] }         # CONDITIONAL
   prompt:           { $ref: PromptDef }                   # CONDITIONAL
-  dataset:          { type: string }                      # OPTIONAL
+  dataset:          { type: string, pattern: "^.+@.+$" }  # OPTIONAL (name@version)
   variables:        { type: object }                      # OPTIONAL
   seeded_control:   { $ref: SeededControlConfig }          # OPTIONAL
   evidence:         { $ref: FixedEvidence }                # CONDITIONAL
@@ -194,6 +196,9 @@ properties:
   target:     { type: string, minLength: 1 }         # REQUIRED
   expected:   { }                                    # REQUIRED
   veto:       { type: boolean, default: false }      # OPTIONAL
+  id:         { type: string, minLength: 1 }         # OPTIONAL
+  dimension:  { type: string, enum: [functional, semantic,
+                operational, safety] }               # OPTIONAL (default by validator type)
   defect_classes: { type: array, items: { type: string } }  # OPTIONAL
 ```
 
@@ -212,6 +217,9 @@ properties:
   review_timeout:         { type: string }                             # OPTIONAL
   on_timeout:             { type: string, enum: [block, escalate],
                             default: block }                           # OPTIONAL
+  id:                     { type: string, minLength: 1 }               # OPTIONAL
+  dimension:              { type: string, enum: [functional, semantic,
+                            operational, safety], default: semantic }  # OPTIONAL
   defect_classes:         { type: array, items: { type: string } }     # OPTIONAL
 ```
 
@@ -345,6 +353,7 @@ properties:
 **ReleaseDecision**
 ```
 properties:
+  id:                  { type: string, minLength: 1 }                    # REQUIRED
   project:             { type: string, minLength: 1 }                    # REQUIRED
   environment:         { type: string, minLength: 1 }                    # REQUIRED
   suite:               { type: string, minLength: 1 }                    # REQUIRED
@@ -365,11 +374,13 @@ properties:
 **GateResult**
 ```
 properties:
+  id:         { type: string, minLength: 1 }                             # REQUIRED
   status:     { type: string, enum: [pass, fail] }                       # REQUIRED
   blocking:   { type: boolean }                                          # REQUIRED
   reasons:    { type: array, minItems: 1, uniqueItems: true,
                 items: { type: string, enum: [threshold, insufficient_basis,
-                non_actionable_results, seeded_control_miss] } }         # CONDITIONAL
+                non_actionable_results, seeded_control_miss,
+                stale_results] } }                                       # CONDITIONAL
   value:      { oneOf: [ { type: number },
                 { type: object, additionalProperties: { type: number } },
                 { type: string, const: not_computed } ] }                # REQUIRED
@@ -403,12 +414,29 @@ properties:
   environments:   { type: object, additionalProperties: Environment }    # REQUIRED
   contracts:      { type: object,
                     additionalProperties: { type: string } }             # REQUIRED
-    inline_contracts: { type: object, additionalProperties:
+  inline_contracts: { type: object, additionalProperties:
                       { type: array, items: Contract } }                 # REQUIRED
   quality_gates:  { type: array, items: QualityGate }                    # REQUIRED
   baselines:      { type: array, items: { type: string } }               # OPTIONAL
   release_label:  { type: string }                                       # OPTIONAL
 ```
+
+**ReleasePolicy**
+```
+properties:
+  id:                { type: string, minLength: 1 }                      # REQUIRED
+  project:           { type: string, minLength: 1 }                      # REQUIRED
+  suites:            { type: array, items: { type: string }, minItems: 1 }  # REQUIRED
+  environments:      { type: array, items: { type: string }, minItems: 1 }  # REQUIRED
+  service_accounts:  { type: array, items: { type: string }, minItems: 1 }  # REQUIRED
+  approved_by:       { type: string, minLength: 1 }                      # REQUIRED
+  approval_role:     { type: string, minLength: 1 }                      # REQUIRED
+  approved_at:       { type: string, format: date-time }                 # REQUIRED
+  revoked_at:        { type: string, format: date-time }                 # OPTIONAL
+  revoked_by:        { type: string, minLength: 1 }                      # CONDITIONAL
+```
+
+*Cross-field rule:* `revoked_by` is REQUIRED when `revoked_at` is present.
 
 ## B.3 — Cross-Type Validation Rules
 
@@ -420,7 +448,7 @@ by a conformant implementation at configuration load time:
 | Independent Oracle — identity | Volume I, Ch. 3 | A JudgeConfig's `model` MUST NOT be identical to the Environment's `model_version` (same weights/decision process as the subject). |
 | Independent Oracle — family | Volume I, Ch. 3 | A JudgeConfig's `model` SHOULD NOT be from the same model family as the Environment's `model_version`, where this can be avoided. |
 | Contract non-empty | Volume VII | A Contract with zero Constraints and zero Expectations is invalid. |
-| Effective Contract | Volume VII | For every Scenario in every Suite, the composition of the Project's `contracts`, the Suite's `contracts`, and the Scenario's `contract` MUST contain at least one clause. A Scenario MAY omit `contract` only when the Project or Suite supplies one. A lower level MUST NOT remove or weaken a clause contributed by a higher one; a differing value for the same clause is a composition conflict. |
+| Effective Contract | Volume VII | For every Scenario in every Suite, the composition of the Project's `contracts`, the Suite's `contracts`, and the Scenario's `contract` MUST contain at least one clause. A Scenario MAY omit `contract` only when the Project or Suite supplies one. A lower level MUST NOT remove or weaken a clause contributed by a higher one. Two clauses are the same clause only when they declare the same `id`; the same `id` with differing content is a composition conflict. |
 | Gate name uniqueness | Volume I, Ch. 6 | A Quality Gate name MUST be unique across a Project's `quality_gates` and those of all its Suites. |
 | Prompt presence | Volume II; Volume III | A Scenario MUST carry `prompt` unless its `dataset` is a `production_replay` Dataset or it carries `evidence`. Every Variable a `prompt.template` references MUST be supplied by the Scenario's `variables` or every row of its Dataset. |
 | Consensus threshold | Volume VI | `threshold` is valid only with `method: voting`. Votes are counted against `panel.counted` (or samples); a verdict requires at least ⌈threshold × count⌉ matching votes. |
@@ -428,7 +456,7 @@ by a conformant implementation at configuration load time:
 | Dataset version immutability | Volume IV | Two configurations referencing the same Dataset name + version MUST resolve to identical rows. |
 | Retry scope | Volume III | RetryConfig MUST NOT trigger on Result-level failures, only infrastructure failures. |
 | Baseline reproducibility | Volume X | A Baseline MUST reference a Dataset version and Contract version that are still recoverable. |
-| Composition conflict surfacing | Volume VII | When `extends` produces conflicting clause values, the implementation MUST surface the conflict, not silently resolve it. |
+| Composition conflict surfacing | Volume VII | When composition, by `extends` or across Project, Suite, and Scenario, yields two clauses with the same `id` and differing content, the implementation MUST surface the conflict, not silently resolve it. |
 | Multi-Judge purpose consistency | Volume VI | An independence-mode MultiJudge with judges from the same model family SHOULD produce a warning. |
 | Result disposition validity | Appendix C §C.7 | `verdict` MUST be `null` when `disposition` is `awaiting_review`, `oracle_unavailable`, or `not_assessed`, and MUST be `pass` or `fail` otherwise. `confidence` MUST NOT be bare `null` under any disposition. |
 | Seeded Control invalidation scope | Volume VIII; Appendix C §C.3 | A missed Seeded Control invalidates only the Results its Oracle produced in the same run sharing its `defect_class`, by default. Full-run invalidation requires a Project to declare it explicitly, with a recorded, non-empty reason. |
@@ -448,7 +476,7 @@ by a conformant implementation at configuration load time:
 | Requalification covers every invalidation | Volume I, Ch. 6; Volume VIII | A requalified Oracle's Result MAY resolve an invalidated Result only if that Oracle has been requalified for every `defect_class` in the Result's `invalidated_by`. |
 | Validator unavailable | Volume V; Appendix C §C.7 | A Validator that cannot complete its check MUST produce `oracle_unavailable`, never `fail`, and Validation for that Execution has not passed. |
 | Gate reasons | Volume I, Ch. 6; Appendix A §A.12 | A failed GateResult MUST list every applicable reason. A Gate whose aggregate includes an effective Result that is not `actionable` MUST fail, with `non_actionable_results` or `seeded_control_miss`. |
-| Gate Result override | Volume XII | An `override` MUST reference an approved `gate_override` record made for that GateResult. One override record MUST NOT be referenced by more than one GateResult. |
+| Gate Result override | Volume XII | An `override` MUST reference an approved `gate_override` record made for that GateResult, named by its `id`. One override record MUST NOT be referenced by more than one GateResult. |
 | Release Decision coverage | Volume I, Ch. 6 | `gates` MUST contain a GateResult for every Quality Gate, blocking or advisory, applicable to the decision's scope. |
 | Release Decision outcome | Volume I, Ch. 6; Volume XII | `decision: approved` requires every blocking GateResult to have `status: pass`; `decision: overridden` requires every blocking GateResult with `status: fail` to carry `override`. |
 | Release Decision currency | Volume I, Ch. 6 | A Release Decision MUST NOT be recorded if any Contract (Reusable or inline), Quality Gate, or Environment in its scope differs from the configuration captured in the Snapshot named by `snapshot_id`. |
@@ -457,6 +485,12 @@ by a conformant implementation at configuration load time:
 | Human approval | Volume XII | `baseline_approve` and `gate_override` MUST be approved by a Person. A `contract_define` applied by a Service Account MUST name the approving Person and reference the external review. |
 | Automatic release | Volume XII | A Release Decision whose `approved_by` is a Service Account MUST carry `release_policy`, and its `decision` MUST be `approved` (every blocking GateResult `pass`, no `override`) or `rejected`. |
 | Snapshot immutability | Volume X | A Snapshot MUST NOT be modified after `captured_at`. |
+| Clause identity | Volume VII | A clause `id` MUST be unique within the Contract that declares it. |
+| Dataset reference | Volume IV | A Scenario's `dataset` and a Dataset's `base_dataset` MUST name a version (`name@version`) that resolves to a Dataset in the Project's `datasets` or one registered through Appendix C §C.3. |
+| Clause dimension | Volume I, Ch. 6 | A Constraint bound to a Custom Validator MUST declare `dimension`. |
+| Stale Results | Volume I, Ch. 6 | A Gate whose aggregate includes a Result produced under an Environment, or for a clause of a Contract, other than the one the evaluation's Snapshot captures MUST fail, with `stale_results`. |
+| Release policy | Volume XII | A Release Decision's `release_policy` MUST name a Release Policy in force when the decision is recorded, approved by a Person holding `release_decide`, that lists the acting Service Account and covers the decision's Suite and Environment. |
+| Governed configuration change | Volume XII; Appendix C §C.5 | Creating or changing a `contract`, `contracts`, or `quality_gates` value, through whatever operation, is `contract_define`. |
 
 ## B.4 — Extensibility
 

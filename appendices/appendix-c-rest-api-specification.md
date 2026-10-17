@@ -61,6 +61,7 @@ subject's output varies (Volume I, Chapter 3).
 | Report | `/projects/{project}/reports` | XI | Frozen presentations. |
 | Quality Gate | `/projects/{project}/gates` | I, Ch. 6 | Thresholded checks. |
 | Release Decision | `/projects/{project}/releases` | I, Ch. 6; XII | Go/no-go records. |
+| Release Policy | `/projects/{project}/release-policies` | XII | Standing authorizations for Release Decisions recorded by a Service Account. |
 
 **Governance Resources**
 
@@ -139,6 +140,20 @@ subject's output varies (Volume I, Chapter 3).
 | GET | `.../executions/{execution}/conversation` | Retrieve the Conversation transcript. | `read` |
 | GET | `.../executions/{execution}/artifacts` | List Artifacts. | `read` |
 | GET | `.../executions/{execution}/results` | List Results (Validator + Judge). | `read` |
+| POST | `.../executions/{execution}/results/{result}/review` | Record a Human Reviewer's verdict on this Result: completes it if it is `awaiting_review`, otherwise records a new Human Reviewer Result that resolves it. | `review` |
+| POST | `.../executions/{execution}/results/{result}/reassess` | Have an Oracle assess the stored Evidence again for this Result's clause, as a new Result that resolves it. The subject is not invoked. | `execute` |
+
+**Review and re-assessment** carry out Result Resolution (Volume I, Chapter 6); both
+MUST be rejected where it does not allow the resolution requested.
+
+- `review`: the body gives `verdict`, `confidence` where the review captures one, and
+  `supporting_evidence`. The Principal MUST be a Person holding `review` and, where the
+  clause names a `human_reviewer.role` (Appendix A §A.5), that Role. A Result that is
+  neither `awaiting_review` nor open to resolution by a Human Reviewer is not reviewed.
+- `reassess`: the body names the `oracle` configuration to use. It MUST be rejected for
+  the same Oracle configuration unless the Result is `oracle_unavailable`, and for an
+  Oracle not requalified for every defect class in the Result's `invalidated_by`
+  (Volume VIII).
 
 **Triggering:** `POST /executions` accepts a body specifying `suite`, `environment`,
 and optional `gates` to check after completion. The response returns a batch
@@ -209,7 +224,7 @@ operation modifies or replaces a Snapshot.
 | POST | `/projects/{project}/gates` | Define a Quality Gate. Governed by Approval Workflow. | `contract_define` |
 | PUT | `/projects/{project}/gates/{gate}` | Change a Quality Gate (threshold, `min_basis`, `on_failure`). Governed by Approval Workflow. | `contract_define` |
 | POST | `/projects/{project}/gates/check` | Evaluate Gates against a set of Results. Returns one GateResult (Appendix A §A.12) per Gate and the `snapshot_id` captured for the evaluation. | `execute` |
-| POST | `/projects/{project}/gates/{gate}/override` | Override one failed blocking GateResult. Body MUST identify the evaluation (`execution_batch_id`) and include a non-empty justification. Applies to that GateResult only. Governed by Approval Workflow. | `gate_override` |
+| POST | `/projects/{project}/gates/{gate}/override` | Override one failed blocking GateResult. Body MUST name the GateResult by its `id` (Appendix A §A.12), give its `execution_batch_id`, and include a non-empty justification. Applies to that GateResult only. Governed by Approval Workflow. | `gate_override` |
 
 **Aggregate Basis Reporting:** the response to `POST /projects/{project}/gates/check`,
 and every per-gate entry in a Release Decision, MUST include a `basis` object for the
@@ -218,7 +233,7 @@ aggregate that Gate read (Volume I, Chapter 6):
 | Field | Type | Description |
 |---|---|---|
 | `results` | Integer | Effective Results whose effective state is `actionable` that the aggregate was computed from. |
-| `not_actionable` | Integer | Effective Results in the same scope whose effective state is not `actionable` (§C.7), invalidated ones included. |
+| `not_actionable` | Integer | Effective Results in the same scope whose effective state is not `actionable` (§C.7), invalidated ones included, and stale ones (Volume I, Chapter 6). |
 | `scenarios` | Integer | Distinct Scenarios those Results came from. |
 | `executions` | Integer | Distinct Executions those Results came from. |
 | `min_basis_met` | Boolean or `"not_declared"` | Whether the Gate's `min_basis` (Appendix A §A.10) was met. `"not_declared"` when the Gate sets none. Never bare `null`. |
@@ -236,6 +251,17 @@ Results are not counted in any field above.
 | GET | `/projects/{project}/reports/{report}` | Retrieve a frozen Report. | `read` |
 | POST | `/projects/{project}/releases` | Record a Release Decision. MUST be rejected if a Contract, Quality Gate, or Environment in its scope differs from its `snapshot_id`, or if no Quality Gate applies to its scope (Volume I, Chapter 6). Governed by Approval Workflow. | `release_decide` |
 | GET | `/projects/{project}/releases` | List Release Decisions. | `read` |
+
+**Release Policy**
+
+| Method | Path | Description | Permission |
+|---|---|---|---|
+| GET | `/projects/{project}/release-policies` | List Release Policies, revoked ones included. | `read` |
+| POST | `/projects/{project}/release-policies` | Approve a Release Policy (Appendix A §A.14). The Principal MUST be a Person. Governed by Approval Workflow. | `release_decide` |
+| GET | `/projects/{project}/release-policies/{policy}` | Retrieve a Release Policy. | `read` |
+| POST | `/projects/{project}/release-policies/{policy}/revoke` | Revoke a Release Policy. The Principal MUST be a Person. | `release_decide` |
+
+No operation modifies a Release Policy; a different policy is approved as a new one.
 
 **Governance**
 
@@ -292,6 +318,14 @@ changing a Quality Gate, which sets what a release must show (Volume XII).
 | `POST /baselines` | `baseline_approve` |
 | `POST /gates/{gate}/override` | `gate_override` |
 | `POST /releases` | `release_decide` |
+| `POST /release-policies` | `release_decide` |
+| `POST /release-policies/{policy}/revoke` | `release_decide` |
+
+The table names the operations made for these actions, not the only ones that can carry
+them. Any operation that creates or changes a `contract`, `contracts`, or
+`quality_gates` value, on whatever resource (a Project, a Suite, or a Scenario), is
+`contract_define` as well as that operation's own Permission, and is governed and logged
+the same way.
 
 ## C.6 — Pagination and Filtering
 
@@ -319,7 +353,7 @@ configuration entities, but Result is runtime output, so it belongs here.
 |---|---|---|---|
 | `id` | String | MUST | Unique identifier of this Result. |
 | `execution` | String | MUST | The Execution whose Evidence was assessed. |
-| `clause` | String | MUST | The Contract clause applied: a stable reference to the clause within the Contract version in force for that Execution. |
+| `clause` | String | MUST | The Contract clause applied: a stable reference to the clause within the Contract version in force for that Execution, using the clause's `id` (Appendix A §A.5) where it declares one. |
 | `resolves` | String | MAY | The `id` of an earlier Result for the same `execution` and `clause` that this Result resolves (Volume I, Chapter 6 — Result Resolution). Absent otherwise. |
 | `oracle_type` | String | MUST | `validator`, `judge`, or `human_reviewer`. |
 | `oracle` | String | MUST | Which Oracle configuration produced this Result, with its version: a Validator's name and version (a plugin's included), a Judge's model and criteria configuration, or, for a Human Reviewer, the review role. The reviewing Person is recorded in `supporting_evidence`. What "the same Oracle" and "a requalified Oracle" mean (Volume I, Chapter 6; Volume VIII) is decided against this field. |
@@ -327,6 +361,7 @@ configuration entities, but Result is runtime output, so it belongs here.
 | `confidence` | Float (0.0–1.0) or `"not_applicable"` | MUST | Never omitted and never bare `null`. `"not_applicable"` for every Validator Result (Volume V), for a Human Reviewer Result whose review captures no Confidence (Volume II; Appendix A §A.5, `captures_confidence`), and for any Result with no verdict yet. |
 | `disposition` | String | MUST | `actionable`, `inconclusive`, `awaiting_review`, `oracle_unavailable`, or `not_assessed`. See below. |
 | `supporting_evidence` | Any | MUST | What the Oracle based its judgment on — the Conversation, Artifacts, or specific excerpts, per Oracle type. |
+| `recorded_at` | DateTime | MUST | When this Result was recorded. A Result that completes from `awaiting_review` keeps it; when the review returned is in `supporting_evidence`. |
 | `panel` | Object | MUST (Multi Judge Results); absent otherwise | `{ configured: Integer, counted: Integer }` — Judges configured in the panel, and Judges whose verdicts were counted after exclusions (Volume VI). |
 | `invalidated_by` | List of `{ scenario: String, defect_class: String }` | Read-only, derived | Present in a response when one or more missed Seeded Controls invalidate this Result for its run: one entry per control (§C.3, `seeded_control_results`). The Result stays invalidated while any entry remains applicable; it leaves that state only by being resolved (Volume I, Chapter 6). Never stored on the Result, and never set by a client. |
 
@@ -360,6 +395,9 @@ previously named as a field:
   scopes to the Execution stage; the same prohibition applies without exception: an
   Oracle that could not be reached MUST NOT be silently retried until a favorable
   verdict appears, and MUST NOT be treated as an implicit pass. `verdict` is `null`.
+  Re-attempting a call that failed before any verdict was returned is not such a retry
+  (Volume VI — Human Review); `oracle_unavailable` is what remains when every attempt
+  failed.
 - **`not_assessed`** — the Oracle was deliberately not invoked: it had missed a Seeded
   Control of the clause's defect class earlier in the same run (Volume VIII), or a Multi
   Judge panel fell below its quorum (Volume VI). `verdict` is `null`. The Evidence is

@@ -176,6 +176,7 @@ result:
   verdict: pass
   confidence: 0.91
   disposition: actionable        # 0.91 meets the 0.8 threshold
+  recorded_at: "2025-08-06T10:00:00Z"
   supporting_evidence:
     excerpt: "The capital of France is Paris."
 ```

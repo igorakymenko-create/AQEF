@@ -665,7 +665,9 @@ carry directly into how this combination MUST work:
 
 Aggregation produces one aggregate per Quality dimension, plus, where a Quality Gate
 spans more than one dimension, a further combination across those per-dimension
-aggregates. Which dimensions a given Gate reads, and at what weight, is a property of
+aggregates. Each clause states the dimension its Results count toward (`dimension`,
+Appendix A §A.5), with a default by Validator type, so which Results a dimension's
+aggregate reads is a matter of configuration, not of an implementation's own mapping. Which dimensions a given Gate reads, and at what weight, is a property of
 that Gate's own configuration, not a fixed formula this chapter imposes uniformly on
 every Suite or Project.
 
@@ -788,7 +790,14 @@ the same Results are evaluated against the new definition. Where a Contract chan
 those Results were produced against requirements no longer in force, and the affected
 clauses need new Results. Where the Environment changed — a model version, a prompt
 version, a tool configuration, an infrastructure target — the subject itself may now
-behave differently, and its Scenarios need new Executions. A change elsewhere in the Project, outside the decision's
+behave differently, and its Scenarios need new Executions.
+
+Evaluating the Gates again does not make old evidence current. A Result is **stale** for
+an evaluation when its Execution ran under an Environment, or its clause belongs to a
+Contract, other than the one that evaluation's Snapshot captures. A Gate MUST NOT pass on
+an aggregate that includes a stale Result, and records the reason as `stale_results`
+(Appendix A §A.12). Without this rule, a Gate evaluated again after a model upgrade would
+capture a Snapshot of the new Environment and pass on Results the old one produced. A change elsewhere in the Project, outside the decision's
 scope, does not affect it. This is a consistency check, not a safeguard against anyone
 in particular: a shared Contract fragment can be changed, correctly and with approval,
 by a Role that has no part in this release, and days can pass between the Report a

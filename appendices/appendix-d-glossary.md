@@ -356,7 +356,7 @@ intent. Distinct from Data Mutation (intent-preserving) and Edge Cases (targeted
 
 **Gate Result** — The outcome of evaluating one Quality Gate once (Appendix A §A.12):
 `pass` or `fail`, whether it blocks, every reason for a failure (threshold, insufficient
-basis, non-actionable Results, Seeded Control miss), the value and threshold compared, and its Aggregate
+basis, non-actionable Results, Seeded Control miss, stale Results), the value and threshold compared, and its Aggregate
 Basis. An override applies to exactly one Gate Result.
 
 **Generated Dataset** — A Dataset (Volume IV) expanded or created by an AI model.
@@ -576,6 +576,12 @@ Pipeline: a go/no-go judgment backed by a Report, a Gate Result for every applic
 Quality Gate, the Snapshot of the configuration they were evaluated under, and an
 Approval Workflow record, not merely a claim. Cannot be recorded if that configuration
 changed after the Snapshot.
+
+**Release Policy** — A standing authorization (Volume XII; Appendix A §A.14), approved
+by a Person holding `release_decide`, under which named Service Accounts MAY record
+Release Decisions for named Suites and Environments: `approved` only when every blocking
+Gate passed without an override and the configuration is current, or `rejected`. Not
+modified once approved; revoked and replaced instead.
 
 **Report** — A structured, point-in-time presentation (Volume II, Volume XI) of
 Metrics and Results. A Report is frozen once generated, making it valid as attached

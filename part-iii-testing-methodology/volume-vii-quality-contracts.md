@@ -131,6 +131,16 @@ the same Expectation, for instance — Composition MUST surface the conflict exp
 rather than silently resolve it; silently picking one value would hide exactly the kind
 of drift Chapter 3 requires a Contract to remain auditable against.
 
+Two contributed clauses are the same clause only when they declare the same `id`
+(Appendix A §A.5). With identical content they are one clause; with differing content,
+such as two Confidence thresholds, they are a conflict. A clause without an `id` is never
+the same clause as another: it is added, and applies alongside whatever else was
+contributed. This is what makes "cannot remove or weaken" checkable, below: a lower level
+can address a higher level's clause only through its `id`, and then only to repeat it
+unchanged. Matching clauses by their criteria text or by Validator and target was
+considered and rejected: two different checks can share both, and a reworded criterion
+would silently become a new clause.
+
 A Contract MAY be attached at three levels: to a Project, to a Suite, and to a Scenario
 (Appendix A §A.1, §A.3, §A.4). The effective Contract for a Scenario, when it is run as
 part of a Suite, is the composition of all three: the Project's Contracts, that Suite's

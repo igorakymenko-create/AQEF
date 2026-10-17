@@ -214,6 +214,14 @@ Evidence as a new, recorded Result that resolves the `oracle_unavailable` one (V
 Chapter 6 — Result Resolution). No verdict existed, so this is not a retry toward a
 favorable one; whatever the new Result says stands.
 
+A call to an Oracle that fails in transport before any verdict comes back (a dropped
+connection, a timeout, a rate-limit response) MAY be re-attempted within the same
+assessment, within the Execution's `timeout` (Appendix A §A.9). Every attempt is recorded
+in the Result's `supporting_evidence`. This is not the retry prohibited above: no verdict
+has been seen, so there is nothing to retry away from. Once any response carrying a
+verdict arrives, it stands, whatever it says. If every attempt fails, the Result is
+`oracle_unavailable`.
+
 ## Judge Drift
 
 Judge Drift is to a Judge what Semantic Regression (Volume X) is to the system under

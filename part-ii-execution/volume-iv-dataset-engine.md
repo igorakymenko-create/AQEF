@@ -128,7 +128,9 @@ requires Independent Oracles at assessment time.
 
 Every Dataset, regardless of source, MUST be versioned: a specific Execution's Variable
 Resolution (Volume III) is only reproducible if the Dataset row it drew from is pinned
-to a specific version, not silently mutable underneath it. This is what lets a Baseline
+to a specific version, not silently mutable underneath it. A Scenario therefore
+references a Dataset by name and version, `name@version` (Appendix A §A.4), never by name
+alone. This is what lets a Baseline
 (Volume II) mean anything at all — a Baseline is only a meaningful reference if the
 Dataset that produced its Execution can be identified precisely, not just the Scenario
 definition around it. Dataset Versioning is not the same mechanism as a Snapshot (Volume

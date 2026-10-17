@@ -62,7 +62,7 @@ The form of the statement is the implementation's choice; this one is recommende
 
 ```yaml
 aqef_conformance:
-  specification_version: "0.34"
+  specification_version: "0.37"
   implementation: "Example Engine 1.2"
   capabilities:
     - human_review
