@@ -31,6 +31,5 @@ directed the work and made the decisions recorded in it. All three reviewed comp
 versions of the document at various stages, as independent reviewers.
 
 - Claude (Anthropic) — drafting and editing; review.
-- ChatGPT (OpenAI) — review, including the staged consistency audits of v0.33 and
-  v0.34, whose findings were resolved in v0.34 and v0.35.
+- ChatGPT (OpenAI) — review.
 - Gemini (Google) — review.
