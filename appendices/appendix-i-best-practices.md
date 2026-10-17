@@ -229,13 +229,16 @@ through the Python SDK for the same inputs, the SDK has diverged from the API.
 
 ## I.8 — Extensibility
 
-**Verify Validator Plugin determinism mechanically.** The Extension Lifecycle (Volume
-XVI) MUST run a candidate Validator Plugin against a fixed input multiple times at
-registration and reject it on any variance. This is not a test the plugin author runs
-manually — it is an automated enforcement step the platform performs.
+**Check Validator Plugin repeatability mechanically, and don't mistake it for proof.**
+The Extension Lifecycle (Volume XVI) MUST run a candidate Validator Plugin against a
+fixed input multiple times at registration and reject it on any variance. This is not a
+test the plugin author runs manually — it is an automated step the platform performs.
+Passing it shows repeatability on one input, not determinism: keep clocks, random
+sources, and network calls out of Validators (Volume V), and re-check them on stored
+Evidence when in doubt.
 
 **Accept that Judge Plugin independence cannot be mechanically verified.** Unlike
-Validator determinism, a Judge's independence from the system under test (Volume I,
+Validator repeatability, a Judge's independence from the system under test (Volume I,
 Chapter 3) is a design-time and Contract-time judgment, not something the Plugin
 Architecture can test at registration. A Judge Plugin's structure can be checked (does
 it produce Confidence? are its criteria inspectable?), but whether it shares blind

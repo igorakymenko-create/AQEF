@@ -269,8 +269,10 @@ Executions after the fact is the normal path under this principle, not a special
 Every Result MUST be explicit about whether Confidence applies to it and, if so, what
 value it carries — no Result may simply omit the question and leave a consumer to
 guess whether it should be trusted at face value or weighed as one data point among
-several. For a Judge or Human Reviewer, this means an actual Confidence score
-reflecting genuine uncertainty in the verdict. For a Validator, whose check is
+several. For a Judge, this means an actual Confidence score reflecting genuine uncertainty in
+the verdict. A Human Reviewer's Result MAY carry one where the review captures it
+(Volume II); where it does not, the Result declares Confidence inapplicable, exactly as
+a Validator's does. For a Validator, whose check is
 deterministic and carries no epistemic uncertainty to quantify, this means the Result
 MUST instead explicitly declare that Confidence does not apply — stating its absence
 rather than omitting the field, so "unrated" and "deterministically certain" are never
@@ -567,9 +569,11 @@ in the first place.
 A Validator's Result carries no Confidence value, by definition (Glossary), and the
 Confidence Model treats it accordingly: fully binding, with no probabilistic discount,
 because the Result already declares Confidence inapplicable rather than merely absent —
-there is nothing left to model. A Judge or Human Reviewer's Result
-carries a genuine Confidence value, and the Confidence Model is what decides what that
-number *does*, not merely what it records:
+there is nothing left to model. A Judge's Result carries a genuine Confidence value, and so does a Human Reviewer's
+where the review captures one (Volume II); a Human Reviewer's Result that carries none
+is treated as a Validator's is, `actionable` once a verdict exists. Where a Confidence
+value exists, the Confidence Model is what decides what that number *does*, not merely
+what it records:
 
 - At or above the Confidence threshold set on the relevant Contract clause, a Result's
   disposition (Appendix C §C.7) is `actionable`, and it is counted at face value in the
@@ -579,6 +583,9 @@ number *does*, not merely what it records:
   Review (Volume VI), producing a separate Result that starts at disposition
   `awaiting_review` and resolves once a human responds, since a Judge that is not
   confident in its own verdict is exactly the case a Human Reviewer exists to resolve.
+  The Human Reviewer's Result resolves the Judge's (Result Resolution, below): from then
+  on it is the Result the Aggregation Model reads for that clause, while the Judge's
+  Result stays in the record unchanged.
 - A cluster of low-Confidence Results concentrated on one Scenario or one Judge, rather
   than spread evenly, is itself a signal worth surfacing to Reporting independently of
   any individual Result's disposition — it is frequently the first visible symptom of
@@ -589,6 +596,29 @@ Result and becomes an input to a decision about many Results at once: the same
 Confidence value means something different depending on what surrounds it, which is
 precisely why the Confidence Model has to be a distinct step and not folded silently
 into Aggregation.
+
+### Result Resolution
+
+A recorded Result is not modified. The one exception is a Human Reviewer's Result
+completing once its review returns: `awaiting_review` is the only disposition a Result
+leaves (Appendix C §C.7). A later Result can nevertheless settle what an earlier one
+left open, and the Aggregation Model has to know which of the two to read. A Result
+that does this names the Result it **resolves**. For each Execution and Contract
+clause, the Aggregation Model reads the **effective Result**: the last Result in that
+chain. Every earlier Result stays in the record, visible to Audit and Traceability
+(Volume XII), and is not counted again by any aggregate or Quality Gate.
+
+Only two kinds of Result may resolve another:
+
+- a Human Reviewer's Result, resolving an `inconclusive` Result or a Multi Judge
+  panel's Result that Consensus left unresolved (Volume VI);
+- a Result from a requalified Oracle re-assessing stored Evidence (Volume VIII),
+  resolving a Result invalidated by a missed Seeded Control.
+
+The same Oracle asked again resolves nothing: that is a retry until a favorable verdict
+appears, which Volume III prohibits. An effective Result that is itself not
+`actionable` (a review that timed out, a reviewer who could not be reached) blocks
+exactly as the Result it resolved did.
 
 ### Aggregation Model
 
@@ -658,16 +688,24 @@ that a Project has a place to state its own minimum, below.
 
 ### Quality Gates
 
-A **Quality Gate** is a named, thresholded check against one or more aggregated Metrics
-— attached to a Suite, Project, or a specific release candidate — that MUST pass for a
-Release Decision to authorize shipping. This chapter is its authoritative definition.
+A **Quality Gate** is a named, thresholded check against one or more aggregated Metrics,
+declared on a Project or on a Suite (Appendix A §A.1, §A.3). The Gates applicable to a
+Release Decision are those declared on its Project and on the Suite it covers. A blocking
+Gate MUST pass for a Release Decision to authorize shipping; an advisory Gate is evaluated
+and reported but does not by itself prevent shipping (below). This chapter is its
+authoritative definition.
 
 A Quality Gate MUST NOT pass on any aggregate to which an Oracle contributed Results
-sharing a missed Seeded Control's defect class (Volume VIII) in that run, unless the
-Project has declared full-run invalidation for that miss. A missed Seeded Control does
-not mean the system failed. It means the instrument could not be shown to work against
-that defect class in that run, so none of its Results in that class can support a
-decision to ship, including its passes.
+sharing a missed Seeded Control's defect class (Volume VIII) in that run. Where the
+Project has declared full-run invalidation for that miss, the same rule extends to every
+aggregate any Result of that run contributed to: full-run invalidation widens the rule,
+it never lifts it. A missed Seeded Control does not mean the system failed. It means the
+instrument could not be shown to work against that defect class in that run, so none of
+its Results in that class can support a decision to ship, including its passes. A Gate
+that does not pass for this reason records it as such (`seeded_control_miss`, Appendix A
+§A.12), not as a threshold failure. Results later produced by a requalified Oracle MAY
+resolve the invalidated ones (Result Resolution, above), and the Gate MAY then be
+evaluated again; the earlier Gate Result stays in the record.
 
 A Quality Gate MAY declare a minimum Aggregate Basis for the aggregate it reads. Where it
 does and the basis is not met, the Gate MUST NOT pass, and the reason MUST be recorded as
@@ -691,12 +729,23 @@ A Project typically runs several Quality Gates, each reading a different aggrega
 - A **Cost/Operational Gate**, reading Operational Quality aggregates such as latency
   or cost per Execution.
 
-A Release Decision requires every Quality Gate applicable to its scope to pass. Where
-one fails, the Decision Pipeline does not silently continue — Governance's Approval
-Workflow (Volume XII) is the only path through which a failing Gate can still result in
-a "ship" outcome, and any such exception MUST be recorded as an explicit, auditable
-override rather than a quiet pass. A Gate reading an aggregate that includes any Result
-whose disposition is not `actionable` (Appendix C §C.7) — a Result still
+Every Quality Gate declares what its failure does (`on_failure`, Appendix A §A.10). A
+**blocking** Gate (`block_release`) MUST pass for a Release Decision to authorize
+shipping. An **advisory** Gate (`warn`) is evaluated and reported in exactly the same
+way, and its result is recorded in every Report and Release Decision whose scope it
+covers, but its failure does not by itself prevent shipping. Changing a Gate from
+blocking to advisory weakens what a release must show, and is governed like any other
+change to a Gate (Volume XII — Approval Workflow).
+
+A Release Decision requires every blocking Quality Gate applicable to its scope to
+pass. Where one fails, the Decision Pipeline does not silently continue — Governance's
+Approval Workflow (Volume XII) is the only path through which a failing blocking Gate
+can still result in a "ship" outcome, and any such exception MUST be recorded as an
+explicit, auditable override rather than a quiet pass. An override applies to exactly
+one Gate Result — one Gate, evaluated once, for one batch of Executions — and MUST NOT
+authorize any other, including a later evaluation of the same Gate for a different
+batch. A Gate reading an aggregate that includes any effective Result (Result
+Resolution, above) whose disposition is not `actionable` (Appendix C §C.7) — a Result still
 `awaiting_review`, one whose Oracle was `oracle_unavailable`, or one `not_assessed`
 after a missed Seeded Control (Volume VIII) — MUST treat that Result
 as blocking by default; an unresolved or unreachable Oracle is not evidence of quality,
@@ -704,6 +753,21 @@ regardless of how favorably every other Result in the aggregate reads. The same 
 what a Report surfaces for human visibility (Volume XI) and what a CI/CD pipeline
 queries to decide whether a deployment may proceed (Volume XIII) — one mechanism, viewed
 from two places, not two different things wearing the same name.
+
+A Release Decision is valid only for the configuration its Gates were evaluated under.
+When Gates are evaluated for a Release Decision, the configuration in the decision's
+scope — the Contracts its Scenarios resolve to, the definitions of the Gates it reads,
+and its Environment — is captured as a Snapshot (Volume X), and the Release Decision
+references it. If any of that configuration changed after the Snapshot was captured, the
+Release Decision MUST NOT be recorded until its Gates are evaluated again against the
+current configuration. Where only a Gate definition changed, no new Execution is needed:
+the same Results are evaluated against the new definition. Where a Contract changed,
+those Results were produced against requirements no longer in force, and the affected
+clauses need new Results. A change elsewhere in the Project, outside the decision's
+scope, does not affect it. This is a consistency check, not a safeguard against anyone
+in particular: a shared Contract fragment can be changed, correctly and with approval,
+by a Role that has no part in this release, and days can pass between the Report a
+decision reads and the decision itself.
 
 ### The Decision Pipeline as a Whole
 
@@ -713,7 +777,7 @@ flowchart TD
     CM --> AM["Aggregation Model<br/>Business Quality weight applied per Scenario (Ch. 2);<br/>Safety: Validator failures act as a hard veto,<br/>kept separate from the weighted combination elsewhere"]
     AM --> QG["Quality Gate(s)<br/>e.g. Safety Gate, Regression Gate (vs. Baseline/<br/>Snapshot, Volume X), Functional Gate, Cost Gate"]
     QG -->|fail| RDN["Release Decision: don't ship<br/>(or: Governance-logged override, Volume XII)"]
-    QG -->|"pass (all applicable Gates)"| RDS["Release Decision: ship"]
+    QG -->|"pass (all blocking Gates)"| RDS["Release Decision: ship"]
     RDN --> FB["feedback into Requirements / Risk Analysis (Chapter 5)"]
     RDS --> FB
 ```

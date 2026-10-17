@@ -43,7 +43,9 @@ event, and data are different things and stay different entities throughout AQEF
 
 **Project**
 Top-level container for a single AI system under quality governance (e.g. "Support Bot
-v2"). *Relationships:* owns Environments and Suites; scopes Baselines, Snapshots, Reports.
+v2"). *Relationships:* owns Environments and Suites; MAY carry Contracts and Quality Gates that
+apply to every Suite it owns (Volume VII — Contract Composition; Volume I, Chapter 6);
+scopes Baselines, Snapshots, Reports.
 
 **Environment**
 A named runtime configuration bound to a specific model version, prompt version, tool
@@ -56,7 +58,9 @@ real (Volume III).
 **Suite**
 A named, curated collection of Scenarios grouped by testing purpose (e.g. "Regression
 Suite", "Jailbreak Suite"). *Relationships:* belongs to a Project; contains many
-Scenarios; is the unit that gets run against an Environment, producing many Executions.
+Scenarios; MAY carry Contracts and Quality Gates that apply to every Scenario it runs, in
+addition to the Project's; is the unit that gets run against an Environment, producing
+many Executions.
 
 **Scenario** — see Glossary (Front Matter §8). *Relationships:* belongs
 to one or more Suites; references a Quality Contract; may reference a Dataset for
@@ -67,8 +71,10 @@ composed of ordered Prompts and Responses; evaluated by Oracles to produce Resul
 
 **Prompt**
 The atomic unit of stimulus sent to the AI system within a Conversation — a literal
-input or a template populated by Variables. *Relationships:* belongs to a Scenario or a
-Conversation turn; may draw values from a Dataset via Variables.
+input or a template populated by Variables. *Relationships:* belongs to a Scenario (its `prompt`, Appendix A §A.4) or a Conversation
+turn; may draw values from a Dataset via Variables. Distinct from the Environment's
+prompt version, which pins the system-side instructions the subject runs with; a
+Scenario's Prompt is the stimulus it is given.
 
 **Dataset**
 A named, versioned collection of input data — Prompts, Variable sets, or full Scenario
@@ -106,8 +112,9 @@ designated as the reference against which a Judge's Confidence and Judge Drift a
 measured.
 
 **Execution** — see Glossary. *Relationships:* instantiates a Scenario within an
-Environment; produces exactly one Conversation and zero or more Artifacts; triggers the
-Oracle runs defined by its Scenario's Contract.
+Environment; produces exactly one Conversation and zero or more Artifacts — or, for a
+Seeded Control carrying fixed Evidence, supplies them without invoking the subject
+(Volume VIII); triggers the Oracle runs defined by its Scenario's Contract.
 
 **Artifact**
 Auxiliary data captured during an Execution beyond the Conversation transcript — logs,
@@ -119,8 +126,9 @@ evidence beyond the Conversation text.
 The verdict produced by one Oracle applying one Contract clause to a Conversation (and
 its Artifacts) — a pass/fail, Confidence if the Oracle is a Judge or Human Reviewer, a
 disposition stating whether that verdict is safe to use yet, and supporting evidence.
-*Relationships:* produced by exactly one Oracle for exactly one Execution; many Results
-aggregate into a Metric; a Result MAY be designated a Baseline. See Appendix C §C.7 for
+*Relationships:* produced by exactly one Oracle for exactly one Execution and one
+Contract clause; MAY resolve one earlier Result for the same Execution and clause
+(Volume I, Chapter 6 — Result Resolution); many Results aggregate into a Metric; a Result MAY be designated a Baseline. See Appendix C §C.7 for
 the concrete shape.
 
 **Baseline** — see Glossary. *Relationships:* a designated Execution/Result pair for a
@@ -132,7 +140,9 @@ A frozen, point-in-time capture of a *wider* state than a single Baseline — e.
 Baseline in a Suite, or a Project's full configuration (model/prompt versions,
 Contracts) at a release point. *Relationships:* composed of many Baselines and/or
 configuration records; used for release-to-release drift comparison (Volume X) — this is
-what distinguishes it from a Baseline's per-Scenario reference role.
+what distinguishes it from a Baseline's per-Scenario reference role. Also captured when
+Quality Gates are evaluated for a Release Decision, which references it to pin the
+configuration the decision rests on (Volume I, Chapter 6). Never modified once captured.
 
 **Metric**
 A quantified, aggregated measure derived from many Results across Executions within a

@@ -204,11 +204,11 @@ sequenceDiagram
     participant PS as Plugin Store
 
     PA->>PR: Submit Validator Plugin (v1.0.0)
-    PR->>VE: Verify determinism
+    PR->>VE: Check repeatability
     VE->>VE: Run plugin against fixed input (N times)
     VE->>VE: Compare all N outputs
     alt All outputs identical
-        VE-->>PR: Determinism confirmed
+        VE-->>PR: Repeatability check passed (evidence, not proof)
         PR->>PS: Register plugin (version-pinned)
         PS-->>PA: Plugin available for use
         note over PA,PS: Historical Results produced by v1.0.0 remain valid<br/>even if v2.0.0 is later registered or v1.0.0 is deprecated

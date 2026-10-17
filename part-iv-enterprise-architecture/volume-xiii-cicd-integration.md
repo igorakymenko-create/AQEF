@@ -68,15 +68,19 @@ Validator Pipeline, Decision Pipeline), which always carry a qualifier.
 This section specifies only the CI/CD-facing translation, not the Gate itself, which
 remains Chapter 6's. A Pipeline invocation reads a Quality Gate's pass/fail/override
 status — Volume XI already specifies how that status is surfaced generally — and
-translates it into whatever native primitive the platform offers, so a failing Quality
-Gate blocks the Pipeline the same way any other native pipeline failure would, without a
+translates it into whatever native primitive the platform offers, so a failing blocking Quality
+Gate (Chapter 6) blocks the Pipeline the same way any other native pipeline failure
+would, while a failing advisory Gate is reported without blocking it, without a
 person needing to check AQEF's own Report or Dashboard separately to know a deployment
 was blocked. Where a Quality Gate failed but Approval Workflow (Volume XII) logged an
 explicit override, the Pipeline MUST reflect the override's outcome, not the underlying
 Gate's raw failure — a Pipeline showing a red status for a deployment Governance has
-already, explicitly approved would misrepresent a decision that was actually made, the
-same silent-versus-explicit distinction Approval Workflow exists to keep from getting
-lost downstream.
+already, explicitly approved would misrepresent a decision that was actually made, the same silent-versus-explicit distinction Approval Workflow exists to keep from getting
+lost downstream. The override that counts is the one recorded against this Pipeline's
+own Gate Result; an override recorded for an earlier batch, even of the same Gate, does
+not apply (Volume XII). A Pipeline that ships automatically records its Release Decision
+through a Service Account under a standing release policy (Volume XII — Principals): it
+can record a release whose blocking Gates all passed, but it cannot approve an override.
 
 An unattended Pipeline blocked on a Result still `awaiting_review` (Volume VI; Appendix
 C §C.7) has no person present to resolve it — the Pipeline SHOULD NOT wait

@@ -40,6 +40,14 @@ Collection, below). An Execution is complete once the Conversation Engine has no
 turns to produce; what happens after that point — Validation, Evaluation — belongs to
 Volume V and Volume VI, not this one.
 
+One kind of Scenario does not go through these stages. A Seeded Control that carries
+fixed Evidence (Volume VIII; Appendix A §A.4) is executed without invoking the subject:
+the Execution belongs to the same batch and Environment as the others, but the Execution
+Engine supplies the control's recorded Conversation and Artifacts directly to Validation
+and Evaluation instead of producing them. No other Scenario may carry fixed Evidence, and
+such an Execution, like every Seeded Control, is excluded from Aggregation (Volume I,
+Chapter 6).
+
 ## Runtime
 
 The Runtime is the concrete process that hosts one Execution while it runs: it resolves
@@ -152,9 +160,10 @@ one that finished.
 Variables are named parameters, sourced from a Dataset row (Volume IV) or fixed on a
 Scenario, that get interpolated into Prompts at Execution time (Volume II). This Volume
 adds the pipeline detail Volume II's structural definition does not: interpolation
-happens once per turn, at Prompt Construction (see Execution Pipeline, above), and the
-interpolation step itself is Deterministic Infrastructure — the same Variables and the
-same Prompt template MUST produce the same literal Prompt text every time. All
+happens once per turn, at Prompt Construction (see Execution Pipeline, above), and the interpolation step itself is Deterministic Infrastructure — the same Variables and the
+same Prompt template MUST produce the same literal Prompt text every time. The template
+is the Scenario's `prompt` (Appendix A §A.4); for a multi-turn Scenario it is the opening
+turn, and later turns are constructed by the Conversation Engine from Context. All
 non-determinism in an Execution is reserved for what the subject does with that Prompt,
 never for how the harness fills it in.
 

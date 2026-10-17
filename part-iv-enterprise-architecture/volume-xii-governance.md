@@ -6,7 +6,7 @@ Chapter 4 already framed Governance as wrapping around AQEF's data flow rather t
 sitting inside it — "the layer that determines who is permitted to trigger, approve, or
 override any step within it" — and named four specific actions it controls: defining a
 Contract, approving a Baseline, overriding a Quality Gate, and authorizing a Release
-Decision. This Volume specifies the mechanism: who can act (Teams, Roles, Permissions),
+Decision. This Volume specifies the mechanism: who can act (Teams, Roles, Permissions, Principals),
 how what happened gets verified after the fact (Audit, Traceability, Compliance), and
 the single workflow (Approval Workflow) that ties both together for the four actions
 Chapter 4 already named.
@@ -24,8 +24,9 @@ separate concept invented for Governance alone.
 
 ## Roles
 
-A Role is a named, reusable bundle of Permissions (below) assigned to a person, not an
-independent governance primitive of its own. Where Teams answer "what can this person
+A Role is a named, reusable bundle of Permissions (below) assigned to a Principal — a
+person or a Service Account (below) — not an independent governance primitive of its
+own. Where Teams answer "what can this person
 see," Roles answer "what can this person do" once inside that scope — the two are
 orthogonal: a person's Team scopes their access, their Role scopes their capability, and
 a Project typically needs both dimensions specified before a specific action is actually
@@ -41,6 +42,31 @@ include it, the same way a Constraint (Volume VII) MUST be checkable independent
 which Contract happens to reference it — a Role is a convenience for assignment, not the
 unit Governance actually enforces at the moment an action is attempted.
 
+## Principals
+
+Every action Governance checks is taken by a **Principal**: a **Person**, or a **Service
+Account** — an identity for automation, such as a CI/CD Pipeline, a plugin, or a
+scheduler. A Service Account holds Team membership, Roles, and Permissions exactly as a
+Person does, and MUST have an owning Person accountable for what it does. Audit records
+which kind of Principal acted. A Service Account is not a stand-in for a person and MUST
+NOT be set up to look like one.
+
+Automation may carry out a decision a person made; it may not make one. For the four
+governed actions this means:
+
+- `gate_override` and `baseline_approve` MUST be approved by a Person. Each is a
+  judgment about one specific situation — accepting the risk of a failed Gate, declaring
+  what good looks like — and there is nothing to approve in advance.
+- `contract_define` MAY be applied by a Service Account when the change was approved by a
+  Person in an external review, such as a reviewed and merged change to a Contract file
+  in version control. The Approval Workflow record MUST name that Person and reference
+  the review.
+- `release_decide` MAY be recorded by a Service Account only under a **standing release
+  policy** that a Person holding `release_decide` approved through Approval Workflow, and
+  only as `approved` when every blocking Gate Result passed without an override and the
+  configuration has not changed since the Snapshot (Chapter 6), or as `rejected`. The
+  record MUST reference the policy. An override, or any other decision, needs a Person.
+
 ## Audit
 
 Audit is the retrospective review capability: querying the historical record of
@@ -54,8 +80,8 @@ what's needed is its full chain.
 ## Traceability
 
 Traceability is the capability to reconstruct the full authorization chain behind one
-specific artifact or decision — which Report a Release Decision relied on, which Quality
-Gates it read, which Baseline a Regression Gate compared against, who approved that
+specific artifact or decision — which Report a Release Decision relied on, which Snapshot
+pinned the configuration it was evaluated under, which Quality Gates it read, which Baseline a Regression Gate compared against, who approved that
 Baseline and when. Where Audit answers a broad "what happened," Traceability answers a
 narrow "how did we get to this specific outcome" — the same underlying logged records,
 queried differently. A Release Decision that cannot be traced this far back is not
@@ -96,6 +122,18 @@ rather than aspirational: a Quality Gate override (Chapter 6), a Baseline design
 all resolve through this one workflow, which is why none of those earlier Volumes needed
 to invent an approval mechanism of their own — Approval Workflow was always the
 mechanism they were deferring to.
+
+Defining a Contract includes defining or changing a Quality Gate: its threshold, its
+minimum basis, or whether its failure blocks a release (Chapter 6). A Gate states what a
+release must show just as a Contract does, and loosening either one has the same effect,
+so both go through the same governed action (`contract_define`). The four governed
+actions remain four.
+
+An approved Quality Gate override applies to exactly one Gate Result (Appendix A §A.12)
+— one Gate, evaluated once, for one batch of Executions — and is recorded against it. It
+MUST NOT be applied to any other evaluation, including a later evaluation of the same
+Gate for a different batch. A Project MAY add an expiry or a revocation rule of its own;
+this specification does not require one.
 
 ---
 

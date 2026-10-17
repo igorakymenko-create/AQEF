@@ -29,6 +29,10 @@ surfaced in Reports. Every attempt to cross it is recorded, blocked or not.
 system under test's Safety or Functional boundaries, used to verify resilience under
 hostile input. SHOULD draw on an independent source.
 
+**Advisory Gate** — A Quality Gate (Volume I, Chapter 6) with `on_failure: warn`:
+evaluated and recorded in every Report and Release Decision in scope, but its failure
+does not by itself prevent shipping. Distinct from a Blocking Gate.
+
 **Agent** — A Pattern-Focused test type (Volume IX) testing AI-Agent-pattern-specific
 behavior — tool selection, argument construction, and reasoning trajectory — distinct
 from the AI Agent architectural pattern (Volume I, Chapter 7) it targets.
@@ -60,8 +64,8 @@ architectural patterns (Volume I, Chapter 7) and test types (Volume IX).
 
 **Approval Workflow** — The single mechanism (Volume XII) — request, role-based review,
 explicit decision, log — governing all four Governance-controlled actions: defining a
-Contract, approving a Baseline, overriding a Quality Gate, and authorizing a Release
-Decision.
+Contract (including defining or changing a Quality Gate), approving a Baseline,
+overriding a Quality Gate, and authorizing a Release Decision.
 
 **Artifact** — Auxiliary data (Volume II) captured during an Execution beyond the
 Conversation transcript itself — logs, token-usage records, tool-call traces,
@@ -89,6 +93,10 @@ systematically unfair or discriminatory output, checked for regardless of how el
 subject's expected path on purpose (broken tool, withheld permission, impossible task,
 failing environment) to check that it stops and reports rather than finding a way
 around. Usually uses Tripwires. A Safety test, distinct from Chaos (Operational).
+
+**Blocking Gate** — A Quality Gate (Volume I, Chapter 6) with `on_failure:
+block_release`: MUST pass for a Release Decision to authorize shipping, unless overridden
+through Approval Workflow for that one evaluation.
 
 **Boundary Analysis** — A test design technique (Volume VIII) that turns an Edge Cases
 Dataset into Scenarios probing a specific, named boundary of the input or output space.
@@ -139,7 +147,12 @@ Expectations only — Constraints carry no Confidence to threshold.
 platform executing this specification — not of any AI system under test (Conformance,
 §10). Scoped to claimed capability with a non-negotiable core: the five logical layers
 (Volume I, Chapter 4) and the seven Fundamental Principles (Volume I, Chapter 3) bind
-every conformant implementation regardless of scope.
+every conformant implementation regardless of scope. The claimed capabilities are
+declared in a Conformance Statement.
+
+**Conformance Statement** — What an implementation claiming Conformance MUST publish
+(§10): the specification version and the capabilities it claims, using §10's
+identifiers. Says what is to be checked, not that the checks pass.
 
 **Consensus** — The mechanism (Volume VI) for resolving disagreement among a Multi
 Judge configuration's individual Results into a single verdict for an Execution.
@@ -158,8 +171,10 @@ from Variables (fixed before Execution starts) and Environment (which does not
 accumulate at all).
 
 **Contract Composition** — The combination (Volume VII) of Constraints, Expectations,
-and Policies from two or more contributing Contracts into one effective Contract.
-Conflicting clause values MUST be surfaced, not silently resolved.
+and Policies from two or more contributing Contracts into one effective Contract,
+including Contracts attached at Project, Suite, and Scenario level. Additive: a lower
+level adds clauses but cannot remove or weaken one from a higher level. Conflicting
+clause values MUST be surfaced, not silently resolved.
 
 **Contract Language** — The declarative grammar (Volume VII) in which a Quality
 Contract is expressed, describing what MUST hold rather than how to check it.
@@ -250,6 +265,11 @@ checking Human Reviewer agreement.
 boundary conditions of the input space, used as input to Boundary Analysis. Distinct
 from Fuzzing (undirected) and Data Mutation (intent-preserving).
 
+**Effective Result** — For one Execution and one Contract clause, the last Result in a
+chain of Results resolving one another (Volume I, Chapter 6 — Result Resolution). The
+only Result Aggregation and Quality Gates read for that clause; earlier ones stay in the
+record.
+
 **Enterprise Engine** — A deployment topology (Volume XVII) running AQEF's logical
 layers as independently scaled services. Satisfies the same normative requirements as
 a Minimal Engine through different mechanisms.
@@ -310,6 +330,11 @@ producing new Scenarios retroactively.
 installation and registration through versioning to deprecation, ensuring deprecated
 plugins do not invalidate historical Results they produced.
 
+**Fixed Evidence** — Recorded Evidence carried by a Seeded Control (Volume VIII;
+Appendix A §A.4), with the planted defect already in it, so the defect is present by
+construction and the subject is not invoked. SHOULD be derived from Evidence the subject
+actually produced. Permitted only on a Seeded Control.
+
 **Forbidden-Content Validator** — A built-in Validator (Volume V) checking for
 disallowed strings, patterns, or tokens as a deterministic safety rule.
 
@@ -328,6 +353,11 @@ Validators.
 **Fuzzing** — Randomized or automated perturbation (Volume IV) of inputs to surface
 unexpected behavior or breaking points, without preserving the original input's
 intent. Distinct from Data Mutation (intent-preserving) and Edge Cases (targeted).
+
+**Gate Result** — The outcome of evaluating one Quality Gate once (Appendix A §A.12):
+`pass` or `fail`, whether it blocks, the reason for a failure (threshold, insufficient
+basis, or Seeded Control miss), the value and threshold compared, and its Aggregate
+Basis. An override applies to exactly one Gate Result.
 
 **Generated Dataset** — A Dataset (Volume IV) expanded or created by an AI model.
 SHOULD draw on an independent source to avoid correlated blind spots with the system
@@ -416,8 +446,9 @@ across Executions — pass rate, mean Confidence, hallucination rate, cost per E
 and so on.
 
 **Minimal Engine** — A simplified deployment topology (Volume XVII) collapsing AQEF's
-logical layers into a single process. Satisfies all normative requirements through
-simpler mechanisms, not relaxed ones.
+logical layers into a single process. Satisfies the same normative requirements as an
+Enterprise Engine for the capabilities it claims (Conformance, §10), through simpler
+mechanisms, not relaxed ones.
 
 **Model Drift** — A change (Volume X) in the underlying model an Environment resolves
 to, correlated with a Semantic Regression. May occur with no AQEF-visible Environment
@@ -471,6 +502,9 @@ always carry a qualifier.
 combine — Validator Composition logic, Business Quality weighting — rather than a
 clause in its own right. Produces no Result of its own.
 
+**Principal** — The identity that takes an action Governance checks (Volume XII): a
+Person or a Service Account. Holds Team membership, Roles, and Permissions.
+
 **Probabilistic Subject (Principle)** — The principle (Volume I, Chapter 3) that the AI
 system under test is inherently non-deterministic, and quality tooling must
 accommodate rather than restrict this variability.
@@ -483,7 +517,9 @@ production Conversations and folding them back in as Scenarios, enabling the
 quality governance, grouping its Environments, Suites, Datasets, and Contracts.
 
 **Prompt** — The atomic unit of stimulus (Volume II) sent to the AI system within a
-Conversation, often populated by Variables at Execution time.
+Conversation, often populated by Variables at Execution time. A Scenario's Prompt is its
+`prompt` (Appendix A §A.4); distinct from the Environment's prompt version, which pins
+the system-side instructions.
 
 **Prompt Construction** — The Execution Pipeline stage (Volume III) that assembles
 resolved Variables into the final Prompt(s) before the Conversation begins.
@@ -500,7 +536,8 @@ applied, what constitutes a passing Result under each, and what Confidence thres
 makes a Result actionable. See Front Matter §8 for the full definition.
 
 **Quality Gate** — A named, thresholded check (Volume I, Chapter 6) against aggregated
-Metrics that must pass to authorize a release. Distinct from a CI/CD platform's own
+Metrics. A Blocking Gate must pass to authorize a release; an Advisory Gate is reported
+without blocking. Distinct from a CI/CD platform's own
 native gating primitive even where the vendor uses the same word.
 
 **RAG (Architectural Pattern) (Pattern)** — Retrieval-Augmented Generation (Volume I,
@@ -523,8 +560,10 @@ against a Baseline or Snapshot to detect regressions before release.
 the stability of the system's behavior across repeated Executions and across time.
 
 **Release Decision** — The culminating output (Volume I, Chapter 6) of the Decision
-Pipeline: a go/no-go judgment backed by a Report, Quality Gate results, and an
-Approval Workflow record, not merely a claim.
+Pipeline: a go/no-go judgment backed by a Report, a Gate Result for every applicable
+Quality Gate, the Snapshot of the configuration they were evaluated under, and an
+Approval Workflow record, not merely a claim. Cannot be recorded if that configuration
+changed after the Snapshot.
 
 **Report** — A structured, point-in-time presentation (Volume II, Volume XI) of
 Metrics and Results. A Report is frozen once generated, making it valid as attached
@@ -551,7 +590,13 @@ clause to an Execution's Evidence. A Result from a Validator carries no Confiden
 value; a Result from a Judge MUST carry one. Every Result also carries a `disposition`
 (Appendix C §C.7) — `actionable`, `inconclusive`, `awaiting_review`,
 `oracle_unavailable`, or `not_assessed` — distinguishing a verdict safe to use at face value from one that
-is not yet, or may never be. See Appendix C §C.7 for the authoritative shape.
+is not yet, or may never be. A Result is not modified once recorded; a later Result MAY
+resolve it (Result Resolution). See Appendix C §C.7 for the authoritative shape.
+
+**Result Resolution** — The rule (Volume I, Chapter 6) by which a later Result settles
+what an earlier one left open without modifying it: the later Result names the earlier
+one it `resolves`. Only a Human Reviewer's Result or a requalified Oracle's re-assessment
+may resolve another; the same Oracle asked again may not.
 
 **Retry** — A re-attempt (Volume III) triggered by an infrastructure-level failure
 that occurred before the subject produced a genuine Response. Re-running because a
@@ -570,8 +615,8 @@ Risk-Based Testing, which acts on that prioritization.
 Scenarios and tighter thresholds on high-stakes behaviors as identified by Risk
 Analysis. Distinct from Risk Analysis itself.
 
-**Role** — A named, reusable bundle (Volume XII) of Permissions assigned to a person,
-defining what they can do within the scope of a Team. Orthogonal to Team, which
+**Role** — A named, reusable bundle (Volume XII) of Permissions assigned to a Principal,
+defining what it can do within the scope of a Team. Orthogonal to Team, which
 defines what they can see.
 
 **Runtime** — The concrete process (Volume III) that hosts one Execution while it
@@ -608,8 +653,9 @@ validated against the REST API specification, not hand-authored independently.
 **Seeded Control** — A Scenario carrying a deliberately planted, known defect (Volume
 VIII; Appendix A §A.4), used to prove that an Oracle can still detect that Defect Class in
 the current run. SHOULD be generated, with instances hidden from the Oracle's tuner; MUST
-record its planted defect, and SHOULD confirm it is present in the Evidence (otherwise the
-control is `invalid` for that run). If its Oracle misses it, the Oracle's Results for
+record its planted defect and confirm it reached the Evidence the Oracle received — by a
+Validator, a Human Reviewer, or by construction (Fixed Evidence) — otherwise the control
+is `invalid` for that run. If its Oracle misses it, the Oracle's Results for
 clauses of that class become `inconclusive`, the Oracle SHOULD stop being invoked for
 them (`not_assessed`), and it needs Requalification before further use for that class.
 Full-run invalidation or a halt requires an explicit Project decision. Tests the Oracle,
@@ -629,6 +675,11 @@ Result against its Baseline, in which a Conversation now fails an Oracle it prev
 passed — judged by meaning, not literal text equality. See Front Matter §8 for the
 full definition.
 
+**Service Account** — A Principal (Volume XII) for automation — a CI/CD Pipeline, a
+plugin, a scheduler — with an owning Person. May carry out decisions a Person made
+(an externally reviewed Contract change, a release under a standing release policy);
+may not approve a Baseline or a Gate override.
+
 **Single Judge** — The baseline Judge configuration (Volume VI) of one Judge assessing
 one Conversation to produce one Confidence-qualified Result.
 
@@ -640,12 +691,19 @@ architectural decomposition.
 responds at all, providing fast, cheap confirmation that nothing is fundamentally
 broken.
 
-**Snapshot** — A frozen, point-in-time capture (Volume II) of a Project's wider state —
-many Baselines plus configuration — used for release-to-release Snapshot Comparison.
+**Snapshot** — A frozen, point-in-time capture (Volume II; Appendix A §A.13) of a
+Project's wider state — configuration and, optionally, many Baselines — used for
+release-to-release Snapshot Comparison and to pin the configuration a Release Decision
+rests on.
 Distinct from Dataset Versioning, which tracks one Dataset's own content over time.
 
 **Snapshot Comparison** — Comparing (Volume X) a Project's current state against a
 prior Snapshot to detect release-to-release drift across an entire Suite or Project.
+
+**Standing Release Policy** — A policy a Person approves through Approval Workflow
+(Volume XII) under which a Service Account may record a Release Decision: `approved`
+only when every blocking Gate passed without an override and the configuration has not
+changed since the Snapshot, or `rejected`.
 
 **Static Dataset** — A fixed, versioned collection (Volume IV) of rows authored
 directly and changed only through explicit, versioned edits.
@@ -728,8 +786,9 @@ Executions and dimensions.
 composing Validators to produce a Result or short-circuit further assessment.
 
 **Validator Plugin** — A plugin (Volume XVI) extending built-in Validators with a
-Project-specific deterministic check, mechanically verified at registration by running
-against a fixed input multiple times to confirm determinism.
+Project-specific deterministic check. Checked at registration by running against a fixed
+input multiple times; passing shows repeatability on that input, which is evidence of
+determinism, not proof.
 
 **Variable Resolution** — The first stage (Volume III) of the Execution Pipeline,
 resolving Dataset rows and Scenario-level parameters into concrete named values before
@@ -740,4 +799,6 @@ time, sourced from Datasets or Scenario configuration, fixed before the Executio
 starts. Distinct from Context, which accumulates during Execution.
 
 **Voting** — A specific Consensus mechanism (Volume VI) that combines Judges' discrete
-pass/fail verdicts by majority or plurality count.
+pass/fail verdicts by counting them against a threshold: `majority`, `unanimous`, or a
+stated fraction above one half, counted against the Judges actually counted. Without a
+verdict reaching the threshold, the disagreement policy applies.

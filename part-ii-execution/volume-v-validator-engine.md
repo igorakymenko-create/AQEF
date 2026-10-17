@@ -19,7 +19,12 @@ determine when it runs and what counts as passing. The check function itself MUS
 pure function of its target evidence — the Glossary's constraint that a Validator "MUST
 return the same Result for the same input" is the architectural requirement that makes
 Validators cheap and trustworthy enough to run before anything probabilistic does
-(Validation before Evaluation, Chapter 3). A Validator's Result carries no Confidence
+(Validation before Evaluation, Chapter 3). Pure has a specific meaning here: a
+Validator's Result MUST depend only on its target evidence (the Conversation and its
+Artifacts) and on the Validator's own versioned configuration — not on the clock, a
+random source, a network call, or any other state that can differ between two runs on
+the same evidence. A latency check is pure in this sense: the latency it checks was
+recorded in an Artifact during the Execution, not measured when the check runs. A Validator's Result carries no Confidence
 value, and per "Everything has Confidence" (Chapter 3), MUST explicitly declare
 Confidence inapplicable rather than simply omitting the field — an architectural
 obligation on every Validator implementation, not an incidental detail left to
@@ -104,7 +109,11 @@ pass/fail verdict, an explicit Confidence-inapplicable declaration, and supporti
 evidence sufficient for a Report (Volume XI) to explain the verdict without re-running
 the check. The SDK does not itself grant any exemption from Validator Architecture's
 constraints — it is the mechanical contract those constraints are expressed through, not
-a separate set of rules.
+a separate set of rules. The SDK SHOULD hand a Custom Validator its target evidence and
+configuration as its only inputs, and SHOULD NOT give it a clock, a random source, or
+network access. Because Evidence is stored, an implementation MAY re-check a Validator
+at any time by running it again on stored Evidence; a Result that differs from the one
+recorded is a defect in the Validator, not in the subject, and MUST be reported as such.
 
 ## Validator Pipeline
 

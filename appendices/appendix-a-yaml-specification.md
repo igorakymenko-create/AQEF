@@ -28,6 +28,8 @@ The top-level container for a single AI system under quality governance (Volume 
 | `suites` | List of Suite | MAY | Suites MAY be defined inline or in separate files. |
 | `execution` | ExecutionConfig | MAY | Default execution settings (timeout, retry). |
 | `defect_classes` | List of DefectClassConfig | MAY | Defect classes the Project's Seeded Controls plant, with the difficulty prior for each (Volume VIII). |
+| `contracts` | List of Contract (inline) or String (reference) | MAY | Contracts that apply to every Scenario in every Suite of the Project, composed with Suite- and Scenario-level Contracts (Volume VII — Contract Composition). |
+| `quality_gates` | List of QualityGate | MAY | Quality Gates (§A.10) that apply to every Release Decision in the Project. |
 
 **DefectClassConfig**
 
@@ -111,6 +113,9 @@ A named, curated collection of Scenarios grouped by testing purpose (Volume II).
 |---|---|---|---|
 | `name` | String | MUST | Unique within the Project. |
 | `scenarios` | List of Scenario | MUST | At least one Scenario MUST be present. |
+| `contracts` | List of Contract (inline) or String (reference) | MAY | Contracts that apply to every Scenario run in this Suite, composed with the Project's and each Scenario's own (Volume VII — Contract Composition). |
+| `quality_gates` | List of QualityGate | MAY | Quality Gates (§A.10) that apply, in addition to the Project's, to every Release Decision covering this Suite. A Gate name MUST be unique across the Project and its Suites. |
+| `execution` | ExecutionConfig | MAY | Execution settings for this Suite, overriding the Project's defaults field by field (§A.9). |
 
 ```yaml
 suite:
@@ -126,14 +131,26 @@ optionally a Dataset.
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `name` | String | MUST | Unique within the Suite. |
-| `contract` | Contract (inline) or String (reference) | MUST | Quality Contract governing this Scenario. |
+| `contract` | Contract (inline) or String (reference) | MUST (unless the Project or Suite supplies one) | This Scenario's own Contract, composed with the Project's and the Suite's (Volume VII — Contract Composition). The effective Contract MUST contain at least one clause. |
+| `prompt` | PromptDef | MUST (unless `dataset` is a `production_replay` Dataset, or the Scenario carries `evidence`) | The stimulus sent to the subject (Volume II — Prompt). For a multi-turn Scenario, the opening turn. |
 | `dataset` | String (reference) | MAY | Reference to a named Dataset for data-driven instantiation. |
 | `variables` | Map of String → Any | MAY | Fixed Variables when no Dataset is used. |
 | `seeded_control` | SeededControlConfig | MAY | Marks this Scenario as a Seeded Control (Volume VIII) — a deliberately planted, known defect used to prove that an Oracle can still detect that defect class in the current run. |
+| `evidence` | FixedEvidence | MAY | Only on a Seeded Control with `confirmed_by: construction`, and then REQUIRED. Recorded Evidence with the defect already in it; the subject is not invoked (Volume III). Excludes `prompt`, `dataset`, and `variables`. |
 
 A Scenario MUST specify either `dataset` or `variables` (or neither, for Scenarios that
 need no input beyond the Prompt template). It MUST NOT specify both — a Dataset
 supplies Variables; specifying both creates an ambiguous resolution order.
+
+**PromptDef**
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `template` | String | MUST | The Prompt text, with placeholders for Variables. Placeholder syntax is implementation-defined and MUST be documented by the implementation; interpolation is deterministic (Volume III — Variables). A template referencing a Variable that is not supplied MUST be rejected before the Execution starts. |
+
+The Environment's `prompt_version` (§A.2) pins the system-side instructions; `prompt` is
+the stimulus a Scenario gives. A captured production Conversation (`production_replay`,
+Volume IV) supplies its own Prompts, so a Scenario using one needs no `prompt`.
 
 **SeededControlConfig**
 
@@ -142,7 +159,8 @@ supplies Variables; specifying both creates an ambiguous resolution order.
 | `defect_class` | String | MUST | Identifies the class of defect this control plants. Scopes invalidation (Volume VIII) to Results the same Oracle produced in the same run that share this class, rather than every Result the Oracle produced. Project-defined; AQEF does not prescribe a taxonomy. |
 | `difficulty_prior` | Float (0.0–1.0) or `"not_established"` | MAY | Per-control override of the defect class's prior, for a control that is reused (Volume VIII). Same provenance rules as `DefectClassConfig.difficulty_prior` (§A.1). MUST NOT default to `0.0`. |
 | `planted_defect` | Any | MUST | What defect was planted and where: a description for a hand-authored control, or the generator's structured record of the change it made. |
-| `confirmation` | Constraint | MAY | A Validator-bound check that the planted defect is present in the Evidence the Oracle receives. SHOULD be present (Volume VIII). Where it fails, the control is `invalid` for that run (Appendix C §C.3). |
+| `confirmed_by` | String | MUST | How the presence of the planted defect in the Evidence the Oracle receives is confirmed (Volume VIII): `validator` (by `confirmation`), `human_reviewer` (a Human Reviewer confirms it per run), or `construction` (the Scenario carries `evidence` with the defect already in it). Without confirmation, the control is `invalid` for that run (Appendix C §C.3). |
+| `confirmation` | Constraint | MUST (if `confirmed_by` is `validator`) | A Validator-bound check that the planted defect is present in the Evidence the Oracle receives. Where it fails, the control is `invalid` for that run. MUST NOT appear for the other methods. |
 | `generator` | String | MAY | Identifier and version of the generator that produced this control. Absent for a hand-authored control. |
 
 The Oracle(s) a Seeded Control guards are not a separate reference field: they are
@@ -151,10 +169,26 @@ simply whichever Oracle(s) the Scenario's own Contract binds to
 Seeded Control is tested by being run like any other Scenario, through the same
 Contract.
 
+**FixedEvidence**
+
+Recorded Evidence carried by a Seeded Control confirmed by construction (Volume VIII).
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `conversation` | Conversation | MUST | The recorded Conversation, in the form the implementation stores Conversations produced by Executions, with the planted defect in it. |
+| `artifacts` | Map of String → Any | MAY | Recorded Artifacts the Contract's clauses read (for example a retrieval record). |
+| `source_execution` | String | MAY | The Execution of the subject this Evidence was derived from. SHOULD be present: fixed Evidence SHOULD be derived from Evidence the subject actually produced, recently and in the same Environment (Volume VIII). |
+
+A Seeded Control with fixed Evidence is still assessed through its own Contract, by the
+same Oracles, and its Results are excluded from Aggregation like those of any other
+control.
+
 ```yaml
 scenarios:
   - name: greeting-response
     dataset: greeting-inputs
+    prompt:
+      template: "{{query}}"
     contract:
       constraints: [...]
       expectations: [...]
@@ -164,6 +198,7 @@ scenarios:
     seeded_control:
       defect_class: toxic-language        # prior held by the class (§A.1)
       generator: decoy-gen/toxicity@1.4
+      confirmed_by: validator             # confirmation below; or human_reviewer, construction
       planted_defect:
         target: response
         change: "abusive phrase inserted mid-paragraph"
@@ -175,6 +210,8 @@ scenarios:
             - regex: "(?i)\\b<planted phrase>\\b"
     variables:
       user_message: "..."
+    prompt:
+      template: "{{user_message}}"
     contract:
       expectations:
         - criteria: "The response contains no toxic or abusive language."
@@ -270,7 +307,7 @@ Configuration for running multiple Judges (Volume VI).
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `method` | String | MUST | `voting`, `confidence_weighted_mean`, or implementation-defined. |
-| `threshold` | String | MAY | For voting: `majority`, `unanimous`, or a numeric fraction. |
+| `threshold` | String or Float | MAY | Only for `method: voting`. `majority` (more than half), `unanimous` (all), or a number greater than 0.5 and at most 1.0, written as a number, not a string. Counted against the Judges actually counted (`panel.counted`, Appendix C §C.7), or the samples in a stability configuration. A verdict is reached when pass or fail votes reach at least ⌈threshold × count⌉; otherwise `on_disagreement` applies (Volume VI — Voting). Default: `majority`. |
 | `min_agreement` | Float | MAY | For confidence-weighted: minimum proportion of samples that must agree. |
 | `on_disagreement` | String | MAY | Action on unresolved disagreement: `human_review`, `fail`, or `flag`. Default: `human_review`. |
 | `min_qualified` | Integer | MAY | Quorum: minimum number of Judges, not excluded by a missed Seeded Control, required for Consensus (Volume VI). Absent means the full panel is required. |
@@ -325,7 +362,8 @@ A named, versioned collection of input data (Volume II, Volume IV).
 
 ## A.9 — ExecutionConfig
 
-Default execution settings applied at the Project or Suite level (Volume III).
+Default execution settings applied at the Project level, and optionally overridden at
+the Suite level field by field (§A.1, §A.3; Volume III).
 
 | Field | Type | Required | Description |
 |---|---|---|---|
@@ -344,7 +382,10 @@ Default execution settings applied at the Project or Suite level (Volume III).
 
 ## A.10 — Quality Gates
 
-Quality Gate definitions for the Decision Pipeline (Volume I, Chapter 6).
+Quality Gate definitions for the Decision Pipeline (Volume I, Chapter 6), declared in
+`quality_gates` on a Project (§A.1) or a Suite (§A.3). A Release Decision is subject to
+the Project's Gates and to those of the Suite it covers. Defining or changing a Quality
+Gate is governed by Approval Workflow under `contract_define` (Volume XII).
 
 | Field | Type | Required | Description |
 |---|---|---|---|
@@ -353,7 +394,7 @@ Quality Gate definitions for the Decision Pipeline (Volume I, Chapter 6).
 | `threshold` | Float or ThresholdMap | MUST | Pass/fail threshold. A ThresholdMap allows multiple named sub-thresholds under one Gate (e.g. several Operational metrics). |
 | `compare_against` | String | MAY | For a Regression Gate (`aggregate: regression`): which Baseline or Snapshot to compare against — a named Baseline, or `latest_approved` (Volume X). |
 | `min_basis` | MinBasis | MAY | Minimum Aggregate Basis (Volume I, Chapter 6) the aggregate must rest on for this Gate to pass. Where declared and not met, the Gate does not pass, with insufficient basis as the recorded reason. |
-| `on_failure` | String | MUST | `block_release` or `warn`. |
+| `on_failure` | String | MUST | `block_release` (a blocking Gate: MUST pass for a Release Decision to authorize shipping) or `warn` (an advisory Gate: evaluated and recorded in every Report and Release Decision in scope, but its failure does not by itself prevent shipping) (Volume I, Chapter 6). Changing this value is governed like any other change to a Gate (Volume XII). |
 | `override_requires` | String | MAY | Permission name required to override this Gate (Volume XII). MAY be a project-defined Permission (e.g. `safety_override`) distinct from the four canonical governed actions (`contract_define`, `baseline_approve`, `gate_override`, `release_decide`) — a Project MAY require a stricter, Gate-specific Permission in addition to `gate_override`. |
 
 **MinBasis**
@@ -367,12 +408,14 @@ At least one of the two MUST be present. This specification does not say what va
 adequate; they are a Project's own decision.
 
 ```yaml
-quality_gates:
-  - name: safety-gate
-    aggregate: safety
-    threshold: 1.0
-    on_failure: block_release
-    override_requires: safety_override
+project:
+  name: helios
+  quality_gates:              # Applies to every Release Decision in the Project
+    - name: safety-gate
+      aggregate: safety
+      threshold: 1.0
+      on_failure: block_release
+      override_requires: safety_override
 ```
 
 ## A.11 — Baseline
@@ -385,7 +428,7 @@ XII).
 | `scenario` | String | MUST | Scenario this Baseline references. |
 | `environment` | String | MUST | Environment the Baseline Execution ran in. |
 | `execution_id` | String | MUST | The specific Execution designated. |
-| `approved_by` | String | MUST | Person who approved the Baseline (Governance). |
+| `approved_by` | String | MUST | Person who approved the Baseline (Governance). MUST be a Person, not a Service Account (Volume XII — Principals). |
 | `approved_at` | DateTime | MUST | Timestamp of approval. |
 | `approval_role` | String | MUST | Role the approver held. MUST have `baseline_approve` Permission. |
 
@@ -399,13 +442,53 @@ The traceable output of the Decision Pipeline (Volume I, Chapter 6; Volume XII).
 | `environment` | String | MUST | Environment evaluated. |
 | `suite` | String | MUST | Suite that was run. |
 | `execution_batch_id` | String | MUST | Batch identifier for the Execution set. |
-| `gates` | Map of String → GateResult | MUST | Per-gate pass/fail/warn status with aggregate values and the Aggregate Basis each aggregate rested on (Appendix C §C.3). |
+| `gates` | Map of String → GateResult | MUST | One GateResult per Quality Gate applicable to the decision's scope, blocking and advisory alike, keyed by Gate name (below). |
 | `decision` | String | MUST | `approved`, `rejected`, or `overridden`. |
-| `approved_by` | String | MUST | Person who made the decision. |
+| `approved_by` | String | MUST | Principal who recorded the decision: a Person, or a Service Account acting under `release_policy` (Volume XII — Principals). |
+| `release_policy` | String | MUST (if `approved_by` is a Service Account) | Reference to the standing release policy a Person approved. With it, `decision` MAY only be `approved` (every blocking GateResult `pass`, none overridden) or `rejected`. |
 | `approved_at` | DateTime | MUST | Timestamp. |
 | `approval_role` | String | MUST | Role held. |
 | `report_id` | String | MUST | Reference to the frozen Report (Volume XI). |
+| `snapshot_id` | String | MUST | The Snapshot (§A.13) of the configuration the Gates were evaluated under (Volume I, Chapter 6). |
 | `notes` | String | MAY | Free-text justification, especially for overrides. |
+
+`decision: approved` requires every blocking GateResult to have `status: pass`.
+`decision: overridden` requires every blocking GateResult with `status: fail` to carry
+an `override`. A Release Decision MUST NOT be recorded if a Contract or Quality Gate in
+its scope changed after the Snapshot named by `snapshot_id` was captured (Volume I,
+Chapter 6).
+
+**GateResult**
+
+The outcome of evaluating one Quality Gate once (Volume I, Chapter 6).
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `status` | String | MUST | `pass` or `fail`: the Gate's state only. What a failure does is `blocking`. |
+| `blocking` | Boolean | MUST | `true` for a Gate with `on_failure: block_release`, `false` for `warn`. |
+| `reason` | String | MUST (if `status` is `fail`) | `threshold`, `insufficient_basis` (its `min_basis` was not met), or `seeded_control_miss` (the aggregate included Results invalidated by a missed Seeded Control, Volume VIII). Where more than one applies, `seeded_control_miss` takes precedence over `insufficient_basis`, and both over `threshold`. Absent when `status` is `pass`. |
+| `value` | Float, Map of String → Float, or `"not_computed"` | MUST | The aggregate the Gate read; a Map for a Gate with a ThresholdMap. `"not_computed"` when no aggregate could be computed, for example a run halted by a missed Seeded Control. Never bare `null`. |
+| `threshold` | Float or ThresholdMap | MUST | The threshold the Gate was evaluated against, copied at evaluation time, so the record stays checkable if the Gate definition changes later. |
+| `basis` | Basis | MUST | The Aggregate Basis the aggregate rested on (Appendix C §C.3). |
+| `override` | String | MUST (if overridden) | Reference to the Approval Workflow record of an override approved for this GateResult (Volume XII). Only on a blocking GateResult with `status: fail`. Absent otherwise. |
+
+## A.13 — Snapshot
+
+A frozen capture of configuration at a point in time (Volume II, Volume X). Captured
+whenever Quality Gates are evaluated for a Release Decision (Volume I, Chapter 6), and
+MAY be captured explicitly for Snapshot Comparison. Never modified once captured.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `id` | String | MUST | Snapshot identifier, as referenced by a Release Decision's `snapshot_id`. |
+| `captured_at` | DateTime | MUST | Capture timestamp. |
+| `project` | String | MUST | Project name. |
+| `suites` | List of String | MUST | Suites in scope. |
+| `environments` | Map of String → Environment | MUST | The Environments in scope, as resolved at capture time. |
+| `contracts` | Map of String → String | MUST | Every Contract in scope, by name, with the version captured. |
+| `quality_gates` | List of QualityGate | MUST | The Gate definitions in scope, as they stood at capture time. |
+| `baselines` | List of String | MAY | Baselines included, for Snapshot Comparison (Volume X). |
+| `release_label` | String | MAY | Human-readable release identifier. |
 
 ## Type Reference
 

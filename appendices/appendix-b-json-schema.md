@@ -24,7 +24,9 @@ to a Domain Model entity (Volume II):
 | BoundaryEntry | A.2 | III |
 | Suite | A.3 | II |
 | Scenario | A.4 | II |
+| PromptDef | A.4 | II, III |
 | SeededControlConfig | A.4 | VIII |
+| FixedEvidence | A.4 | III, VIII |
 | DefectClassConfig | A.1 | VIII |
 | Contract | A.5 | VII |
 | Constraint | A.5 | VII |
@@ -41,6 +43,9 @@ to a Domain Model entity (Volume II):
 | Result | Appendix C §C.7 | II, I Ch. 3 &amp; 6 |
 | Baseline | A.11 | X, XII |
 | ReleaseDecision | A.12 | I, Ch. 6; XII |
+| GateResult | A.12 | I, Ch. 6 |
+| Basis | Appendix C §C.3 | I, Ch. 6 |
+| Snapshot | A.13 | II, X |
 
 ## B.2 — Property Constraints
 
@@ -54,6 +59,8 @@ properties:
   suites:        { type: array, items: Suite }                    # OPTIONAL
   execution:     { $ref: ExecutionConfig }                         # OPTIONAL
   defect_classes: { type: array, items: DefectClassConfig }        # OPTIONAL
+  contracts:      { type: array, items: { oneOf: [Contract, string] } }  # OPTIONAL
+  quality_gates:  { type: array, items: QualityGate }              # OPTIONAL
 ```
 
 **DefectClassConfig**
@@ -106,23 +113,36 @@ properties:
 **Suite**
 ```
 properties:
-  name:       { type: string, minLength: 1 }                  # REQUIRED
-  scenarios:  { type: array, items: Scenario, minItems: 1 }   # REQUIRED
+  name:           { type: string, minLength: 1 }                         # REQUIRED
+  scenarios:      { type: array, items: Scenario, minItems: 1 }          # REQUIRED
+  contracts:      { type: array, items: { oneOf: [Contract, string] } }  # OPTIONAL
+  quality_gates:  { type: array, items: QualityGate }                    # OPTIONAL
+  execution:      { $ref: ExecutionConfig }                              # OPTIONAL
 ```
 
 **Scenario**
 ```
 properties:
   name:             { type: string, minLength: 1 }        # REQUIRED
-  contract:         { oneOf: [Contract, string] }         # REQUIRED
+  contract:         { oneOf: [Contract, string] }         # CONDITIONAL
+  prompt:           { $ref: PromptDef }                   # CONDITIONAL
   dataset:          { type: string }                      # OPTIONAL
   variables:        { type: object }                      # OPTIONAL
   seeded_control:   { $ref: SeededControlConfig }          # OPTIONAL
+  evidence:         { $ref: FixedEvidence }                # CONDITIONAL
 ```
 
 *Cross-field rule:* `dataset` and `variables` are mutually exclusive. A schema SHOULD
 enforce this via a `oneOf` containing three shapes: dataset-only, variables-only, and
-neither.
+neither. `contract` is REQUIRED unless the Project or Suite supplies `contracts`
+(checked at load time, B.3). `prompt` is REQUIRED unless `dataset` names a
+`production_replay` Dataset (checked at load time, B.3).
+
+**PromptDef**
+```
+properties:
+  template:  { type: string, minLength: 1 }   # REQUIRED
+```
 
 **SeededControlConfig**
 ```
@@ -132,12 +152,26 @@ properties:
                        maximum: 1.0 },
                        { type: string, const: not_established } ] }    # OPTIONAL
   planted_defect:    { }                                               # REQUIRED
-  confirmation:      { $ref: Constraint }                              # OPTIONAL
+  confirmed_by:      { type: string, enum: [validator, human_reviewer,
+                       construction] }                                 # REQUIRED
+  confirmation:      { $ref: Constraint }                              # CONDITIONAL
   generator:         { type: string }                                  # OPTIONAL
 ```
 
 Note: an absent `difficulty_prior` is equivalent to `"not_established"`, not to `0.0`.
 A schema MUST NOT default this field to `0.0`.
+
+*Cross-field rules:* `confirmation` is REQUIRED when `confirmed_by` is `validator` and
+MUST NOT appear otherwise. When `confirmed_by` is `construction`, the Scenario MUST carry
+`evidence` and MUST NOT carry `prompt`, `dataset`, or `variables`.
+
+**FixedEvidence**
+```
+properties:
+  conversation:      { }                                  # REQUIRED
+  artifacts:         { type: object }                     # OPTIONAL
+  source_execution:  { type: string, minLength: 1 }       # OPTIONAL
+```
 
 **Contract**
 ```
@@ -222,12 +256,18 @@ properties:
 ```
 properties:
   method:           { type: string, minLength: 1 }                       # REQUIRED
-  threshold:        { type: string }                                     # OPTIONAL
+  threshold:        { oneOf: [ { type: string, enum: [majority, unanimous] },
+                      { type: number, exclusiveMinimum: 0.5,
+                        maximum: 1.0 } ] }                               # OPTIONAL
   min_agreement:    { type: number, minimum: 0.0, maximum: 1.0 }         # OPTIONAL
   on_disagreement:  { type: string, enum: [human_review, fail, flag],
                       default: human_review }                            # OPTIONAL
   min_qualified:    { type: integer, minimum: 1 }                        # OPTIONAL
 ```
+
+*Cross-field rule:* `threshold` MAY appear only when `method` is `voting`; absent, it
+defaults to `majority`. A numeric threshold MUST be a number, not a string: `0.75` is
+valid, `"0.75"` is not.
 
 **Dataset**
 ```
@@ -291,6 +331,82 @@ properties:
 
 *Cross-field rule:* at least one of `results` or `scenarios` MUST be present.
 
+**Baseline**
+```
+properties:
+  scenario:       { type: string, minLength: 1 }          # REQUIRED
+  environment:    { type: string, minLength: 1 }          # REQUIRED
+  execution_id:   { type: string, minLength: 1 }          # REQUIRED
+  approved_by:    { type: string, minLength: 1 }          # REQUIRED
+  approved_at:    { type: string, format: date-time }     # REQUIRED
+  approval_role:  { type: string, minLength: 1 }          # REQUIRED
+```
+
+**ReleaseDecision**
+```
+properties:
+  project:             { type: string, minLength: 1 }                    # REQUIRED
+  environment:         { type: string, minLength: 1 }                    # REQUIRED
+  suite:               { type: string, minLength: 1 }                    # REQUIRED
+  execution_batch_id:  { type: string, minLength: 1 }                    # REQUIRED
+  gates:               { type: object, additionalProperties: GateResult,
+                         minProperties: 1 }                              # REQUIRED
+  decision:            { type: string, enum: [approved, rejected,
+                         overridden] }                                   # REQUIRED
+  approved_by:         { type: string, minLength: 1 }                    # REQUIRED
+  approved_at:         { type: string, format: date-time }               # REQUIRED
+  approval_role:       { type: string, minLength: 1 }                    # REQUIRED
+  report_id:           { type: string, minLength: 1 }                    # REQUIRED
+  snapshot_id:         { type: string, minLength: 1 }                    # REQUIRED
+  release_policy:      { type: string, minLength: 1 }                    # CONDITIONAL
+  notes:               { type: string }                                  # OPTIONAL
+```
+
+**GateResult**
+```
+properties:
+  status:     { type: string, enum: [pass, fail] }                       # REQUIRED
+  blocking:   { type: boolean }                                          # REQUIRED
+  reason:     { type: string, enum: [threshold, insufficient_basis,
+                seeded_control_miss] }                                   # CONDITIONAL
+  value:      { oneOf: [ { type: number },
+                { type: object, additionalProperties: { type: number } },
+                { type: string, const: not_computed } ] }                # REQUIRED
+  threshold:  { oneOf: [number, object] }                                # REQUIRED
+  basis:      { $ref: Basis }                                            # REQUIRED
+  override:   { type: string, minLength: 1 }                             # CONDITIONAL
+```
+
+*Cross-field rules:* `reason` is REQUIRED when `status` is `fail` and MUST NOT appear
+when it is `pass`. `override` MAY appear only when `status` is `fail` and `blocking` is
+`true`.
+
+**Basis**
+```
+properties:
+  results:         { type: integer, minimum: 0 }                         # REQUIRED
+  not_actionable:  { type: integer, minimum: 0 }                         # REQUIRED
+  scenarios:       { type: integer, minimum: 0 }                         # REQUIRED
+  executions:      { type: integer, minimum: 0 }                         # REQUIRED
+  min_basis_met:   { oneOf: [ { type: boolean },
+                     { type: string, const: not_declared } ] }           # REQUIRED
+```
+
+**Snapshot**
+```
+properties:
+  id:             { type: string, minLength: 1 }                         # REQUIRED
+  captured_at:    { type: string, format: date-time }                    # REQUIRED
+  project:        { type: string, minLength: 1 }                         # REQUIRED
+  suites:         { type: array, items: { type: string }, minItems: 1 }  # REQUIRED
+  environments:   { type: object, additionalProperties: Environment }    # REQUIRED
+  contracts:      { type: object,
+                    additionalProperties: { type: string } }             # REQUIRED
+  quality_gates:  { type: array, items: QualityGate }                    # REQUIRED
+  baselines:      { type: array, items: { type: string } }               # OPTIONAL
+  release_label:  { type: string }                                       # OPTIONAL
+```
+
 ## B.3 — Cross-Type Validation Rules
 
 The following rules cannot be expressed within a JSON Schema alone and MUST be enforced
@@ -301,6 +417,10 @@ by a conformant implementation at configuration load time:
 | Independent Oracle — identity | Volume I, Ch. 3 | A JudgeConfig's `model` MUST NOT be identical to the Environment's `model_version` (same weights/decision process as the subject). |
 | Independent Oracle — family | Volume I, Ch. 3 | A JudgeConfig's `model` SHOULD NOT be from the same model family as the Environment's `model_version`, where this can be avoided. |
 | Contract non-empty | Volume VII | A Contract with zero Constraints and zero Expectations is invalid. |
+| Effective Contract | Volume VII | For every Scenario in every Suite, the composition of the Project's `contracts`, the Suite's `contracts`, and the Scenario's `contract` MUST contain at least one clause. A Scenario MAY omit `contract` only when the Project or Suite supplies one. A lower level MUST NOT remove or weaken a clause contributed by a higher one; a differing value for the same clause is a composition conflict. |
+| Gate name uniqueness | Volume I, Ch. 6 | A Quality Gate name MUST be unique across a Project's `quality_gates` and those of all its Suites. |
+| Prompt presence | Volume II; Volume III | A Scenario MUST carry `prompt` unless its `dataset` is a `production_replay` Dataset or it carries `evidence`. Every Variable a `prompt.template` references MUST be supplied by the Scenario's `variables` or every row of its Dataset. |
+| Consensus threshold | Volume VI | `threshold` is valid only with `method: voting`. Votes are counted against `panel.counted` (or samples); a verdict requires at least ⌈threshold × count⌉ matching votes. |
 | Expectation Oracle exclusivity | Volume VII | Exactly one of `judge`, `multi_judge`, `human_reviewer` MUST be present on an Expectation; `confidence_threshold` is REQUIRED for the first two and OPTIONAL for the third. |
 | Dataset version immutability | Volume IV | Two configurations referencing the same Dataset name + version MUST resolve to identical rows. |
 | Retry scope | Volume III | RetryConfig MUST NOT trigger on Result-level failures, only infrastructure failures. |
@@ -310,7 +430,8 @@ by a conformant implementation at configuration load time:
 | Result disposition validity | Appendix C §C.7 | `verdict` MUST be `null` when `disposition` is `awaiting_review`, `oracle_unavailable`, or `not_assessed`, and MUST be `pass` or `fail` otherwise. `confidence` MUST NOT be bare `null` under any disposition. |
 | Seeded Control invalidation scope | Volume VIII; Appendix C §C.3 | A missed Seeded Control invalidates only the Results its Oracle produced in the same run sharing its `defect_class`, by default. Full-run invalidation requires a Project to declare it explicitly, with a recorded, non-empty reason. |
 | Difficulty prior provenance | Volume VIII | A `difficulty_prior` (on a DefectClassConfig or a SeededControlConfig) MUST be established from reference Oracles independent of the Oracle(s) the controls test, or from Human Reviewers, and MUST NOT be set or updated from the outcome of the Oracle(s) under test. |
-| Seeded Control confirmation | Volume VIII; Appendix C §C.3 | Where a SeededControlConfig's `confirmation` fails, the control's outcome MUST be reported as `invalid` for that run, not as `caught` or `missed`. |
+| Seeded Control confirmation | Volume VIII; Appendix C §C.3 | A control's outcome MUST be reported as `invalid` for that run, not as `caught` or `missed`, unless the presence of its planted defect in the Evidence the Oracle received was confirmed by its declared method: its `confirmation` passed (`validator`), a Human Reviewer's confirmation is recorded (`human_reviewer`), or it carries `evidence` (`construction`). |
+| Fixed Evidence scope | Volume III; Volume VIII | `evidence` MAY appear only on a Scenario whose `seeded_control.confirmed_by` is `construction`. An Execution of such a Scenario MUST NOT invoke the subject. |
 | Defect class reference | Volume VIII | Where a Project declares `defect_classes`, every `seeded_control.defect_class` and every clause-level `defect_classes` entry SHOULD name a declared class. |
 | Panel reporting | Volume VI; Appendix C §C.7 | A Result produced by a Multi Judge configuration MUST carry `panel`. Below `min_qualified` (or below the full panel when it is absent), the panel's Results for the affected clauses MUST be `not_assessed`. |
 | Aggregate Basis reporting | Volume I, Ch. 6; Appendix C §C.3 | Every aggregate a Quality Gate reads MUST be reported with its Aggregate Basis. Where `min_basis` is declared and not met, the Gate MUST NOT pass, and the reason MUST be reported as insufficient basis, not as a threshold failure. |
@@ -318,6 +439,16 @@ by a conformant implementation at configuration load time:
 | Boundary attempt capture | Volume III; Volume V | Every attempt to reach outside an Action Boundary, and every Tripwire touch, MUST be captured as an Artifact whether or not it was blocked, and MUST fail a bound Boundary Validator. |
 | Unenforced boundary reporting | Volume III; Volume XI | An Environment declaring `enforced: false` MUST be identified in every Report whose scope includes it. |
 | Deletion referential integrity | Appendix C §C.8 | `DELETE` on an Environment, Dataset, or Contract still referenced by a Baseline, Snapshot, or Report MUST be rejected or preserved as a frozen record, never silently broken. |
+| Result resolution | Volume I, Ch. 6; Appendix C §C.7 | `resolves` MUST reference an earlier Result with the same `execution` and `clause`. Only a Human Reviewer Result, or a Result from a requalified Oracle re-assessing stored Evidence, MAY resolve another. A Result from the same Oracle configuration as the Result it would resolve MUST NOT. |
+| Effective Result | Volume I, Ch. 6 | Aggregation and Quality Gates read only the effective Result per Execution and clause. A resolved Result MUST NOT be counted again, including in `basis.not_actionable`. |
+| Gate Result override | Volume XII | An `override` MUST reference an approved `gate_override` record made for that GateResult. One override record MUST NOT be referenced by more than one GateResult. |
+| Release Decision coverage | Volume I, Ch. 6 | `gates` MUST contain a GateResult for every Quality Gate, blocking or advisory, applicable to the decision's scope. |
+| Release Decision outcome | Volume I, Ch. 6; Volume XII | `decision: approved` requires every blocking GateResult to have `status: pass`; `decision: overridden` requires every blocking GateResult with `status: fail` to carry `override`. |
+| Release Decision currency | Volume I, Ch. 6 | A Release Decision MUST NOT be recorded if a Contract or Quality Gate in its scope changed after the Snapshot named by `snapshot_id` was captured. |
+| Approval Permissions | Volume XII | A Baseline's `approval_role` MUST hold `baseline_approve`; a Release Decision's MUST hold `release_decide`. |
+| Human approval | Volume XII | `baseline_approve` and `gate_override` MUST be approved by a Person. A `contract_define` applied by a Service Account MUST name the approving Person and reference the external review. |
+| Automatic release | Volume XII | A Release Decision whose `approved_by` is a Service Account MUST carry `release_policy`, and its `decision` MUST be `approved` (every blocking GateResult `pass`, no `override`) or `rejected`. |
+| Snapshot immutability | Volume X | A Snapshot MUST NOT be modified after `captured_at`. |
 
 ## B.4 — Extensibility
 

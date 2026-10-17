@@ -27,8 +27,55 @@ CI/CD is not non-conformant for lacking Volume XIII's behavior, because Volume X
 rules simply do not apply to a capability it does not claim. An implementation that does
 integrate with CI/CD MUST follow Volume XIII's rules for it. The same scoping applies to
 specific SDKs (Volume XIV), Reference UI (Volume XV), Plugin Architecture (Volume XVI),
-Dataset sources beyond Static (Volume IV), and Test Types (Volume IX) beyond whichever
-ones a Project's own Contracts actually use.
+Dataset sources beyond Static (Volume IV), Test Types (Volume IX) beyond whichever
+ones a Project's own Contracts actually use, Multi Judge and Human Review (Volume VI),
+Seeded Controls (Volume VIII), and subjects that act through tools (Action Boundary,
+Volume III).
+
+## Conformance Statement
+
+Because Conformance is scoped to claimed capability, a claim of Conformance says nothing
+until it says which capabilities it covers. An implementation that claims AQEF
+Conformance MUST publish a **Conformance Statement** stating:
+
+- the version of this specification it conforms to;
+- the capabilities it claims, from the scoped set above, using the identifiers below;
+  the non-negotiable core (next section) is part of every claim and is not listed.
+
+It MAY also state capabilities it deliberately does not offer, and SHOULD-level
+requirements it deviates from (see Deviating from a SHOULD, below).
+
+| Identifier | Capability |
+|---|---|
+| `dataset:<source>` | A Dataset source beyond Static: `synthetic`, `generated`, `production_replay` (Volume IV) |
+| `multi_judge` | Multi Judge, Consensus, Voting (Volume VI) |
+| `human_review` | Human Reviewer as an Oracle and Human Review (Volume VI) |
+| `seeded_controls` | Seeded Controls, including fixed Evidence (Volume VIII) |
+| `action_boundary` | Subjects that act through tools (Volume III) |
+| `test_type:<name>` | A Test Type (Volume IX) |
+| `ci_cd:<platform>` | A CI/CD integration (Volume XIII) |
+| `sdk:<language>` | A language SDK (Volume XIV) |
+| `reference_ui` | Reference UI (Volume XV) |
+| `plugins:<type>` | Plugin Architecture: `validator`, `judge`, `dataset`, `report` (Volume XVI) |
+
+The form of the statement is the implementation's choice; this one is recommended:
+
+```yaml
+aqef_conformance:
+  specification_version: "0.34"
+  implementation: "Example Engine 1.2"
+  capabilities:
+    - human_review
+    - seeded_controls
+    - dataset:generated
+    - ci_cd:github_actions
+  not_offered:
+    - multi_judge
+    - plugins:judge
+```
+
+A Conformance Statement says what is to be checked. It does not show that the checks
+pass.
 
 ## The Non-Negotiable Core
 

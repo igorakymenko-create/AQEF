@@ -18,7 +18,7 @@ Volume V's Validator Pipeline hands off.
 | Single Judge | Baseline case — one Judge, one Conversation, one Confidence-qualified Result |
 | Multi Judge | More than one Judge assesses the same Conversation — for independence, or for stability; not the same purpose |
 | Consensus | How disagreement among Multi Judge Results gets resolved into one verdict |
-| Voting | One specific Consensus mechanism — majority/plurality counting of discrete verdicts |
+| Voting | One specific Consensus mechanism — counting discrete verdicts against a threshold |
 | Confidence | How a Judge produces its own Confidence value (production, not consumption — Chapter 6 covers consumption) |
 | Calibration | Whether a Judge's stated Confidence actually tracks its accuracy, against a reference |
 | Human Review | Where the Human Reviewer Oracle gets invoked — by Contract, low Confidence, disagreement, or as calibration ground truth |
@@ -111,14 +111,21 @@ sampled repeatedly, a miss excludes every sample.
 ## Voting
 
 Voting is one specific Consensus mechanism: converting several Judges' discrete
-pass/fail verdicts into one Result by majority or plurality count. It is not the only
+pass/fail verdicts into one Result by counting them against a threshold. It is not the only
 way to reach Consensus — an alternative is combining Judges' Confidence-qualified scores
 directly, such as a Confidence-weighted average, rather than counting discrete verdicts
 — but Voting is the simplest and most auditable, since a Report (Volume XI) can state a
-vote count plainly without needing to explain a weighting formula. Voting requires an
-odd number of Judges or an explicit tie-breaking rule to avoid an unresolved verdict;
-routing a tie to Human Review is the natural choice, consistent with Consensus's
-treatment of disagreement above.
+vote count plainly without needing to explain a weighting formula. The threshold is `majority` (more than half), `unanimous` (all), or a stated fraction
+greater than one half and at most one (Appendix A §A.7). It is counted against the Judges
+whose verdicts were actually counted (`panel.counted`, Appendix C §C.7), not the Judges
+configured, and in a stability configuration against the samples. A verdict is reached
+when the pass votes, or the fail votes, number at least the threshold times that count,
+rounded up: a threshold of 0.75 with five counted Judges needs four. A fraction of one
+half or less is not allowed, because a tie would then satisfy both sides at once. Where
+neither side reaches the threshold, including a tie, the Consensus's `on_disagreement`
+policy applies; routing to Human Review is the default, consistent with Consensus's
+treatment of disagreement above. An odd panel does not guarantee an odd count: excluding
+a Judge after a missed Seeded Control can leave an even number.
 
 ## Confidence
 
@@ -172,16 +179,22 @@ Confidence Model routes a Judge Result below its Contract's Confidence threshold
 Human Review before it is allowed to affect an aggregate; unresolved Consensus
 disagreement among independent Judges is itself grounds for Human Review, above; and a
 Human Reviewer's Results serve as the reference Calibration and Judge Drift (below)
-measure against. The sixth is narrower: a Human Reviewer settles a Seeded Control that
-no independent reference Oracle catches, before that control is used to gate an Oracle
-(Volume VIII). A Human Reviewer's own Result MAY carry a Confidence value (Volume II),
+measure against. The sixth is narrower: a Human Reviewer settles a Seeded Control — confirming that its
+planted defect actually reached the Evidence where the control declares
+`confirmed_by: human_reviewer`, or confirming a control that no independent reference
+Oracle catches before it is used to gate an Oracle (Volume VIII). A Human Reviewer's own Result MAY carry a Confidence value (Volume II),
 assessed the same way a Judge's is, but a Human Reviewer is never itself subject to
 Calibration or Judge Drift tracking — those measure a Judge against a Human Reviewer as
-ground truth, not the reverse.
+ground truth, not the reverse. Where Human Review is triggered by a Judge's low
+Confidence or by unresolved Consensus, the Human Reviewer's Result resolves the Result
+that triggered it (Volume I, Chapter 6 — Result Resolution): the Judge's or panel's
+Result stays in the record, and the Human Reviewer's becomes the one the Aggregation
+Model reads.
 
 A Result awaiting a Human Reviewer's response carries the disposition `awaiting_review`
-(Appendix C §C.7) — `verdict` and `confidence` are absent, not a placeholder value,
-because no judgment has been made yet. This MUST NOT persist indefinitely: an
+(Appendix C §C.7). No judgment has been made yet, so `verdict` is `null` and
+`confidence` is `"not_applicable"`: markers that no judgment exists, never a default
+verdict or a zero score. This MUST NOT persist indefinitely: an
 Expectation bound to Human Review SHOULD specify a `review_timeout` (Appendix A §A.5),
 after which the Contract's `on_timeout` policy applies. The default, absent an explicit
 policy, is to treat the Result as blocking — an unanswered review is never silently
@@ -191,7 +204,7 @@ Independent Oracles principles already take toward anything unresolved or unveri
 A Judge (or Human Reviewer interface) that cannot be reached at all — a network timeout,
 a provider rate limit, a crash in the Judge Engine, occurring after Validation has
 already passed — produces a Result with disposition `oracle_unavailable` rather than a
-low-Confidence verdict; no verdict was reached, so none is recorded. This is the
+low-Confidence verdict; no verdict was reached, so `verdict` is `null`. This is the
 Evaluation-stage counterpart to the infrastructure-level Retry Volume III scopes to the
 Execution stage, and the same prohibition carries over without exception: an
 Oracle that could not be reached MUST NOT be silently retried until a favorable verdict

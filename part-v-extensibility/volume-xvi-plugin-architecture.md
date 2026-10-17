@@ -18,20 +18,23 @@ installed, verified, and retired.
 A Validator Plugin extends Volume V's built-in set with a Project-specific check, and it
 inherits Volume V's constraints exactly — deterministic, no Confidence value — not as
 documentation a plugin author is trusted to follow, but as a requirement the Plugin
-Architecture itself checks. Extension Lifecycle's registration step (below) MUST run a
-candidate Validator Plugin against a fixed test input more than once and reject
-registration if its output varies; this is the mechanical enforcement Volume V
-already called for, and it is only possible because a Validator's own defining property
-— the same input always produces the same Result — is something a plugin's behavior can
-be tested against directly, before it ever runs against a real Conversation.
+Architecture checks as far as a check can reach. Extension Lifecycle's registration step
+(below) MUST run a candidate Validator Plugin against a fixed test input more than once
+and reject registration if its output varies. This check is necessary, not sufficient:
+a plugin that passes it has shown that it repeats itself on that input, not that it is
+deterministic on every input — it could still read the clock, a random source, or an
+external service. A successful registration MUST NOT be reported as proof of
+determinism. The plugin remains bound by Volume V's definition of a pure Validator
+throughout its use, and an implementation MAY re-check it later on stored Evidence
+(Volume V — Validator SDK).
 
 ## Judge Plugins
 
 A Judge Plugin extends Volume VI's Judge Engine with a Project-specific assessment model
 or criteria set, and it carries an asymmetry Validator Plugins do not: a Judge's
 defining property is that its Result carries a Confidence value reflecting genuine
-uncertainty, which is not something a registration-time check can verify the way
-determinism can — running a Judge Plugin against a fixed input twice and getting
+uncertainty, which is not something a registration-time check can probe the way
+repeatability can — running a Judge Plugin against a fixed input twice and getting
 different Confidence values is expected, not a failure to catch. What the Plugin
 Architecture can check mechanically stops at structure — does a Judge Plugin's Result
 carry a Confidence value at all, does it declare the criteria it assesses inspectably
@@ -64,8 +67,9 @@ rules out, regardless of how the plugin computed it.
 
 A plugin authenticates against AQEF the same way any other caller of the REST API does
 (Volume XIV) — there is no separate, plugin-specific authorization system, only the same
-Permissions a Team and Role already grant (Volume XII) applied to whatever account the
-plugin runs under. A plugin's own code MAY be trusted by whoever installed it, but that
+Permissions a Team and Role already grant (Volume XII) applied to whatever Principal the
+plugin runs under — ordinarily a Service Account with an owning Person (Volume XII —
+Principals). A plugin never approves a governed action. A plugin's own code MAY be trusted by whoever installed it, but that
 trust does not extend its Permissions beyond what Governance has actually granted the
 account it authenticates as; a plugin requesting an action its account's Role does not
 permit fails the same Approval Workflow check any other caller would.
@@ -73,7 +77,7 @@ permit fails the same Approval Workflow check any other caller would.
 ## Extension Lifecycle
 
 Extension Lifecycle governs how a plugin moves from installation to retirement:
-installation, registration — including the determinism verification Validator Plugins
+installation, registration — including the repeatability check Validator Plugins
 above require — versioning, update, and deprecation. A plugin's own version is tracked
 the same way a Dataset's or a Reusable Contract's is (Volume IV, Volume VII), for the
 same reason: so a specific Execution's Result can be traced back to the exact plugin

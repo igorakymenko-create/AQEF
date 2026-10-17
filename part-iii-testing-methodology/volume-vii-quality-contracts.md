@@ -29,8 +29,14 @@ level name and prose name for one thing, not two.
 A Quality Contract is a declarative specification, not executable code (Chapter 3 —
 Contracts over Assertions): its language describes what MUST hold, not how to check it.
 Concretely, a Contract is a named collection of clauses — Constraints and Expectations,
-below — each binding to one or more Oracles, plus the Policies that govern how those
-clauses combine. This Volume specifies that conceptual grammar; the concrete
+below — each binding to exactly one Oracle, plus the Policies that govern how those
+clauses combine. A Constraint binds to one Validator; an Expectation binds to one Judge,
+one Multi Judge panel, or one Human Reviewer. A Multi Judge panel is one Oracle for this
+purpose: its Judges are combined by Consensus (Volume VI) into the clause's single
+Result, while each member Judge is still qualified individually by Seeded Controls
+(Volume VIII). Routing a low-Confidence Result to Human Review is escalation, not a
+second Oracle bound to the clause. Where two independent Oracles are wanted for the same
+criterion, they are authored as two clauses. This Volume specifies that conceptual grammar; the concrete
 serialization a Contract is actually written in — its YAML form (Appendix A) and the
 JSON Schema that validates it (Appendix B) — is generated from the entities this Volume
 and Volume II define, not authored independently, for the same reason Appendix A already
@@ -124,6 +130,17 @@ genuinely conflicting values for the same clause — different Confidence thresh
 the same Expectation, for instance — Composition MUST surface the conflict explicitly
 rather than silently resolve it; silently picking one value would hide exactly the kind
 of drift Chapter 3 requires a Contract to remain auditable against.
+
+A Contract MAY be attached at three levels: to a Project, to a Suite, and to a Scenario
+(Appendix A §A.1, §A.3, §A.4). The effective Contract for a Scenario, when it is run as
+part of a Suite, is the composition of all three: the Project's Contracts, that Suite's
+Contracts, and the Scenario's own. Composition across levels follows the same rules as
+any other: it is additive, and a lower level adds clauses but cannot remove or weaken a
+clause contributed by a higher one. Where a Scenario needs a different value for the
+same clause, that is a conflict, and it is surfaced like any other. Because a Scenario
+MAY belong to more than one Suite, its effective Contract is determined per Suite. An
+effective Contract with no clauses is invalid, at whatever level it would have been
+supplied.
 
 ## Reusable Contracts
 

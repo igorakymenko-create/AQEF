@@ -165,7 +165,9 @@ Oracle produced in the same run that shares that defect class MUST take the disp
 Results outside that class, since the miss never put them in question. A Project MAY
 instead declare full-run invalidation for a given miss, but this is a deliberate
 decision, not the default, and MUST record a reason (Volume XII) — a narrow miss should
-not silently discard evidence it never disqualified. Seeded Control Results themselves
+not silently discard evidence it never disqualified. Under full-run invalidation, no
+Result of that run counts as `actionable` for any Quality Gate (Chapter 6), whatever its
+defect class. Seeded Control Results themselves
 MUST be excluded from Aggregation.
 
 **Coverage and order.** A Project SHOULD maintain at least one Seeded Control for each
@@ -204,16 +206,46 @@ authorship SHOULD stay separate from tuning, through Governance's Role/Permissio
 mechanism (Volume XII). An Oracle tuned to catch a defect class better in general is not
 tuned around its controls: that is the improvement Seeded Controls exist to verify.
 
-**Confirmed by construction.** A Seeded Control MUST record the defect it plants
-(`planted_defect`, Appendix A §A.4): a defect nobody can state is not a known defect. A
-control SHOULD also carry a confirmation, a Validator-bound check that the planted defect
-is actually present in the Evidence the Oracle receives. A control runs through the
-system under test like any other Scenario, and a defect planted in its input may not
-survive into the response. Where confirmation fails, the control is `invalid` for that
-run (Appendix C §C.3): it is neither caught nor missed, and nothing is inferred about the
-Oracle from it. A generator SHOULD place a defect where the Scenario necessarily exercises
-it, so that `invalid` controls stay rare. An `invalid` control points at the generator or
-the author, not at the Oracle.
+**Confirmed presence.** A Seeded Control MUST record the defect it plants
+(`planted_defect`, Appendix A §A.4): a defect nobody can state is not a known defect. Its
+outcome means something only if the defect actually reached the Evidence the Oracle
+received, and in both directions. If the defect never arrived, an Oracle that reports
+nothing is right, and counting that as a miss disqualifies a working Oracle. If the
+defect never arrived and the Oracle reports one anyway, counting that as a catch
+qualifies an Oracle that has shown nothing, which is the more dangerous error of the two.
+A Seeded Control's outcome MUST therefore be `invalid` for the run (Appendix C §C.3) —
+neither caught nor missed, with nothing inferred about the Oracle — unless the presence of
+its planted defect in that Evidence has been confirmed, by one of three methods the control
+declares (`confirmed_by`):
+
+- **`validator`** — a Validator-bound check (`confirmation`) that the defect is present
+  in the Evidence. Cheap, where the defect can be stated as a rule: a planted phrase, a
+  changed figure.
+- **`human_reviewer`** — a Human Reviewer confirms that the defect is present in the
+  Evidence the Oracle received (Volume VI — Human Review). Until the confirmation is
+  recorded, the control is `invalid`; it SHOULD be recorded before the Quality Gates that
+  read the Oracle's Results are evaluated. A confirmation recorded later updates the
+  control's reported outcome, and the Gates MAY then be evaluated again; a Gate Result or
+  Release Decision already recorded stays in the record.
+- **`construction`** — the control carries **fixed Evidence** (`evidence`, Appendix A
+  §A.4): a Conversation, and Artifacts where they matter, with the defect already in it.
+  The subject is not invoked; the Oracle receives that Evidence directly (Volume III), so
+  the defect is present by construction and needs no further check.
+
+A control that runs through the subject (the first two methods) can lose its defect on
+the way: a defect planted in the input may not survive into the response. A generator
+SHOULD place a defect where the Scenario necessarily exercises it, so that `invalid`
+controls stay rare. An `invalid` control points at the generator or the author, not at
+the Oracle.
+
+Fixed Evidence removes that loss and the cost of invoking the subject, and brings a risk
+of its own: Evidence written for a control can look unlike anything the subject produces,
+and an Oracle can learn to recognize controls by how they look rather than by the defect.
+Fixed Evidence SHOULD therefore be derived from Evidence the subject actually produced,
+recently and in the same Environment, with the defect planted into it, and SHOULD name
+the Execution it was derived from (`source_execution`). The rules on generation and
+exposure above apply to it unchanged. Fixed Evidence is permitted only on a Seeded
+Control: a Scenario that tests the subject has to invoke it.
 
 **Difficulty prior.** A difficulty prior states how reliably independent reference
 Oracles catch a class of defect, so that a miss can be read correctly: a miss on a class
@@ -237,9 +269,11 @@ missed defect class until it is requalified. The cause is diagnosed (a changed m
 prompt, criteria, or configuration; or Judge Drift, Volume VI), the Oracle is corrected,
 and the corrected Oracle catches fresh controls of that class. Never the control it
 missed: the diagnosis exposed it. A requalified Oracle MAY then re-assess the stored
-Evidence of the affected run, without invoking the system under test again. The new
-Results are recorded against the corrected Oracle's configuration; the original
-`inconclusive` or `not_assessed` Results remain in the record unchanged. This is not a
+Evidence of the affected run, without invoking the system under test again. The new Results are recorded against the corrected Oracle's configuration; the original
+`inconclusive` or `not_assessed` Results remain in the record unchanged. The new Results
+resolve the original ones (Chapter 6 — Result Resolution), and a Quality Gate MAY be
+evaluated again on them; a Gate Result or Release Decision already recorded stays in the
+record. This is not a
 Retry (Volume III): the subject is not re-run, and the re-assessment is made by a
 different, requalified Oracle, not by the same Oracle asked again until it agrees. A
 Judge that missed a control inside a Multi Judge panel is handled by that panel's quorum

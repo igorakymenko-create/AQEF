@@ -20,7 +20,7 @@ SDKs, and Reference UI (Volume XV) are clients of this API, not independent syst
 Operations follow standard HTTP semantics: GET for reads, POST for creation, PUT for
 full replacement, PATCH for partial update, DELETE for removal.
 
-**Governance-integrated.** Every mutating operation checks the acting user's
+**Governance-integrated.** Every mutating operation checks the acting Principal's
 Permissions (Volume XII) before executing. Audit-relevant operations produce Governance
 log entries as a side effect.
 
@@ -153,7 +153,8 @@ array, one entry per Seeded Control Scenario in that run:
 |---|---|---|
 | `scenario` | String | The Seeded Control Scenario. |
 | `defect_class` | String | From Appendix A §A.4's `SeededControlConfig`. |
-| `outcome` | String | `caught`, `missed`, or `invalid` (the control's confirmation failed, Volume VIII). |
+| `outcome` | String | `caught`, `missed`, or `invalid` (presence of the planted defect not confirmed: confirmation failed, or not yet recorded, Volume VIII). |
+| `confirmed_by` | String | The control's declared method: `validator`, `human_reviewer`, or `construction` (Appendix A §A.4). |
 | `invalidation_scope` | String | `none` (when `outcome` is `caught` or `invalid`), `defect_class`, or `full_run`. |
 | `reason` | String or `null` | MUST be present and non-empty when `invalidation_scope` is `full_run` (Volume VIII); `null` otherwise. |
 
@@ -167,7 +168,9 @@ low-Confidence Result from one invalidated by a Seeded Control miss.
 Where the Oracle was not invoked for clauses after a miss (Volume VIII, failing fast),
 their Results carry `not_assessed` (§C.7). Where the Project's `on_seeded_control_miss`
 is `halt_run` (Appendix A §A.9), the entry's `invalidation_scope` is `full_run` and its
-`reason` is set automatically to the configured policy.
+`reason` is set automatically to the configured policy. Under `full_run`, no Result of
+that run counts as `actionable` for any Quality Gate, whatever its defect class (Volume
+VIII).
 
 | Method | Path | Description | Permission |
 |---|---|---|---|
@@ -178,6 +181,17 @@ four Approval-Workflow-gated actions (Volume XII) — full-run invalidation is a
 judgment call, not a standing configuration, and Volume VIII keeps its governance at
 SHOULD, not MUST. A logged call to this endpoint is queryable like any other
 Governance-controlled action through `GET /projects/{project}/audit`.
+
+**Snapshot**
+
+| Method | Path | Description | Permission |
+|---|---|---|---|
+| GET | `/projects/{project}/snapshots` | List Snapshots. | `read` |
+| GET | `/projects/{project}/snapshots/{snapshot}` | Retrieve a Snapshot (Appendix A §A.13). | `read` |
+| POST | `/projects/{project}/snapshots` | Capture a Snapshot explicitly, for Snapshot Comparison (Volume X). | `snapshot_create` |
+
+A Snapshot is also captured automatically by `POST .../gates/check` (below). No
+operation modifies or replaces a Snapshot.
 
 **Baseline**
 
@@ -192,9 +206,10 @@ Governance-controlled action through `GET /projects/{project}/audit`.
 | Method | Path | Description | Permission |
 |---|---|---|---|
 | GET | `/projects/{project}/gates` | List Gate definitions. | `read` |
-| POST | `/projects/{project}/gates` | Define a Quality Gate. | `gate_define` |
-| POST | `/projects/{project}/gates/check` | Evaluate Gates against a set of Results. | `execute` |
-| POST | `/projects/{project}/gates/{gate}/override` | Override a failed Gate. Governed by Approval Workflow. | `gate_override` |
+| POST | `/projects/{project}/gates` | Define a Quality Gate. Governed by Approval Workflow. | `contract_define` |
+| PUT | `/projects/{project}/gates/{gate}` | Change a Quality Gate (threshold, `min_basis`, `on_failure`). Governed by Approval Workflow. | `contract_define` |
+| POST | `/projects/{project}/gates/check` | Evaluate Gates against a set of Results. Returns one GateResult (Appendix A §A.12) per Gate and the `snapshot_id` captured for the evaluation. | `execute` |
+| POST | `/projects/{project}/gates/{gate}/override` | Override one failed blocking GateResult. Body MUST identify the evaluation (`execution_batch_id`) and include a non-empty justification. Applies to that GateResult only. Governed by Approval Workflow. | `gate_override` |
 
 **Aggregate Basis Reporting:** the response to `POST /projects/{project}/gates/check`,
 and every per-gate entry in a Release Decision, MUST include a `basis` object for the
@@ -219,7 +234,7 @@ Results are not counted in any field above.
 |---|---|---|---|
 | GET | `/projects/{project}/reports` | List Reports. | `read` |
 | GET | `/projects/{project}/reports/{report}` | Retrieve a frozen Report. | `read` |
-| POST | `/projects/{project}/releases` | Record a Release Decision. Governed by Approval Workflow. | `release_decide` |
+| POST | `/projects/{project}/releases` | Record a Release Decision. MUST be rejected if a Contract or Quality Gate in its scope changed after its `snapshot_id` was captured (Volume I, Chapter 6). Governed by Approval Workflow. | `release_decide` |
 | GET | `/projects/{project}/releases` | List Release Decisions. | `read` |
 
 **Governance**
@@ -245,12 +260,16 @@ Results are not counted in any field above.
 ## C.4 — Authentication and Authorization
 
 All API operations MUST be authenticated. The authentication mechanism is
-implementation-defined (API key, OAuth 2.0, etc.) but MUST resolve to a Person with
-Team membership and Role assignments (Volume XII).
+implementation-defined (API key, OAuth 2.0, etc.) but MUST resolve to a Principal — a
+Person or a Service Account with an owning Person — with Team membership and Role
+assignments (Volume XII — Principals).
 
-Every mutating operation MUST check the resolved Person's Permissions before
-executing. If the Person lacks the required Permission, the API MUST reject the
-request. Permission checks are against the atomic Permission, not the Role — Roles are
+Every mutating operation MUST check the resolved Principal's Permissions before
+executing. If the Principal lacks the required Permission, the API MUST reject the
+request. Approving `baseline_approve` or `gate_override` additionally requires the
+Principal to be a Person; a Service Account MAY apply `contract_define` only with a
+reference to an external review approved by a Person, and MAY record a Release Decision
+only under a standing release policy (Volume XII). Permission checks are against the atomic Permission, not the Role — Roles are
 convenience groupings, Permissions are the enforcement unit.
 
 ## C.5 — Governance Side Effects
@@ -261,12 +280,15 @@ operation itself and queryable through `GET /projects/{project}/audit`. The Gove
 Action column uses the same identifiers as the Permission columns in §C.3 — these are
 the same four actions Chapter 4 and Volume XII name, not a fifth: creating and modifying
 a Contract are both instances of `contract_define`, since both are the same
-Governance-controlled act of setting what a Contract requires.
+Governance-controlled act of setting what a Contract requires, and so are defining and
+changing a Quality Gate, which sets what a release must show (Volume XII).
 
 | Operation | Governed Action (Volume XII) |
 |---|---|
 | `POST /contracts` | `contract_define` |
 | `PUT /contracts/{contract}` | `contract_define` |
+| `POST /gates` | `contract_define` |
+| `PUT /gates/{gate}` | `contract_define` |
 | `POST /baselines` | `baseline_approve` |
 | `POST /gates/{gate}/override` | `gate_override` |
 | `POST /releases` | `release_decide` |
@@ -295,9 +317,13 @@ configuration entities, but Result is runtime output, so it belongs here.
 
 | Field | Type | Required | Description |
 |---|---|---|---|
+| `id` | String | MUST | Unique identifier of this Result. |
+| `execution` | String | MUST | The Execution whose Evidence was assessed. |
+| `clause` | String | MUST | The Contract clause applied: a stable reference to the clause within the Contract version in force for that Execution. |
+| `resolves` | String | MAY | The `id` of an earlier Result for the same `execution` and `clause` that this Result resolves (Volume I, Chapter 6 — Result Resolution). Absent otherwise. |
 | `oracle_type` | String | MUST | `validator`, `judge`, or `human_reviewer`. |
 | `verdict` | String or `null` | MUST | `pass` or `fail`. `null` only when `disposition` is `awaiting_review`, `oracle_unavailable`, or `not_assessed` — no verdict has been reached. |
-| `confidence` | Float (0.0–1.0) or `"not_applicable"` | MUST | Never omitted and never bare `null`. `"not_applicable"` for every Validator Result (Volume V) and for any Result with no verdict yet. |
+| `confidence` | Float (0.0–1.0) or `"not_applicable"` | MUST | Never omitted and never bare `null`. `"not_applicable"` for every Validator Result (Volume V), for a Human Reviewer Result whose review captures no Confidence (Volume II; Appendix A §A.5, `captures_confidence`), and for any Result with no verdict yet. |
 | `disposition` | String | MUST | `actionable`, `inconclusive`, `awaiting_review`, `oracle_unavailable`, or `not_assessed`. See below. |
 | `supporting_evidence` | Any | MUST | What the Oracle based its judgment on — the Conversation, Artifacts, or specific excerpts, per Oracle type. |
 | `panel` | Object | MUST (Multi Judge Results); absent otherwise | `{ configured: Integer, counted: Integer }` — Judges configured in the panel, and Judges whose verdicts were counted after exclusions (Volume VI). |
@@ -312,10 +338,13 @@ previously named as a field:
 - **`inconclusive`** — a Judge or Human Reviewer Result whose Confidence is below the
   Contract's `confidence_threshold` (Volume I, Chapter 6). Terminal for that specific
   Result; it MAY trigger Human Review, which produces a separate Result under the Human
-  Reviewer Oracle, not a mutation of this one.
+  Reviewer Oracle, not a mutation of this one. That Result resolves this one
+  (`resolves`, above).
 - **`awaiting_review`** — a Human Reviewer Result has been requested (Volume VI — Human
-  Review) but not yet returned. `verdict` and `confidence` are absent because no
-  judgment has been made yet. Volume XII's Approval Workflow governs how long this MAY
+  Review) but not yet returned. No judgment has been made yet: `verdict` is
+  `null` and `confidence` is `"not_applicable"`, markers that no judgment exists, never a
+  default verdict or a zero score. This is the one disposition a Result leaves: it
+  completes once the review returns. Volume XII's Approval Workflow governs how long this MAY
   persist; a Contract SHOULD specify a `review_timeout` (Appendix A) and an
   `on_timeout` policy so an unattended pipeline (Volume XIII) cannot block indefinitely.
   The default `on_timeout` policy, absent an explicit one, is to treat the Result as
@@ -327,16 +356,18 @@ previously named as a field:
   Evaluation-stage counterpart to the infrastructure-level Retry Volume III already
   scopes to the Execution stage; the same prohibition applies without exception: an
   Oracle that could not be reached MUST NOT be silently retried until a favorable
-  verdict appears, and MUST NOT be treated as an implicit pass. `verdict` is absent.
+  verdict appears, and MUST NOT be treated as an implicit pass. `verdict` is `null`.
 - **`not_assessed`** — the Oracle was deliberately not invoked: it had missed a Seeded
   Control of the clause's defect class earlier in the same run (Volume VIII), or a Multi
-  Judge panel fell below its quorum (Volume VI). `verdict` is absent. The Evidence is
-  kept, and a requalified Oracle MAY assess it later as a new Result; this Result is not
-  modified.
+  Judge panel fell below its quorum (Volume VI). `verdict` is `null`. The Evidence is
+  kept, and a requalified Oracle MAY assess it later as a new Result, which resolves this
+  one; this Result is not modified.
 
-A Quality Gate (Volume I, Chapter 6) reading an aggregate that includes any Result whose
-`disposition` is not `actionable` MUST treat that Result as blocking by default, unless
-the Gate's own configuration explicitly states otherwise.
+A Quality Gate (Volume I, Chapter 6) reading an aggregate that includes any effective
+Result whose `disposition` is not `actionable` MUST treat that Result as blocking by
+default, unless the Gate's own configuration explicitly states otherwise. A Result that
+another Result `resolves` is not counted again (Volume I, Chapter 6 — Result
+Resolution).
 
 ## C.8 — Deletion and Referential Integrity
 

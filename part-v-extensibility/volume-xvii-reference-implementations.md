@@ -16,7 +16,9 @@ A Minimal Engine collapses Chapter 4's five logical layers — Definition, Execu
 Evidence, Assessment, Decision — into a single process, typically one deployable service
 sitting behind the REST API (Volume XIV) with no separately-scaled Execution Engine,
 Validator Engine, or Judge Engine. This is a topology choice, not a reduced normative
-bar: every MUST and SHOULD across all seventeen Volumes still applies. Governance's
+bar: a Minimal Engine meets exactly the requirements an Enterprise Engine meets for the
+same claimed capabilities (Front Matter §10). Topology neither adds nor removes any
+requirement. Governance's
 Approval Workflow (Volume XII) still governs approving a Baseline or overriding a
 Quality Gate, even where the Team is one person and the "review" is a single click;
 Deterministic Infrastructure (Chapter 3) still holds, even where every Execution runs on
@@ -34,8 +36,9 @@ own services, and Reporting & Analytics and Governance as cross-cutting services
 others call into rather than embed. The same normative bar from Minimal Engine applies
 unchanged — an Enterprise Engine satisfies no requirement a Minimal Engine does not, it
 simply satisfies all of them at a scale and organizational complexity (multiple Teams,
-differentiated Roles, CI/CD Integration as a first-class expectation rather than an
-optional add-on, Volume XIII) a Minimal Engine's simpler topology was never built to
+differentiated Roles, CI/CD Integration typically offered from the start rather than
+added later, Volume XIII — which capabilities an implementation offers is what
+Conformance is scoped to, §10, not its topology) a Minimal Engine's simpler topology was never built to
 carry.
 
 ## Cloud Architecture

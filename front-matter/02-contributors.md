@@ -7,8 +7,6 @@ direction.
 
 ## Acknowledgements
 
-Drafting assisted by Claude (Anthropic).
-
 [Roman Hurakov](https://www.linkedin.com/in/relywoo/) — external feedback that shaped
 clause-level weighting and aggregate declaration for Judge Results (Volume VII and
 Volume VI, v0.27): a reported case in which a faithfulness Judge returned a high score on
@@ -25,3 +23,14 @@ behind generated, exposure-retired Seeded Controls (Volume VIII, v0.32).
 [Tatyana Arbouzova](https://www.linkedin.com/in/tatyana-arbouzova-leader/) — a public
 discussion of AI agents acting outside their test environments that shaped the Action
 Boundary, Unauthorized Action, and Blocked-Path Testing (Volumes III, VIII, IX, v0.33).
+
+### AI assistance
+
+Three large language models took part in developing this specification. Igor Akymenko
+directed the work and made the decisions recorded in it. All three reviewed complete
+versions of the document at various stages, as independent reviewers.
+
+- Claude (Anthropic) — drafting and editing; review.
+- ChatGPT (OpenAI) — review, including the staged consistency audit of v0.33 whose
+  findings were resolved in v0.34.
+- Gemini (Google) — review.

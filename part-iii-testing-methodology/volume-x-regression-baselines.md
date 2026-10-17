@@ -103,7 +103,10 @@ release-to-release drift across an entire Suite or Project, not one Scenario at 
 This is what a Regression Gate (Chapter 6) configured against a Snapshot rather than an
 individual Baseline actually performs: not "did this one Scenario regress" but "did this
 release, taken as a whole, regress relative to the last one" — a question no amount of
-per-Scenario Baseline comparison, run one at a time, directly answers on its own.
+per-Scenario Baseline comparison, run one at a time, directly answers on its own. A
+Snapshot is also captured whenever Quality Gates are evaluated for a Release Decision,
+pinning the configuration that decision rests on (Chapter 6); the same Snapshot can later
+serve as the reference for Snapshot Comparison.
 
 ---
 
