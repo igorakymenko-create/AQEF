@@ -593,7 +593,8 @@ formats while maintaining strict traceability back to underlying Results.
 **Requalification** — Returning an Oracle to use for a Defect Class after it missed a
 Seeded Control (Volume VIII): diagnose, correct, and catch fresh controls of that class,
 never the missed one. A requalified Oracle MAY re-assess stored Evidence as new Results;
-the original Results are not modified. Not a Retry.
+the original Results are not modified. Not a Retry. Recorded as a Requalification
+record (Appendix C §C.3).
 
 **Requirements** — Explicit statements (Volume I, Chapter 5) of expected behavior that
 serve as the origin for Quality Contract clauses, produced during the earliest

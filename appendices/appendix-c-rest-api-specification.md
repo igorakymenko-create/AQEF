@@ -62,6 +62,7 @@ subject's output varies (Volume I, Chapter 3).
 | Quality Gate | `/projects/{project}/gates` | I, Ch. 6 | Thresholded checks. |
 | Release Decision | `/projects/{project}/releases` | I, Ch. 6; XII | Go/no-go records. |
 | Release Policy | `/projects/{project}/release-policies` | XII | Standing authorizations for Release Decisions recorded by a Service Account. |
+| Requalification | `/projects/{project}/requalifications` | VIII | Records that an Oracle configuration is requalified for a defect class. |
 
 **Governance Resources**
 
@@ -148,12 +149,13 @@ MUST be rejected where it does not allow the resolution requested.
 
 - `review`: the body gives `verdict`, `confidence` where the review captures one, and
   `supporting_evidence`. The Principal MUST be a Person holding `review` and, where the
-  clause names a `human_reviewer.role` (Appendix A §A.5), that Role. A Result that is
+  clause names a `human_reviewer.role` (Appendix A §A.5), that Role, or the
+  `escalate_to` Role once the review has been escalated. A Result that is
   neither `awaiting_review` nor open to resolution by a Human Reviewer is not reviewed.
 - `reassess`: the body names the `oracle` configuration to use. It MUST be rejected for
   the same Oracle configuration unless the Result is `oracle_unavailable`, and for an
-  Oracle not requalified for every defect class in the Result's `invalidated_by`
-  (Volume VIII).
+  Oracle without a Requalification record (below) for every defect class in the
+  Result's `invalidated_by` (Volume VIII).
 
 **Triggering:** `POST /executions` accepts a body specifying `suite`, `environment`,
 and optional `gates` to check after completion. The response returns a batch
@@ -190,12 +192,32 @@ VIII).
 | Method | Path | Description | Permission |
 |---|---|---|---|
 | POST | `.../executions/{execution}/seeded-controls/{scenario}/invalidate` | Declare full-run invalidation for a Seeded Control missed in this Execution. Body MUST include a non-empty `reason`. | `seeded_control_invalidate` |
+| POST | `.../executions/{execution}/seeded-controls/{scenario}/confirm` | Record a Human Reviewer's confirmation that the planted defect is present in the Evidence the Oracle received, for a control with `confirmed_by: human_reviewer` (Volume VIII). The Principal MUST be a Person. Until it is recorded, the control is `invalid` for the run. | `review` |
 
 `seeded_control_invalidate` is an ordinary checked Permission, not one of Governance's
 four Approval-Workflow-gated actions (Volume XII) — full-run invalidation is a per-miss
 judgment call, not a standing configuration, and Volume VIII keeps its governance at
 SHOULD, not MUST. A logged call to this endpoint is queryable like any other
 Governance-controlled action through `GET /projects/{project}/audit`.
+
+**Requalification**
+
+| Method | Path | Description | Permission |
+|---|---|---|---|
+| POST | `/projects/{project}/requalifications` | Record that an Oracle configuration is requalified for a defect class (Volume VIII — Requalification). Body names the `oracle`, the `defect_class`, and the Seeded Control Results it rests on. MUST be rejected unless each named control is of that class, was `caught` by that Oracle configuration, and is not a control any Oracle missed in a run whose Results the requalification will be used to re-assess. | `execute` |
+| GET | `/projects/{project}/requalifications` | List Requalification records. | `read` |
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | String | Identifier of the record. |
+| `oracle` | String | The Oracle configuration requalified, as in a Result's `oracle` (§C.7). |
+| `defect_class` | String | The class it is requalified for. |
+| `controls` | List of String | The Seeded Control Results, by Result `id`, it rests on. |
+| `recorded_at` | DateTime | When the record was made. |
+| `recorded_by` | String | The Principal who made it. |
+
+A Requalification record is never modified. An Oracle is requalified for a class only
+where such a record exists; `reassess` (above) relies on it.
 
 **Snapshot**
 
@@ -248,7 +270,7 @@ Results are not counted in any field above.
 | Method | Path | Description | Permission |
 |---|---|---|---|
 | GET | `/projects/{project}/reports` | List Reports. | `read` |
-| GET | `/projects/{project}/reports/{report}` | Retrieve a frozen Report. | `read` |
+| GET | `/projects/{project}/reports/{report}` | Retrieve a frozen Report, in the shape of §C.10. | `read` |
 | POST | `/projects/{project}/releases` | Record a Release Decision. MUST be rejected if a Contract, Quality Gate, or Environment in its scope differs from its `snapshot_id`, or if no Quality Gate applies to its scope (Volume I, Chapter 6). Governed by Approval Workflow. | `release_decide` |
 | GET | `/projects/{project}/releases` | List Release Decisions. | `read` |
 
@@ -362,7 +384,8 @@ configuration entities, but Result is runtime output, so it belongs here.
 | `disposition` | String | MUST | `actionable`, `inconclusive`, `awaiting_review`, `oracle_unavailable`, or `not_assessed`. See below. |
 | `supporting_evidence` | Any | MUST | What the Oracle based its judgment on — the Conversation, Artifacts, or specific excerpts, per Oracle type. |
 | `recorded_at` | DateTime | MUST | When this Result was recorded. A Result that completes from `awaiting_review` keeps it; when the review returned is in `supporting_evidence`. |
-| `panel` | Object | MUST (Multi Judge Results); absent otherwise | `{ configured: Integer, counted: Integer }` — Judges configured in the panel, and Judges whose verdicts were counted after exclusions (Volume VI). |
+| `panel` | Object | MUST (Multi Judge Results); absent otherwise | `{ configured: Integer, counted: Integer }` — Judges configured in the panel, and Judges whose verdicts were counted after exclusions (Volume VI). In a stability configuration, samples configured (`samples`) and samples counted. |
+| `assertions` | Integer | MUST (Judge Result over several assertions); absent otherwise | The number of independent assertions the Judge's criterion spans, where it spans more than one (Volume VI — Single Judge). Its presence declares the verdict and Confidence an aggregate over those assertions; its absence declares them a verdict on a single one. |
 | `invalidated_by` | List of `{ scenario: String, defect_class: String }` | Read-only, derived | Present in a response when one or more missed Seeded Controls invalidate this Result for its run: one entry per control (§C.3, `seeded_control_results`). The Result stays invalidated while any entry remains applicable; it leaves that state only by being resolved (Volume I, Chapter 6). Never stored on the Result, and never set by a client. |
 
 **Disposition** is what closes the gap between "a Result exists" and "a Result is safe
@@ -447,3 +470,29 @@ generates:
 This generation chain ensures that the CLI, SDKs, and API cannot drift from each other
 or from this specification. The generation step itself is an implementation concern,
 not specified by AQEF.
+
+## C.10 — Report Response Shape
+
+A Report (Volume XI) is retrieved through the API in this shape. How it is rendered for
+people is the implementation's choice; what it contains is not. It is frozen when
+generated: no field changes afterwards.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `id` | String | MUST | Report identifier, as referenced by a Release Decision's `report_id`. |
+| `generated_at` | DateTime | MUST | When the Report was generated and frozen. |
+| `scope` | Object | MUST | `{ project, suites, environments, execution_batch_ids }`: what the Report covers. |
+| `snapshot_id` | String | MAY | The Snapshot of the evaluation its GateResults come from, where Gates were evaluated. |
+| `gates` | Map of String → GateResult | MUST | For every Quality Gate applicable to the scope, the latest GateResult (Appendix A §A.12) at generation time, with its `basis`, `reasons`, and `override`. Empty only where no Gate applies. |
+| `metrics` | List of Object | MUST | Each Metric shown, with its definition and the `id`s of the Results it was computed from, or a query that returns exactly them. |
+| `signals` | Signals | MUST | The signals Volume XI requires a Report to surface (below). |
+
+**Signals.** Each field is a list, empty when nothing applies, and never omitted.
+
+| Field | Content |
+|---|---|
+| `retries` | Per Scenario, the number of infrastructure-level Retries (Volume III) in scope. |
+| `low_confidence` | Per Scenario and per Oracle, the number of `inconclusive` Results and the number of Results in scope. |
+| `multi_judge` | Per clause assessed by a Multi Judge panel, its `purpose` (`independence` or `stability`). |
+| `unenforced_boundaries` | Every Environment in scope whose Action Boundary declares `enforced: false`. |
+| `boundary_attempts` | Every recorded attempt to cross an Action Boundary and every Tripwire touch: Execution, target, whether blocked, whether a Tripwire. |

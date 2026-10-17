@@ -792,16 +792,22 @@ clauses need new Results. Where the Environment changed — a model version, a p
 version, a tool configuration, an infrastructure target — the subject itself may now
 behave differently, and its Scenarios need new Executions.
 
+A change elsewhere in the Project, outside the decision's scope, does not affect it.
+This is a consistency check, not a safeguard against anyone in particular: a shared
+Contract fragment can be changed, correctly and with approval, by a Role that has no part
+in this release, and days can pass between the Report a decision reads and the decision
+itself.
+
 Evaluating the Gates again does not make old evidence current. A Result is **stale** for
-an evaluation when its Execution ran under an Environment, or its clause belongs to a
-Contract, other than the one that evaluation's Snapshot captures. A Gate MUST NOT pass on
-an aggregate that includes a stale Result, and records the reason as `stale_results`
-(Appendix A §A.12). Without this rule, a Gate evaluated again after a model upgrade would
-capture a Snapshot of the new Environment and pass on Results the old one produced. A change elsewhere in the Project, outside the decision's
-scope, does not affect it. This is a consistency check, not a safeguard against anyone
-in particular: a shared Contract fragment can be changed, correctly and with approval,
-by a Role that has no part in this release, and days can pass between the Report a
-decision reads and the decision itself.
+an evaluation when its Execution ran under an Environment other than the one that
+evaluation's Snapshot captures, or when its clause differs from that clause in the
+Snapshot. A clause is matched by its `id` (Appendix A §A.5): one whose content is
+unchanged is not stale, whatever else changed in its Contract. A clause without an `id`
+cannot be matched across versions, so any change in its Contract makes its Results
+stale. A Gate MUST NOT pass on an aggregate that includes a stale Result, and records the
+reason as `stale_results` (Appendix A §A.12). Without this rule, a Gate evaluated again
+after a model upgrade would capture a Snapshot of the new Environment and pass on Results
+the old one produced.
 
 ### The Decision Pipeline as a Whole
 

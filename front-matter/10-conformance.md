@@ -55,6 +55,7 @@ requirements it deviates from (see Deviating from a SHOULD, below).
 | `test_type:<name>` | A Test Type (Volume IX) |
 | `ci_cd:<platform>` | A CI/CD integration (Volume XIII) |
 | `sdk:<language>` | A language SDK (Volume XIV) |
+| `cli` | A command-line interface (Volume XIV) |
 | `reference_ui` | Reference UI (Volume XV) |
 | `plugins:<type>` | Plugin Architecture: `validator`, `judge`, `dataset`, `report` (Volume XVI) |
 

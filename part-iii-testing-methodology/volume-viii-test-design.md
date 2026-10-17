@@ -271,7 +271,9 @@ required: the prior is a reference for reading a miss, not a measurement of peop
 missed defect class until it is requalified. The cause is diagnosed (a changed model,
 prompt, criteria, or configuration; or Judge Drift, Volume VI), the Oracle is corrected,
 and the corrected Oracle catches fresh controls of that class. Never the control it
-missed: the diagnosis exposed it. A requalified Oracle MAY then re-assess the stored
+missed: the diagnosis exposed it. Requalification is recorded (Appendix C §C.3,
+Requalification): which Oracle configuration, for which defect class, on which fresh
+controls' Results. Without that record, the Oracle is not requalified. A requalified Oracle MAY then re-assess the stored
 Evidence of the affected run, without invoking the system under test again. The new Results are recorded against the corrected Oracle's configuration; the original
 invalidated or `not_assessed` Results remain in the record unchanged. The new Results
 resolve the original ones (Chapter 6 — Result Resolution), and a Quality Gate MAY be

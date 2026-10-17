@@ -58,7 +58,7 @@ claim, not merely a description of the common case. Where a Contract clause's cr
 spans multiple independent assertions, the Judge necessarily reduces several internal
 verdicts to one score, and that reduction MUST be declared: the Result MUST state that it
 is an aggregate over multiple assertions rather than present its score as an atomic
-verdict on a single one. A faithfulness score of 0.92 over a dozen separable claims is
+verdict on a single one (`assertions`, Appendix C §C.7). A faithfulness score of 0.92 over a dozen separable claims is
 not a verdict that the response is 92% faithful; it is a mean, and one load-bearing claim
 being wrong is exactly the failure it conceals. This is the same requirement
 "Everything has Confidence" (Chapter 3) makes one level up — a Result must be explicit
@@ -106,7 +106,8 @@ produced by a panel MUST state how many Judges were configured and how many were
 (`panel`, Appendix C §C.7). A consensus of two out of three is a different finding from a
 consensus of three, and the honest-denominator rule (Volume I, Chapter 6) applies to a
 panel as it does to an aggregate. In a stability configuration, where one Judge is
-sampled repeatedly, a miss excludes every sample.
+sampled repeatedly, a miss excludes every sample. There, `panel` counts samples: those
+configured (`samples`) and those counted.
 
 ## Voting
 
@@ -196,7 +197,10 @@ A Result awaiting a Human Reviewer's response carries the disposition `awaiting_
 `confidence` is `"not_applicable"`: markers that no judgment exists, never a default
 verdict or a zero score. This MUST NOT persist indefinitely: an
 Expectation bound to Human Review SHOULD specify a `review_timeout` (Appendix A §A.5),
-after which the Contract's `on_timeout` policy applies. The default, absent an explicit
+after which the Contract's `on_timeout` policy applies: `block` leaves the Result
+blocking; `escalate` passes the review to the Role named in `escalate_to`, and the Result
+stays `awaiting_review` until a reviewer holding that Role returns a verdict. Neither
+policy ever produces a verdict by itself. The default, absent an explicit
 policy, is to treat the Result as blocking — an unanswered review is never silently
 treated as a pass, the same posture Chapter 3's Deterministic Infrastructure and
 Independent Oracles principles already take toward anything unresolved or unverifiable.

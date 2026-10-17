@@ -217,6 +217,7 @@ properties:
   review_timeout:         { type: string }                             # OPTIONAL
   on_timeout:             { type: string, enum: [block, escalate],
                             default: block }                           # OPTIONAL
+  escalate_to:            { type: string, minLength: 1 }               # CONDITIONAL
   id:                     { type: string, minLength: 1 }               # OPTIONAL
   dimension:              { type: string, enum: [functional, semantic,
                             operational, safety], default: semantic }  # OPTIONAL
@@ -228,6 +229,8 @@ properties:
 - `confidence_threshold` is REQUIRED when `judge` or `multi_judge` is present (a Judge
   Result always carries Confidence). It is OPTIONAL when `human_reviewer` is present,
   since a Human Reviewer Result MAY carry no Confidence value at all (Volume II).
+- `escalate_to` is REQUIRED when `on_timeout` is `escalate` and MUST NOT appear
+  otherwise.
 
 **HumanReviewerConfig**
 ```
@@ -268,7 +271,7 @@ properties:
                       { type: number, exclusiveMinimum: 0.5,
                         maximum: 1.0 } ] }                               # OPTIONAL
   min_agreement:    { type: number, minimum: 0.0, maximum: 1.0 }         # OPTIONAL
-  on_disagreement:  { type: string, enum: [human_review, fail, flag],
+  on_disagreement:  { type: string, enum: [human_review, fail],
                       default: human_review }                            # OPTIONAL
   min_qualified:    { type: integer, minimum: 1 }                        # OPTIONAL
 ```
@@ -488,7 +491,7 @@ by a conformant implementation at configuration load time:
 | Clause identity | Volume VII | A clause `id` MUST be unique within the Contract that declares it. |
 | Dataset reference | Volume IV | A Scenario's `dataset` and a Dataset's `base_dataset` MUST name a version (`name@version`) that resolves to a Dataset in the Project's `datasets` or one registered through Appendix C §C.3. |
 | Clause dimension | Volume I, Ch. 6 | A Constraint bound to a Custom Validator MUST declare `dimension`. |
-| Stale Results | Volume I, Ch. 6 | A Gate whose aggregate includes a Result produced under an Environment, or for a clause of a Contract, other than the one the evaluation's Snapshot captures MUST fail, with `stale_results`. |
+| Stale Results | Volume I, Ch. 6 | A Gate whose aggregate includes a Result produced under an Environment other than the one the evaluation's Snapshot captures, or for a clause that differs from that clause in the Snapshot, MUST fail, with `stale_results`. A clause is matched by its `id`; a clause without an `id` differs when anything in its Contract differs. |
 | Release policy | Volume XII | A Release Decision's `release_policy` MUST name a Release Policy in force when the decision is recorded, approved by a Person holding `release_decide`, that lists the acting Service Account and covers the decision's Suite and Environment. |
 | Governed configuration change | Volume XII; Appendix C §C.5 | Creating or changing a `contract`, `contracts`, or `quality_gates` value, through whatever operation, is `contract_define`. |
 
