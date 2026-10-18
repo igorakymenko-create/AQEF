@@ -54,6 +54,14 @@ of any tool.
 
 17 volumes across 5 parts, plus front matter and 11 appendices.
 
+## Conformance Test Specification
+
+`conformance-tests/` holds the AQEF Conformance Test Specification: tests that check
+whether an implementation meets the requirements it claims in its Conformance Statement
+(§10). It is a separate, non-normative document, versioned on its own; where a test and
+the specification disagree, the specification is right. `conformance-tests/_inventory/`
+lists every requirement the tests trace to. Each release carries it as its own PDF.
+
 ## Core concepts
 
 | Concept | What it is |
