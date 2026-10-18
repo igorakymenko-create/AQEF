@@ -24,6 +24,15 @@ Every test has the same fields:
 | `NOT_APPLICABLE` | The test's capability is not claimed in the implementation's Conformance Statement; or the test checks a feature the specification leaves optional (MAY), the implementation does not offer it, and the test says that this outcome applies. |
 | `NOT_RUN` | The test could not be carried out, with the reason stated: for example, its setup could not be built (1.6), a fixture the tester supplies could not be provided or registered, or the harness failed its self-test (2.8). A `NOT_RUN` is not a `PASS`. |
 
+**Cases.** A test whose **Action** lists numbered cases gives each case an identifier of
+its own, the test's ID followed by the case number (`CT-CFG-025.07`), and each case has
+its own outcome, decided by the table above as if it were a test. The test report gives
+every case's outcome, and Section 90 traces requirements to cases, not to the test as a
+whole. The test's own outcome only summarizes its cases: `FAIL` if any case is `FAIL`;
+otherwise `NOT_RUN` if any case is `NOT_RUN`; otherwise `PASS` if any case is `PASS`;
+otherwise `NOT_APPLICABLE`. A summary `PASS` therefore never stands for a case that did
+not run, and a test with any case `NOT_RUN` is not reported as passed.
+
 ## 1.3 Verification methods
 
 | Method | Meaning |
@@ -92,8 +101,10 @@ tests ran before it.
 
 ## 1.7 Test report
 
-A test report gives, for each test, its outcome and, for `NOT_RUN` and
-`NOT_APPLICABLE`, the reason. It also lists every requirement of Section 90 whose tests
-were all `NOT_RUN` or `NOT_APPLICABLE` for that implementation: those requirements were
-not verified, and a summary of the run says so rather than counting them as covered.
+A test report gives, for each test and each case (1.2), its outcome and, for `NOT_RUN`
+and `NOT_APPLICABLE`, the reason. It also lists every requirement of Section 90 whose
+tests and cases were all `NOT_RUN` or `NOT_APPLICABLE` for that implementation: those
+requirements were not verified, and a summary of the run says so rather than counting
+them as covered. A requirement traced to a case is verified only by that case, never by
+the outcome of the test it belongs to.
 

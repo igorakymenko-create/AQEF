@@ -84,6 +84,7 @@ requirement of the specification changed; the tests did.
   CT-API-001, CT-API-002, CT-HRV-002, CT-MJG-006, CT-PLG-003, CT-PLG-005, CT-SDK-001,
   CT-SDK-002; and the fixtures of the tests that took over another test's state.
 - **Tests added.** CT-CFG-025, one case per required configuration field of Appendix A,
-  so that no row of Section 90 is left as Field.
+  so that no row of Section 90 is left as Field. Each case has an identifier and an
+  outcome of its own, and Section 90 traces each row to its case (1.2, Cases).
 - **Test reports** list every requirement whose tests did not run (1.7).
 

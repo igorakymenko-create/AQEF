@@ -342,7 +342,7 @@ them needs an Execution.
 
 ### CT-CFG-025 — A configuration missing a required field is rejected
 
-- **Capability:** core; case 25 `seeded_controls`
+- **Capability:** core; case `CT-CFG-025.25`: `seeded_controls`
 - **Requirement:** Appendix A, every field marked MUST in the tables of §A.1 to §A.10
   that the cases below name; Appendix A, introduction: "A conformant implementation MUST
   accept configurations expressible within this specification", which a configuration
@@ -350,50 +350,51 @@ them needs an Execution.
 - **Method:** Automated
 - **Fixture:** Four starting configurations, each a setup check: it must load (for
   F-BASE, CT-CFG-001). If a starting configuration is rejected, the cases that use it are
-  `NOT_RUN`, with that reason.
+  `NOT_RUN`, with that reason; the other cases still run.
   - F-BASE.
   - F-RETRY: F-BASE with `execution: { retry: { max_attempts: 2, on:
     infrastructure_failure } }` on the Project.
   - F-DS: CT-CFG-011's configuration with `variables` removed from the Scenario, so that
-    `s-greeting` draws on `ds-1@1.0.0`; for case 24, `ds-1` also given
+    `s-greeting` draws on `ds-1@1.0.0`; for case `CT-CFG-025.24`, `ds-1` also given
     `mechanisms: [ { type: edge_cases } ]`.
   - F-SEED (Section 13.1).
 - **Action:** For each case, remove the one field named from its starting configuration,
-  change nothing else, and load the result. Each case runs in a Project of its own.
+  change nothing else, and load the result. Each case runs in a Project of its own and
+  has its own outcome (1.2, Cases).
 
 | Case | Inventory row | Start | Field removed |
 |---|---|---|---|
-| 1 | R-0129 | F-BASE | `project.name` |
-| 2 | R-0137 | F-BASE | `environments[0].name` |
-| 3 | R-0138 | F-BASE | `environments[0].model_version` |
-| 4 | R-0139 | F-BASE | `environments[0].prompt_version` |
-| 5 | R-0140 | F-BASE | `environments[0].tool_configuration` (the key itself; with the value `null`, F-BASE loads) |
-| 6 | R-0142 | F-BASE | `environments[0].infra_target` |
-| 7 | R-0151 | F-BASE | `suites[0].name` |
-| 8 | R-0155 | F-BASE | `suites[0].scenarios[0].name` |
-| 9 | R-0175 | F-BASE | the schema Constraint's `target` |
-| 10 | R-0176 | F-BASE | the schema Constraint's `expected` |
-| 11 | R-0177 | F-BASE | the Expectation's `criteria` |
-| 12 | R-0185 | F-BASE | the Expectation's `judge.model` |
-| 13 | R-0187 | F-BASE | the Expectation's `judge.confidence_source` |
-| 14 | R-0216 | F-BASE | `quality_gates[0].name` |
-| 15 | R-0217 | F-BASE | `quality_gates[0].aggregate` |
-| 16 | R-0218 | F-BASE | `quality_gates[0].threshold` |
-| 17 | R-0219 | F-BASE | `quality_gates[0].on_failure` |
-| 18 | R-0213 | F-RETRY | `execution.retry.max_attempts` |
-| 19 | R-0195 | F-DS | `datasets[0].name` |
-| 20 | R-0198 | F-DS | `datasets[0].source` |
-| 21 | R-0199 | F-DS | `datasets[0].rows` (the Dataset is `static`) |
-| 22 | R-0202 | F-DS | `datasets[0].rows[0].id` |
-| 23 | R-0203 | F-DS | `datasets[0].rows[0].variables` |
-| 24 | R-0211 | F-DS | `datasets[0].mechanisms[0].type` |
-| 25 | R-0132 | F-SEED | `defect_classes[0].name` |
+| `CT-CFG-025.01` | R-0129 | F-BASE | `project.name` |
+| `CT-CFG-025.02` | R-0137 | F-BASE | `environments[0].name` |
+| `CT-CFG-025.03` | R-0138 | F-BASE | `environments[0].model_version` |
+| `CT-CFG-025.04` | R-0139 | F-BASE | `environments[0].prompt_version` |
+| `CT-CFG-025.05` | R-0140 | F-BASE | `environments[0].tool_configuration` (the key itself; with the value `null`, F-BASE loads) |
+| `CT-CFG-025.06` | R-0142 | F-BASE | `environments[0].infra_target` |
+| `CT-CFG-025.07` | R-0151 | F-BASE | `suites[0].name` |
+| `CT-CFG-025.08` | R-0155 | F-BASE | `suites[0].scenarios[0].name` |
+| `CT-CFG-025.09` | R-0175 | F-BASE | the schema Constraint's `target` |
+| `CT-CFG-025.10` | R-0176 | F-BASE | the schema Constraint's `expected` |
+| `CT-CFG-025.11` | R-0177 | F-BASE | the Expectation's `criteria` |
+| `CT-CFG-025.12` | R-0185 | F-BASE | the Expectation's `judge.model` |
+| `CT-CFG-025.13` | R-0187 | F-BASE | the Expectation's `judge.confidence_source` |
+| `CT-CFG-025.14` | R-0216 | F-BASE | `quality_gates[0].name` |
+| `CT-CFG-025.15` | R-0217 | F-BASE | `quality_gates[0].aggregate` |
+| `CT-CFG-025.16` | R-0218 | F-BASE | `quality_gates[0].threshold` |
+| `CT-CFG-025.17` | R-0219 | F-BASE | `quality_gates[0].on_failure` |
+| `CT-CFG-025.18` | R-0213 | F-RETRY | `execution.retry.max_attempts` |
+| `CT-CFG-025.19` | R-0195 | F-DS | `datasets[0].name` |
+| `CT-CFG-025.20` | R-0198 | F-DS | `datasets[0].source` |
+| `CT-CFG-025.21` | R-0199 | F-DS | `datasets[0].rows` (the Dataset is `static`) |
+| `CT-CFG-025.22` | R-0202 | F-DS | `datasets[0].rows[0].id` |
+| `CT-CFG-025.23` | R-0203 | F-DS | `datasets[0].rows[0].variables` |
+| `CT-CFG-025.24` | R-0211 | F-DS | `datasets[0].mechanisms[0].type` |
+| `CT-CFG-025.25` | R-0132 | F-SEED | `defect_classes[0].name` |
 
-- **Expected:** Each case is rejected, with an error that identifies what was wrong
-  (1.5): the missing field, or what its absence left unresolved. Each case
-  has its own outcome; the test passes when every case that ran passes. Case 25 is
-  `NOT_APPLICABLE` unless `seeded_controls` is claimed. (The other branch of case 21, a
-  Dataset that is not `static` loading without `rows`, belongs to `dataset:<source>`,
-  Section 24.)
-- **Fails if:** Any case loads, including with a default supplied silently for the
-  missing field; or a case is rejected with no error that identifies what was wrong.
+- **Expected:** In each case, the configuration is rejected, with an error that
+  identifies what was wrong (1.5): the missing field, or what its absence left
+  unresolved. `CT-CFG-025.25` is `NOT_APPLICABLE` unless `seeded_controls` is claimed.
+  (The other branch of `CT-CFG-025.21`, a Dataset that is not `static` loading without
+  `rows`, belongs to `dataset:<source>`, Section 24.)
+- **Fails if:** A case is `FAIL` when its configuration loads, including with a default
+  supplied silently for the missing field, or when it is rejected with no error that
+  identifies what was wrong. The test's own outcome summarizes its cases (1.2).
