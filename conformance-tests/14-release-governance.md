@@ -177,11 +177,11 @@ Workflow governs it.
   batch"; Appendix B §B.3: "One override record MUST NOT be referenced by more than one
   GateResult."
 - **Method:** Automated
-- **Fixture:** As CT-REL-006, after its Action.
+- **Fixture:** F-OVERRIDDEN (2.7).
 - **Action:** Execute `cts-suite` again (a new batch) with `J-FAIL-90`; evaluate the
   Gates. As `P-RELEASE`, record a Release Decision for the new batch with
   `decision: overridden`, its `semantic-gate` GateResult carrying the `override`
-  reference from CT-REL-006.
+  reference recorded when F-OVERRIDDEN was built.
 - **Expected:** The new `semantic-gate` GateResult carries no `override`. The Release
   Decision is rejected.
 - **Fails if:** The new GateResult shows the earlier override, or the Release Decision
@@ -274,8 +274,8 @@ Workflow governs it.
 - **Requirement:** Appendix A §A.13, Snapshot: "Never modified once captured"; Appendix B
   §B.3, Snapshot immutability: "A Snapshot MUST NOT be modified after `captured_at`."
 - **Method:** Automated
-- **Fixture:** As CT-REL-011, after its Action.
-- **Action:** Retrieve the Snapshot named by the first evaluation's `snapshot_id`.
+- **Fixture:** F-CONTRACT-CHANGED (2.7).
+- **Action:** Retrieve the Snapshot named by the evaluation's `snapshot_id`.
 - **Expected:** It has `id`, `captured_at`, `project: cts-base`, `suites: [cts-suite]`,
   `environments` holding `cts-env` as defined in F-BASE, `contracts: {}`,
   `inline_contracts` holding `s-greeting`'s Contract in full under
@@ -289,8 +289,8 @@ Workflow governs it.
 - **Requirement:** Appendix A §A.12, GateResult `threshold`: "copied at evaluation time,
   so the record stays checkable if the Gate definition changes later."
 - **Method:** Automated
-- **Fixture:** As CT-REL-010, after its Action.
-- **Action:** Retrieve the `semantic-gate` GateResult from the first evaluation.
+- **Fixture:** F-GATE-CHANGED (2.7).
+- **Action:** Retrieve the `semantic-gate` GateResult from evaluation 1.
 - **Expected:** `threshold: 1.0`.
 - **Fails if:** It shows `0.9`, or the earlier GateResult can no longer be retrieved.
 
@@ -360,9 +360,11 @@ Workflow governs it.
 - **Expected:** (a) rejected; (b) accepted, and the stored decision references `RP-1`;
   (c) rejected; (d) accepted; (e) rejected, since `RP-1` does not cover `cts-env-2`;
   (f) rejected, since `RP-1` is revoked. The decisions (b) and (d) are still recorded
-  after the revocation.
+  after the revocation. `RP-1`, retrieved after it, has `revoked_at` and `revoked_by`
+  naming `P-RELEASE`, and its other fields unchanged.
 - **Fails if:** (a), (c), (e), or (f) is accepted; (b) or (d) is rejected; (b)'s record
-  does not reference `RP-1`; or the revocation removed (b) or (d).
+  does not reference `RP-1`; the revocation removed (b) or (d); or the revoked `RP-1`
+  lacks `revoked_at` or `revoked_by`.
 
 ### CT-REL-019 — Audit records which kind of Principal acted
 
@@ -370,7 +372,7 @@ Workflow governs it.
 - **Requirement:** Volume XII, Principals: a Service Account "MUST have an owning Person
   accountable for what it does. Audit records which kind of Principal acted."
 - **Method:** Automated, Inspection
-- **Fixture:** As CT-REL-018, after its Action.
+- **Fixture:** F-SA-DECISIONS (2.7).
 - **Action:** Query the audit log for action type `release_decide`. Retrieve `SA-CI`'s
   details. If the implementation lets a Service Account be created, attempt to create one
   with no owning Person.
@@ -421,8 +423,7 @@ Workflow governs it.
   Snapshot, a Report, or an audit record that references the deleted entity"; Volume XII,
   Traceability.
 - **Method:** Automated
-- **Fixture:** As CT-REL-021, after its Action, plus one evaluation of the Gates so that
-  a Snapshot references `cts-env`.
+- **Fixture:** F-BASELINED (2.7).
 - **Action:** As `P-APPROVER`, `DELETE` `cts-env`. Retrieve the Baseline and the
   Snapshot.
 - **Expected:** Either the deletion is rejected, or both the Baseline and the Snapshot
@@ -438,7 +439,7 @@ Workflow governs it.
   Quality Gates it read ... who approved"; "A Release Decision that cannot be traced
   this far back is not meaningfully audited."
 - **Method:** Inspection
-- **Fixture:** The Release Decision accepted in CT-REL-006.
+- **Fixture:** F-OVERRIDDEN (2.7); its Release Decision.
 - **Action:** From the implementation's records alone, follow the chain from the
   Release Decision to its Report, Snapshot, GateResults, the override and its approver,
   the Results each Gate read, their Executions, and each Execution's Conversation.
@@ -451,7 +452,7 @@ Workflow governs it.
 - **Requirement:** Volume XIII, Quality Gates: "the Pipeline MUST reflect the override's
   outcome, not the underlying Gate's raw failure."
 - **Method:** Automated
-- **Fixture:** As CT-REL-006, run from a pipeline on the claimed platform.
+- **Fixture:** CT-REL-006's configuration, run from a pipeline on the claimed platform.
 - **Action:** Run the pipeline to the point where it checks the Gates; override
   `semantic-gate`; let the pipeline continue.
 - **Expected:** Before the override, the pipeline's Gate check fails. After it, the
@@ -530,10 +531,10 @@ Workflow governs it.
   aggregate and threshold it failed against"; "A Gate's displayed status MUST include
   the Aggregate Basis"; Appendix C §C.10, `gates`.
 - **Method:** Automated
-- **Fixture:** (a) The batch of CT-REL-006, after its override. (b) The batch of
-  CT-DEC-004.
-- **Action:** Retrieve the Report the implementation produced for each batch after its
-  Gates were evaluated, (a) including any Report produced after the override.
+- **Fixture:** Two variants. (a) F-OVERRIDDEN (2.7). (b) CT-DEC-004's configuration.
+- **Action:** In (b), execute `cts-suite` and evaluate the Gates. In each, retrieve the
+  Report the implementation produced for the batch after its Gates were evaluated, in
+  (a) including any Report produced after the override.
 - **Expected:** Each Report has the fields of Appendix C §C.10. In (a), `gates` holds
   `semantic-gate`'s GateResult with `status: fail`, its `threshold`, `basis`, and
   `override`. In (b), `semantic-gate`'s GateResult has `reasons:
@@ -591,11 +592,18 @@ Workflow governs it.
   Persons: `P-ROLE-A`, holding only a Role named `release_manager` that grants `read`
   and `execute`; and `P-ROLE-B`, holding only a Role named `observer` that grants `read`,
   `execute`, and `release_decide`.
-- **Action:** Execute `cts-suite`; evaluate the Gates. Record a Release Decision as
-  `P-ROLE-A`, then as `P-ROLE-B`.
-- **Expected:** `P-ROLE-A`'s attempt is rejected; `P-ROLE-B`'s is accepted.
-- **Fails if:** Either outcome is reversed: the Role's name, not its Permissions,
-  decided.
+- **Action:** Execute `cts-suite`; evaluate the Gates. Record a Release Decision with the
+  body of 14.1, made (a) by `P-ROLE-A` with `approved_by: P-ROLE-A` and
+  `approval_role: release_manager`, then (b) by `P-ROLE-B` with
+  `approved_by: P-ROLE-B` and `approval_role: observer`. Every other field is the same in
+  both. Query the audit log, or the error returned, for the reason of (a).
+- **Expected:** (a) is rejected because `P-ROLE-A` lacks the Permission
+  `release_decide`: the error or the audit record says so, and does not report the body
+  as malformed. (b) is accepted, and the stored decision names `observer` as
+  `approval_role`.
+- **Fails if:** (a) is accepted; (a) is rejected for a reason other than the missing
+  Permission; or (b) is rejected. Either of the first two means that the Role's name,
+  not its Permissions, decided.
 
 ### CT-REL-033 — A Service Account is never presented as a Person
 
@@ -603,8 +611,8 @@ Workflow governs it.
 - **Requirement:** Volume XII, Principals: "A Service Account is not a stand-in for a
   person and MUST NOT be set up to look like one."
 - **Method:** Automated, Inspection
-- **Fixture:** As CT-REL-018, after its Action.
-- **Action:** Retrieve decision (b) of CT-REL-018, its audit entry, and `SA-CI`'s
+- **Fixture:** F-SA-DECISIONS (2.7).
+- **Action:** Retrieve decision (b), its audit entry, and `SA-CI`'s
   Principal record. Review whether the implementation lets a Service Account be created
   or presented with a Person's attributes (a personal name, a personal e-mail login, or
   a flag marking it as a Person).
@@ -659,14 +667,14 @@ Workflow governs it.
 - **Requirement:** Volume XI, KPIs: "a KPI MUST be traceable back to the Metric(s) it is
   drawn from."
 - **Method:** Inspection
-- **Fixture:** The batch of CT-REL-035, and a KPI the tester defines in the
-  implementation: the pass rate of `cts-suite`.
+- **Fixture:** F-SIGNALS (2.7), and a KPI the tester defines in the implementation: the
+  pass rate of `cts-suite`.
 - **Action:** From the KPI as displayed, follow it to the Metric(s) it is drawn from
   and from them to the Results.
 - **Expected:** The reviewer reaches the Metric and the individual Results from the KPI
   (for a Metric shown in a Report, through its entry in `metrics`, Appendix C §C.10),
-  citing the records used. If the implementation offers no KPIs, the test is `PASS` and
-  the report says so.
+  citing the records used. If the implementation offers no KPIs, which the
+  specification does not require, the outcome is `NOT_APPLICABLE` (1.2).
 - **Fails if:** The KPI is offered but cannot be traced to its Metric or Results.
 
 ### CT-REL-037 — A platform's native gate is not an AQEF Quality Gate
@@ -675,9 +683,9 @@ Workflow governs it.
 - **Requirement:** Volume XIII: an AQEF Quality Gate and a platform's own gating primitive
   "MUST NOT be conflated: AQEF's Quality Gate is defined once, platform-agnostically."
 - **Method:** Inspection
-- **Fixture:** As CT-REL-024.
-- **Action:** Review the integration's configuration and the platform's records for the
-  pipeline run.
+- **Fixture:** CT-REL-024's configuration and pipeline.
+- **Action:** Carry out CT-REL-024's Action. Review the integration's configuration and
+  the platform's records for the pipeline run.
 - **Expected:** The Gates are defined and evaluated in the implementation; the platform's
   native primitive only carries their outcome. Changing the platform's primitive does
   not change any Gate definition, and the reverse.
@@ -692,7 +700,7 @@ among its tests has not been shown to be met.
 
 | Core part | Tests |
 |---|---|
-| Layer: Definition | CT-CFG-001…024 |
+| Layer: Definition | CT-CFG-001…025 |
 | Layer: Execution | CT-EXE-001…007, CT-EXE-009…011 |
 | Layer: Evidence | CT-EXE-003, CT-EXE-008, CT-EXE-012 |
 | Layer: Assessment | CT-ASM-001…012, CT-ASM-014…019 |

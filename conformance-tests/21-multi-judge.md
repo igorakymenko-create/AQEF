@@ -105,11 +105,14 @@ each. Unless a test says otherwise, all three behave as `J-PASS-90`.
 - **Fixture:** F-PANEL with `purpose: stability`, `judges` replaced by `judge:
   { model: cts-scripted-judge-a@1, confidence_source: self_rating }` and `samples: 3`.
 - **Action:** Execute `cts-suite`; count the calls `cts-scripted-judge-a@1` received;
-  retrieve the Expectation's Result.
-- **Expected:** Three calls; one Result with `verdict: pass` and
-  `panel: { configured: 3, counted: 3 }`.
-- **Fails if:** The number of calls is not 3, more than one Result is recorded, or
-  `panel` differs.
+  retrieve the Results for the Expectation; evaluate the Gates.
+- **Expected:** Three calls. Exactly one effective Result for the Expectation's clause
+  in this Execution, with `verdict: pass` and `panel: { configured: 3, counted: 3 }`.
+  `semantic-gate` counts that one Result (`basis.results: 1`). Records of the
+  individual samples, if the implementation keeps them, are not effective Results for
+  the clause and are not counted by any Gate.
+- **Fails if:** The number of calls is not 3; there is not exactly one effective Result
+  for the clause; `panel` differs; or `semantic-gate` counts more than one Result.
 
 ### CT-MJG-007 — Agreement between Judges is not presented as a Judge's own Confidence
 

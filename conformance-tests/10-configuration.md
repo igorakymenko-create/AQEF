@@ -234,10 +234,10 @@ them needs an Execution.
 - **Requirement:** Appendix B §B.3, Clause dimension: "A Constraint bound to a Custom
   Validator MUST declare `dimension`"; Appendix A §A.5.
 - **Method:** Automated
-- **Fixture:** F-BASE; add a Constraint bound to a Custom Validator `cts-custom` that
-  the tester registers with the implementation, with no `dimension`. If the
-  implementation offers no Custom Validators, the outcome is `NOT_RUN`, with that
-  reason.
+- **Fixture:** F-BASE; add a Constraint `validator: cts-len` (Section 2.5),
+  `target: response`, `expected: {}`, with no `dimension`. Setup check: `cts-len` is
+  registered (2.5). If the implementation offers no Custom Validators, the outcome is
+  `NOT_RUN`, with that reason.
 - **Action:** Load the configuration. Then add `dimension: functional` to that
   Constraint and load it again.
 - **Expected:** The first load is rejected; the second is accepted.
@@ -339,3 +339,61 @@ them needs an Execution.
 - **Action:** Load the configuration.
 - **Expected:** Rejected.
 - **Fails if:** Loaded, or loaded with a default minimum supplied silently.
+
+### CT-CFG-025 — A configuration missing a required field is rejected
+
+- **Capability:** core; case 25 `seeded_controls`
+- **Requirement:** Appendix A, every field marked MUST in the tables of §A.1 to §A.10
+  that the cases below name; Appendix A, introduction: "A conformant implementation MUST
+  accept configurations expressible within this specification", which a configuration
+  lacking a required field is not.
+- **Method:** Automated
+- **Fixture:** Four starting configurations, each a setup check: it must load (for
+  F-BASE, CT-CFG-001). If a starting configuration is rejected, the cases that use it are
+  `NOT_RUN`, with that reason.
+  - F-BASE.
+  - F-RETRY: F-BASE with `execution: { retry: { max_attempts: 2, on:
+    infrastructure_failure } }` on the Project.
+  - F-DS: CT-CFG-011's configuration with `variables` removed from the Scenario, so that
+    `s-greeting` draws on `ds-1@1.0.0`; for case 24, `ds-1` also given
+    `mechanisms: [ { type: edge_cases } ]`.
+  - F-SEED (Section 13.1).
+- **Action:** For each case, remove the one field named from its starting configuration,
+  change nothing else, and load the result. Each case runs in a Project of its own.
+
+| Case | Inventory row | Start | Field removed |
+|---|---|---|---|
+| 1 | R-0129 | F-BASE | `project.name` |
+| 2 | R-0137 | F-BASE | `environments[0].name` |
+| 3 | R-0138 | F-BASE | `environments[0].model_version` |
+| 4 | R-0139 | F-BASE | `environments[0].prompt_version` |
+| 5 | R-0140 | F-BASE | `environments[0].tool_configuration` (the key itself; with the value `null`, F-BASE loads) |
+| 6 | R-0142 | F-BASE | `environments[0].infra_target` |
+| 7 | R-0151 | F-BASE | `suites[0].name` |
+| 8 | R-0155 | F-BASE | `suites[0].scenarios[0].name` |
+| 9 | R-0175 | F-BASE | the schema Constraint's `target` |
+| 10 | R-0176 | F-BASE | the schema Constraint's `expected` |
+| 11 | R-0177 | F-BASE | the Expectation's `criteria` |
+| 12 | R-0185 | F-BASE | the Expectation's `judge.model` |
+| 13 | R-0187 | F-BASE | the Expectation's `judge.confidence_source` |
+| 14 | R-0216 | F-BASE | `quality_gates[0].name` |
+| 15 | R-0217 | F-BASE | `quality_gates[0].aggregate` |
+| 16 | R-0218 | F-BASE | `quality_gates[0].threshold` |
+| 17 | R-0219 | F-BASE | `quality_gates[0].on_failure` |
+| 18 | R-0213 | F-RETRY | `execution.retry.max_attempts` |
+| 19 | R-0195 | F-DS | `datasets[0].name` |
+| 20 | R-0198 | F-DS | `datasets[0].source` |
+| 21 | R-0199 | F-DS | `datasets[0].rows` (the Dataset is `static`) |
+| 22 | R-0202 | F-DS | `datasets[0].rows[0].id` |
+| 23 | R-0203 | F-DS | `datasets[0].rows[0].variables` |
+| 24 | R-0211 | F-DS | `datasets[0].mechanisms[0].type` |
+| 25 | R-0132 | F-SEED | `defect_classes[0].name` |
+
+- **Expected:** Each case is rejected, with an error that identifies what was wrong
+  (1.5): the missing field, or what its absence left unresolved. Each case
+  has its own outcome; the test passes when every case that ran passes. Case 25 is
+  `NOT_APPLICABLE` unless `seeded_controls` is claimed. (The other branch of case 21, a
+  Dataset that is not `static` loading without `rows`, belongs to `dataset:<source>`,
+  Section 24.)
+- **Fails if:** Any case loads, including with a default supplied silently for the
+  missing field; or a case is rejected with no error that identifies what was wrong.

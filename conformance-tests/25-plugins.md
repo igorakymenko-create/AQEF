@@ -28,9 +28,9 @@ returns a Result with no `verdict` field at all.
 - **Requirement:** Volume XVI, Validator Plugins: "A successful registration MUST NOT be
   reported as proof of determinism."
 - **Method:** Inspection
-- **Fixture:** The registration of `cts-len` in CT-PLG-001.
-- **Action:** Read what the implementation reports for the registration, in its
-  response, records, and documentation.
+- **Fixture:** None beyond Section 2.5.
+- **Action:** Register `cts-len` as a Validator Plugin. Read what the implementation
+  reports for the registration, in its response, records, and documentation.
 - **Expected:** It reports a repeatability check that passed, not that the plugin was
   shown to be deterministic.
 - **Fails if:** Anything presents the passed check as proof of determinism.
@@ -44,19 +44,21 @@ returns a Result with no `verdict` field at all.
   "A Validator Plugin receives nothing else"; a Result that fails validation is
   `oracle_unavailable`, "never `fail`."
 - **Method:** Automated, Harness
-- **Fixture:** F-BASE; add two Constraints bound to `cts-probe`, `target: response`,
-  `dimension: functional`: the first with `expected: { marker: 1 }`, the second with
-  `expected: { marker: 2 }` and configuration `malformed: true`.
-- **Action:** Execute `cts-suite`; read what `cts-probe` received; retrieve both
-  Results.
-- **Expected:** For each call, `cts-probe` received the Response, its clause's
-  `expected`, its configuration, and the Execution and clause identifiers, and nothing
-  else. The first Result is `pass` with `oracle` naming `cts-probe` and its version. The
-  second is `oracle_unavailable`, `verdict: null`, and the scripted Judge receives no
-  call.
-- **Fails if:** `cts-probe` received anything beyond those inputs; the first Result does
-  not name the plugin and version; or the second is recorded as `fail` or with the
-  malformed content.
+- **Fixture:** Two variants of F-BASE, each with one Constraint bound to `cts-probe`,
+  `target: response`, `dimension: functional`. (a) `expected: { marker: 1 }`.
+  (b) `expected: { marker: 2 }` and configuration `malformed: true`.
+- **Action:** In each, execute `cts-suite`; read what `cts-probe` received; retrieve the
+  `cts-probe` Result.
+- **Expected:** (a) `cts-probe` received the Response, its clause's `expected`, its
+  configuration, and the Execution and clause identifiers, and nothing else. Its Result
+  is `pass`, with `oracle` naming `cts-probe` and its version. (b) The `cts-probe`
+  Result is `oracle_unavailable`, with `verdict: null`, and the scripted Judge receives
+  no call. (The two cases run separately because the specification does not fix the
+  order in which a Contract's Validators run, and a Validation that has not passed
+  stops there.)
+- **Fails if:** In (a), `cts-probe` received anything beyond those inputs, or the Result
+  does not name the plugin and version; in (b), the Result is recorded as `fail` or with
+  the malformed content, or the Judge is called.
 
 ### CT-PLG-004 — Deprecating a plugin keeps what it produced
 
@@ -72,24 +74,39 @@ returns a Result with no `verdict` field at all.
   deprecated version in `oracle`.
 - **Fails if:** Either is lost, altered, or marked invalid.
 
-### CT-PLG-005 — A Custom Validator gets nothing beyond its evidence and configuration
+### CT-PLG-005 — A Custom Validator's determinism and lack of Confidence are enforced, not documented
 
 - **Capability:** `plugins:validator`
 - **Requirement:** Volume XVI: "a Custom Validator's determinism and absence of a
   Confidence value MUST be enforced at the SDK level, not merely documented as a
-  convention."
-- **Method:** Declaration, Harness
-- **Fixture:** A Validator Plugin `cts-reach` that tries, in order, to read the clock,
-  draw a random number, open a network connection to the harness, and return a
-  Confidence value, and records in its Result's evidence which attempts succeeded.
-- **Action:** Ask the implementation to state how its Validator SDK withholds the clock,
-  randomness, the network, and Confidence. Register and run `cts-reach`; read the harness
-  log.
-- **Expected:** Each attempt fails or is refused at registration, and no Confidence
-  value appears on the Result.
-- **Fails if:** The harness receives a connection from `cts-reach`, or its Result
-  carries a Confidence value. (Clock and randomness may not be observable from outside;
-  the statement covers them.)
+  convention"; Volume V, Custom Validators: "the same input MUST always produce the same
+  Result, and it MUST NOT carry a Confidence value." Volume V, Validator SDK, adds that
+  the SDK "SHOULD NOT give it a clock, a random source, or network access": a SHOULD,
+  which this test reports on but does not fail.
+- **Method:** Declaration, Automated, Harness
+- **Fixture:** F-BASE with a Constraint bound to `cts-reach`, `target: response`,
+  `dimension: functional`. `cts-reach` is a Validator Plugin that tries, in order, to
+  read the clock, draw a random number, and open a network connection to the harness;
+  records in its Result's evidence which attempts succeeded; returns `pass` if the
+  random number it drew (or, where randomness is withheld, the clock reading in
+  milliseconds) is even, `fail` if it is odd, and `pass` if neither is available; and
+  adds a Confidence value of `0.5` to its Result.
+- **Action:** Ask the implementation to state how its Validator SDK enforces determinism
+  and the absence of Confidence. Register `cts-reach`. If it is registered, execute
+  `cts-suite` ten times and retrieve the `cts-reach` Results; read the harness log.
+- **Expected:**
+  - The statement describes enforcement by the SDK or the Plugin Architecture, not only
+    documentation or a convention for plugin authors.
+  - Either registration is refused, or every `cts-reach` Result carries no Confidence
+    value (`confidence: "not_applicable"`, or the Result is `oracle_unavailable` because
+    the returned Confidence made it malformed), and the ten Results have the same
+    `verdict` or are all `oracle_unavailable`.
+  - Reported, not judged: which of the clock, randomness, and network `cts-reach`
+    reached, from its evidence and the harness log; any of them reached is a deviation
+    from Volume V's SHOULD, which the report names.
+- **Fails if:** The statement describes no enforcement beyond documentation; a
+  `cts-reach` Result carries a numeric Confidence; or the ten Results differ in
+  `verdict`.
 
 ### CT-PLG-006 — A Dataset Plugin's output is versioned
 
@@ -112,7 +129,7 @@ returns a Result with no `verdict` field at all.
 - **Method:** Inspection
 - **Fixture:** A Report Plugin the tester registers that introduces a Metric: the share
   of Results with Confidence below 0.7.
-- **Action:** Run the batch of CT-REL-035; generate a Report with the plugin; follow
-  the Metric to the Results behind it.
+- **Action:** Build F-SIGNALS (2.7); generate a Report for its batch with the plugin;
+  follow the Metric to the Results behind it.
 - **Expected:** The reviewer reaches the individual Results from the Metric.
 - **Fails if:** The Metric cannot be traced to its Results.

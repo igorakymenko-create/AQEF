@@ -129,10 +129,16 @@ calls the scripted Judge receives.
   input"; Volume V, Validator Architecture.
 - **Method:** Automated
 - **Fixture:** F-BASE; scripted subject `SR-OK`.
-- **Action:** Execute `cts-suite` twice; compare the two schema Constraint Results.
-- **Expected:** Same `verdict`, `confidence`, `disposition`, and `oracle`; the same
-  `supporting_evidence` apart from identifiers of the Execution itself.
-- **Fails if:** Any of these differ.
+- **Action:** Execute `cts-suite`. If the implementation offers a re-check of a Validator
+  on stored Evidence (Volume V, Validator SDK), re-check the schema Constraint on that
+  Execution's stored Evidence and compare the re-check's Result with the recorded one.
+  Otherwise, execute `cts-suite` a second time, confirm from the two Conversations that
+  the Response, the only input the schema Constraint reads, is identical, and compare
+  the two schema Constraint Results. The report states which path was taken.
+- **Expected:** The two Results have the same `verdict`, `confidence`, `disposition`,
+  `clause`, and `oracle`, and the same `supporting_evidence` apart from references to
+  their own Execution. `id`, `execution`, and `recorded_at` are not compared.
+- **Fails if:** Any compared field differs.
 
 ### CT-ASM-010 — Built-in Validators depend only on evidence and configuration
 
@@ -189,7 +195,9 @@ calls the scripted Judge receives.
   ```
   `cts-crash` is a Custom Validator (Volume V) that raises an error on every call and
   returns no Result. If the implementation offers no way to define one, the outcome is
-  `NOT_RUN`, with that reason.
+  `NOT_RUN`, with that reason. No built-in Validator can be made to fail on demand
+  through configuration alone, so the requirement is then not verified for that
+  implementation, and the test report lists it as such (1.7).
 - **Action:** Execute `cts-suite`; retrieve every Result.
 - **Expected:** The `cts-crash` Result has `oracle_type: validator`,
   `disposition: oracle_unavailable`, `verdict: null`, and `confidence:
@@ -250,10 +258,12 @@ calls the scripted Judge receives.
 - **Action:** Execute `cts-suite` twice; retrieve the `cts-len` Results.
 - **Expected:** Each has `oracle_type: validator`, `verdict: pass`,
   `confidence: "not_applicable"`, `disposition: actionable`, an `oracle` naming
-  `cts-len` and its version, and non-empty `supporting_evidence`. The two Results agree
-  in every field but their identifiers and `recorded_at`.
-- **Fails if:** `confidence` is a number; `supporting_evidence` is empty; or the two
-  Results differ.
+  `cts-len` and its version, and non-empty `supporting_evidence`. The two Results have
+  the same `oracle_type`, `oracle`, `clause`, `verdict`, `confidence`, and
+  `disposition`, and the same `supporting_evidence` apart from references to their own
+  Execution. `id`, `execution`, and `recorded_at` are not compared.
+- **Fails if:** `confidence` is a number; `supporting_evidence` is empty; or any compared
+  field differs.
 
 ### CT-ASM-017 — A check that calls a model is not accepted as a Validator
 
@@ -287,7 +297,8 @@ calls the scripted Judge receives.
 - **Expected:** The re-check produces `fail` where the recorded Result was `pass`, and
   the implementation reports this as a defect in `cts-flaky`, not as a failure of the
   subject. The recorded Result is unchanged. If the implementation offers no re-check,
-  the test is `PASS` and the report says so.
+  which the specification permits but does not require, the outcome is
+  `NOT_APPLICABLE` (1.2).
 - **Fails if:** The disagreement is reported as a subject failure or not reported at
   all; or the recorded Result is changed.
 
@@ -302,8 +313,9 @@ calls the scripted Judge receives.
 - **Fixture:** Two variants of F-BASE. (a) The Expectation's `criteria` set to `"The
   response greets the user, offers help, and names no product."` (b) F-BASE unchanged.
 - **Action:** Execute `cts-suite` for each; retrieve the Expectation's Result.
-- **Expected:** (a) The Result has `assertions: 3`. (b) The Result has no `assertions`.
-- **Fails if:** (a) has no `assertions`, or a value other than 3; or (b) has one. (How
-  the Judge splits a criterion into assertions is the implementation's; if it finds a
-  number other than three in (a), the test report records it, and the test fails only
-  if `assertions` is absent.)
+- **Expected:** (a) The Result has `assertions`, an integer greater than 1; the test
+  report records its value. (b) The Result has no `assertions`. (How the Judge splits a
+  criterion into assertions is the implementation's; the specification requires only
+  that a Result over several assertions says so, so any count above one meets it.)
+- **Fails if:** (a) has no `assertions`, or a value that is not an integer greater than
+  1; or (b) has one.

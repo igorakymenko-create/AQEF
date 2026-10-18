@@ -36,11 +36,18 @@ holds `review` but only a Role named `qa`.
   `review` and, where the clause names a `human_reviewer.role` ..., that Role."
 - **Method:** Automated
 - **Fixture:** F-HR.
-- **Action:** Execute `cts-suite`. Review the pending Result with verdict `pass`, first
-  as `P-REVIEWER-2`, then as `P-REVIEWER`.
-- **Expected:** `P-REVIEWER-2`'s review is rejected and the Result stays
-  `awaiting_review`. `P-REVIEWER`'s completes it.
-- **Fails if:** `P-REVIEWER-2`'s review is accepted.
+- **Action:** Execute `cts-suite`. Review the pending Result with verdict `pass` as
+  `P-REVIEWER-2`; retrieve the Result. Then review it with verdict `pass` as
+  `P-REVIEWER`; retrieve it again, and evaluate the Gates.
+- **Expected:** `P-REVIEWER-2`'s review is rejected with an error, and the Result is
+  unchanged: `disposition: awaiting_review`, `verdict: null`, and no second Result for
+  the Expectation. `P-REVIEWER`'s review is accepted and completes the same Result: the
+  same `id`, `verdict: pass`, `disposition: actionable`, and `supporting_evidence`
+  naming `P-REVIEWER` as the reviewing Person. `semantic-gate` passes.
+- **Fails if:** `P-REVIEWER-2`'s review is accepted or changes the Result; a second
+  Result is recorded for the Expectation; `P-REVIEWER`'s review is rejected or leaves the
+  Result `awaiting_review`; the completed Result names `P-REVIEWER-2`, or no reviewer;
+  or `semantic-gate` fails.
 
 ### CT-HRV-003 — A review that times out never becomes a pass
 

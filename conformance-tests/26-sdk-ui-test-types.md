@@ -7,7 +7,9 @@ Each test applies only where the implementation claims the capability it names (
 - **Capability:** `cli`
 - **Requirement:** Volume XIV, CLI: "A CLI command MUST correspond to a REST API call it
   makes on the caller's behalf, not a separate implementation of the operation it
-  names."
+  names"; Appendix C, introduction: the CLI and the SDKs "are thin wrappers over this API
+  and MUST NOT independently reimplement logic" (the CLI's half of that requirement;
+  CT-SDK-002 checks the SDKs').
 - **Method:** Harness, Inspection
 - **Fixture:** F-BASE. The tester routes the CLI's traffic through a recording proxy.
 - **Action:** With the CLI, load F-BASE, execute `cts-suite`, and evaluate the Gates.
@@ -21,14 +23,21 @@ Each test applies only where the implementation claims the capability it names (
 
 - **Capability:** `sdk:<language>`
 - **Requirement:** Appendix C, introduction: the SDKs "are thin wrappers over this API
-  and MUST NOT independently reimplement logic."
+  and MUST NOT independently reimplement logic" (the SDKs' half of that requirement;
+  CT-SDK-001 checks the CLI's).
 - **Method:** Automated
-- **Fixture:** The fixtures of CT-CFG-002, CT-DEC-006, and CT-REL-002.
-- **Action:** Run each of those three tests twice: once through the REST API, once
-  through the SDK of each claimed language.
-- **Expected:** Each test has the same outcome, the same errors, and the same recorded
-  Results and GateResults (apart from identifiers and times) on every surface.
-- **Fails if:** Any outcome, error, or record differs between surfaces.
+- **Fixture:** The configurations of CT-CFG-002, CT-DEC-006, and CT-REL-002.
+- **Action:** Carry out each of those three tests once through the REST API and once
+  through the SDK of each claimed language, each run in a Project of its own (1.6).
+- **Expected:** Each test reaches the same outcome on every surface. Where the REST API
+  returns an error, the SDK reports the same error in substance: the same HTTP status
+  or error code, and the same field or entity named, however the SDK represents it, as
+  an exception or otherwise. The Results and GateResults recorded agree in every field
+  but identifiers, `execution`, references to their own Execution, and times. Message
+  text, exception classes, and stack traces are not compared.
+- **Fails if:** An outcome differs; an error differs in status, code, or what it names;
+  an SDK succeeds where the API returns an error, or the reverse; or a compared field of
+  a recorded Result or GateResult differs.
 
 ### CT-RUI-001 — A Scenario authored visually is the same as one written in YAML
 
@@ -75,7 +84,7 @@ Each test applies only where the implementation claims the capability it names (
 - **Requirement:** Volume XV, Reporting UI: it "MUST visually distinguish a Report's
   frozen, point-in-time state from a Dashboard's live, continuously-updating one."
 - **Method:** Inspection
-- **Fixture:** The batch of CT-REL-035, and a Dashboard over the same Suite.
+- **Fixture:** F-SIGNALS (2.7), and a Dashboard over the same Suite.
 - **Action:** Open the Report and the Dashboard in the UI.
 - **Expected:** Each states what it is; the Report shows the moment it was frozen.
 - **Fails if:** A viewer could take either for the other from what the UI shows.

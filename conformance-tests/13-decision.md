@@ -30,15 +30,17 @@ fixture's Project-level `quality_gates`:
 
 **Requesting a re-assessment.** "Request that ... assess the stored Evidence again"
 means `POST .../results/{result}/reassess` on the Result named, made by `P-RELEASE`
-(Section 14.1), naming the Oracle configuration. Where a test expects the request to be
-rejected and the implementation offers no way to make it, the test is `PASS`.
+(Section 14.1), naming the Oracle configuration. Appendix C §C.3 specifies `reassess`
+as an operation of a conformant implementation's API. An implementation that offers
+neither it nor an equivalent fails every test that requests a re-assessment, and the
+test report says that the operation is missing.
 
 **Additional scripted Judge behaviors.**
 
 | Code | Behavior |
 |---|---|
 | `J-MAP(a, b, c)` | With scripted subject `SR-ECHO` and F-MULTI: behaves as `a` for the Response `One`, `b` for `Two`, `c` for `Three`. |
-| `J-CATCH` | Verdict `fail`, Confidence `0.90` for the Response `Goodbye.`; otherwise as `J-PASS-90`. |
+| `J-CATCH` | Verdict `fail`, Confidence `0.90` for the Responses `Goodbye.` and `Bye now.`; otherwise as `J-PASS-90`. |
 
 **F-SEED — a Seeded Control.** As F-BASE, plus a defect class on the Project and a second
 Scenario in `cts-suite`, confirmed by construction:
@@ -257,15 +259,24 @@ Judge passes `Goodbye.` and so misses the control; with `J-CATCH`, it catches it
   effective state MUST NOT be `actionable`. A second Result resolving the same Result
   MUST be rejected."
 - **Method:** Automated
-- **Fixture:** As CT-DEC-010, after its Action.
-- **Action:** As `P-REVIEWER`, attempt three further Human Reviewer Results for the
-  Expectation: (a) one with verdict `fail` resolving the Judge's Result again; (b) one
-  resolving the Human Reviewer Result recorded in CT-DEC-010; (c) separately, in a fresh
-  run of F-BASE with `J-PASS-90`, one resolving the Judge's `actionable` Result. Then,
-  (d) in a fresh run of F-BASE with `J-PASS-60`, attempt the review of the Judge's
-  `inconclusive` Result as `P-NOPERM`, who does not hold `review`.
-- **Expected:** All four are rejected. The effective Result in each run is unchanged.
-- **Fails if:** Any of the four is recorded as resolving the Result it names.
+- **Fixture:** Three variants. (a), (b): F-REVIEWED (2.7). (c): F-BASE with
+  `semantic-gate`; scripted Judge `J-PASS-90`. (d): F-BASE with `semantic-gate`;
+  scripted Judge `J-PASS-60`.
+- **Action:** In (c) and (d), execute `cts-suite`. In each variant, record every Result
+  of the run and evaluate the Gates; then make the variant's attempt; then record the
+  Results again and evaluate the Gates again. The attempts, each a review of the
+  Expectation (13.1): (a) as `P-REVIEWER`, verdict `fail`, resolving the Judge's Result
+  again; (b) as `P-REVIEWER`, resolving the Human Reviewer Result recorded when
+  F-REVIEWED was built; (c) as `P-REVIEWER`, resolving the Judge's `actionable` Result;
+  (d) as `P-NOPERM`, who does not hold `review`, resolving the Judge's `inconclusive`
+  Result.
+- **Expected:** Each attempt is rejected with an error. In each variant, the Results
+  after the attempt are the Results before it, none added, changed, or removed; the
+  effective Result for the Expectation is the same; and the second evaluation gives
+  every Gate the same `status` and `reasons` as the first. Any record the implementation
+  keeps of the rejected attempt itself is not a Result.
+- **Fails if:** An attempt is accepted; a Result is added, changed, or removed; the
+  effective Result changes; or a Gate's `status` or `reasons` changes.
 
 ### CT-DEC-013 — The same Oracle asked again does not resolve an inconclusive Result
 
@@ -279,10 +290,10 @@ Judge passes `Goodbye.` and so misses the control; with `J-CATCH`, it catches it
 - **Action:** Execute `cts-suite`. Request that the same Judge configuration assess the
   stored Evidence again. Evaluate the Gates.
 - **Expected:** The request is rejected, or produces a Result that does not resolve the
-  inconclusive one. `semantic-gate` fails with `non_actionable_results`. If the
-  implementation offers no way to make the request, the test is `PASS`.
+  inconclusive one. `semantic-gate` fails with `non_actionable_results`.
 - **Fails if:** A Result from the same Judge configuration resolves the inconclusive
-  Result, or `semantic-gate` passes.
+  Result; `semantic-gate` passes; or the implementation offers no way to request a
+  re-assessment (13.1).
 
 ### CT-DEC-014 — The same Oracle may resolve its own `oracle_unavailable` Result
 
@@ -298,11 +309,10 @@ Judge passes `Goodbye.` and so misses the control; with `J-CATCH`, it catches it
 - **Expected:** The first evaluation fails with `non_actionable_results`. The new Result
   has `resolves` naming the `oracle_unavailable` Result, `verdict: pass`, and
   `disposition: actionable`. The second evaluation passes with
-  `basis.not_actionable: 0`. The scripted subject received one call in total. If the
-  implementation offers no way to make the request, the outcome is `NOT_RUN`, with that
-  reason.
+  `basis.not_actionable: 0`. The scripted subject received one call in total.
 - **Fails if:** The new Result does not resolve the old one; the second evaluation
-  fails; or the subject is called again.
+  fails; the subject is called again; or the implementation offers no way to request a
+  re-assessment (13.1).
 
 ### CT-DEC-015 — A missed Seeded Control invalidates its defect class without changing any Result
 
@@ -371,16 +381,16 @@ Judge passes `Goodbye.` and so misses the control; with `J-CATCH`, it catches it
   resolve "only once the Oracle has been requalified for every defect class whose miss
   reached that Result"; Volume VIII, Requalification.
 - **Method:** Automated
-- **Fixture:** As CT-DEC-015, after its Action. The Judge configuration is unchanged and
-  has caught no fresh control of `greeting-missing`.
+- **Fixture:** F-SEED-MISSED (2.7). The Judge configuration is unchanged and has caught
+  no fresh control of `greeting-missing`.
 - **Action:** Request that the same Judge configuration assess `s-greeting`'s stored
   Evidence again. Evaluate the Gates.
 - **Expected:** The request is rejected, or produces a Result that does not resolve the
   invalidated or `not_assessed` one. `semantic-gate` still fails with
-  `seeded_control_miss`. If the implementation offers no way to make the request, the
-  test is `PASS`.
-- **Fails if:** A Result from that Judge configuration resolves the earlier Result, or
-  `semantic-gate` passes.
+  `seeded_control_miss`.
+- **Fails if:** A Result from that Judge configuration resolves the earlier Result;
+  `semantic-gate` passes; or the implementation offers no way to request a
+  re-assessment (13.1).
 
 ### CT-DEC-019 — A Validator-enforced Safety failure vetoes its aggregate
 
@@ -437,10 +447,11 @@ Judge passes `Goodbye.` and so misses the control; with `J-CATCH`, it catches it
 - **Requirement:** Volume I, Chapter 6, Aggregate Basis: "An implementation MAY report
   such an interval alongside an aggregate; it MUST NOT label it Confidence."
 - **Method:** Inspection
-- **Fixture:** The GateResults from CT-DEC-002 and CT-DEC-008, and any Report or
-  Dashboard the implementation produces for those runs.
-- **Action:** Review how every aggregate is presented, and any interval, margin of error,
-  or similar figure reported with it.
+- **Fixture:** Two variants: CT-DEC-002's configuration and CT-DEC-008's.
+- **Action:** In each, execute `cts-suite` and evaluate the Gates. Review how every
+  aggregate is presented in the GateResults and in any Report or Dashboard the
+  implementation produces for those runs, and any interval, margin of error, or similar
+  figure reported with it.
 - **Expected:** Where an interval appears, it is not called Confidence. The word
   Confidence is used only for an Oracle's certainty in one verdict.
 - **Fails if:** Any interval or aggregate-level figure is labelled Confidence.

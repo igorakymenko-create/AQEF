@@ -16,7 +16,7 @@ their IDs and are marked.
 |---|---|
 | Tested | Checked by the tests named. |
 | Restates | Says again what another row says; it is covered wherever that row is. Mostly the Glossary (Appendix D), Best Practices (Appendix I), and reference examples. |
-| Field | A field Appendix A or C marks as required. Whether its absence is rejected is not tested field by field in this draft; CT-CFG-001 checks that a complete configuration is accepted. |
+| Field | A field Appendix A or C marks as required, whose absence no test checks separately. None in this draft: CT-CFG-025 checks each required configuration field of Appendix A, and the tests named check the fields of runtime records. |
 | Scoped | Belongs to a capability a Conformance Statement may claim (§10) and has no test in this draft. |
 | Not testable | A definition, an introduction to a list, or a statement about people or practice rather than about an implementation. |
 | Not yet covered | A requirement on every implementation that this draft has no test for. Listed again in 90.4 when there is any. |
@@ -25,9 +25,9 @@ their IDs and are marked.
 
 | Status | Rows |
 |---|---|
-| Tested | 332 |
+| Tested | 358 |
 | Restates | 44 |
-| Field | 26 |
+| Field | 0 |
 | Scoped | 0 |
 | Not testable | 29 |
 | Not yet covered | 0 |
@@ -165,20 +165,20 @@ their IDs and are marked.
 | R-0126 | Vol XVI, Plugin Invocation | Tested | CT-PLG-003 |
 | R-0127 | Vol XVI, Extension Lifecycle | Tested | CT-PLG-004 |
 | R-0128 | App A | Tested | CT-CFG-001 |
-| R-0129 | App A, A.1 — Project | Field | presence not separately tested |
+| R-0129 | App A, A.1 — Project | Tested | CT-CFG-025 |
 | R-0130 | App A, A.1 — Project | Tested | CT-CFG-020 |
 | R-0131 | App A, A.1 — Project | Restates | R-0130 (CT-CFG-020) |
-| R-0132 | App A, A.1 — Project | Field | presence not separately tested |
+| R-0132 | App A, A.1 — Project | Tested | CT-CFG-025; the source line is DefectClassConfig `name`, which the inventory labels Project.name |
 | R-0133 | App A, A.1 — Project | Tested | CT-SCT-005 |
 | R-0134 | App A, A.1 — Project | Tested | CT-SCT-005 |
 | R-0135 | App A, A.1 — Project | Tested | CT-SCT-005 |
 | R-0136 | App A, A.1 — Project | Tested | CT-SCT-006 |
-| R-0137 | App A, A.2 — Environment | Field | presence not separately tested |
-| R-0138 | App A, A.2 — Environment | Field | presence not separately tested |
-| R-0139 | App A, A.2 — Environment | Field | presence not separately tested |
-| R-0140 | App A, A.2 — Environment | Field | presence not separately tested |
+| R-0137 | App A, A.2 — Environment | Tested | CT-CFG-025 |
+| R-0138 | App A, A.2 — Environment | Tested | CT-CFG-025 |
+| R-0139 | App A, A.2 — Environment | Tested | CT-CFG-025 |
+| R-0140 | App A, A.2 — Environment | Tested | CT-CFG-025 |
 | R-0141 | App A, A.2 — Environment | Tested | CT-ABD-001 |
-| R-0142 | App A, A.2 — Environment | Field | presence not separately tested |
+| R-0142 | App A, A.2 — Environment | Tested | CT-CFG-025 |
 | R-0143 | App A, A.2 — Environment | Tested | CT-ABD-002 |
 | R-0144 | App A, A.2 — Environment | Tested | CT-ABD-002 |
 | R-0145 | App A, A.2 — Environment | Tested | CT-ABD-002 |
@@ -187,11 +187,11 @@ their IDs and are marked.
 | R-0148 | App A, A.2 — Environment | Tested | CT-ABD-002 |
 | R-0149 | App A, A.2 — Environment | Tested | CT-ABD-002 |
 | R-0150 | App A, A.2 — Environment | Tested | CT-ABD-002 |
-| R-0151 | App A, A.3 — Suite | Field | presence not separately tested |
+| R-0151 | App A, A.3 — Suite | Tested | CT-CFG-025 |
 | R-0152 | App A, A.3 — Suite | Tested | CT-CFG-021 |
 | R-0153 | App A, A.3 — Suite | Restates | R-0152 (CT-CFG-021) |
 | R-0154 | App A, A.3 — Suite | Tested | CT-CFG-009 |
-| R-0155 | App A, A.4 — Scenario | Field | presence not separately tested |
+| R-0155 | App A, A.4 — Scenario | Tested | CT-CFG-025 |
 | R-0156 | App A, A.4 — Scenario | Tested | CT-CFG-002 |
 | R-0157 | App A, A.4 — Scenario | Tested | CT-CFG-002 |
 | R-0158 | App A, A.4 — Scenario | Tested | CT-CFG-022, CT-DSR-004 |
@@ -211,9 +211,9 @@ their IDs and are marked.
 | R-0172 | App A, A.5 — Quality Contract | Tested | CT-CFG-023 |
 | R-0173 | App A, A.5 — Quality Contract | Tested | CT-CFG-003 |
 | R-0174 | App A, A.5 — Quality Contract | Tested | CT-CFG-019 |
-| R-0175 | App A, A.5 — Quality Contract | Field | presence not separately tested |
-| R-0176 | App A, A.5 — Quality Contract | Field | presence not separately tested |
-| R-0177 | App A, A.5 — Quality Contract | Field | presence not separately tested |
+| R-0175 | App A, A.5 — Quality Contract | Tested | CT-CFG-025 |
+| R-0176 | App A, A.5 — Quality Contract | Tested | CT-CFG-025 |
+| R-0177 | App A, A.5 — Quality Contract | Tested | CT-CFG-025 |
 | R-0178 | App A, A.5 — Quality Contract | Tested | CT-CFG-004 |
 | R-0179 | App A, A.5 — Quality Contract | Tested | CT-CFG-004 |
 | R-0180 | App A, A.5 — Quality Contract | Tested | CT-CFG-004 |
@@ -221,9 +221,9 @@ their IDs and are marked.
 | R-0182 | App A, A.5 — Quality Contract | Tested | CT-CFG-004 |
 | R-0183 | App A, A.5 — Quality Contract | Tested | CT-HRV-001 |
 | R-0184 | App A, A.5 — Quality Contract | Tested | CT-HRV-002 |
-| R-0185 | App A, A.6 — JudgeConfig | Field | presence not separately tested |
+| R-0185 | App A, A.6 — JudgeConfig | Tested | CT-CFG-025 |
 | R-0186 | App A, A.6 — JudgeConfig | Tested | CT-CFG-006 |
-| R-0187 | App A, A.6 — JudgeConfig | Field | presence not separately tested |
+| R-0187 | App A, A.6 — JudgeConfig | Tested | CT-CFG-025 |
 | R-0188 | App A, A.7 — MultiJudgeConfig | Tested | CT-MJG-001 |
 | R-0189 | App A, A.7 — MultiJudgeConfig | Tested | CT-MJG-001 |
 | R-0190 | App A, A.7 — MultiJudgeConfig | Tested | CT-MJG-002 |
@@ -231,15 +231,15 @@ their IDs and are marked.
 | R-0192 | App A, A.7 — MultiJudgeConfig | Tested | CT-MJG-002, CT-MJG-006 |
 | R-0193 | App A, A.7 — MultiJudgeConfig | Tested | CT-MJG-003 |
 | R-0194 | App A, A.7 — MultiJudgeConfig | Tested | CT-MJG-003 |
-| R-0195 | App A, A.8 — Dataset | Field | presence not separately tested |
+| R-0195 | App A, A.8 — Dataset | Tested | CT-CFG-025 |
 | R-0196 | App A, A.8 — Dataset | Tested | CT-CFG-017 |
 | R-0197 | App A, A.8 — Dataset | Restates | R-0063 (CT-CFG-017, CT-EXE-010, CT-DSR-003) |
-| R-0198 | App A, A.8 — Dataset | Field | presence not separately tested |
-| R-0199 | App A, A.8 — Dataset | Field | presence not separately tested |
+| R-0198 | App A, A.8 — Dataset | Tested | CT-CFG-025 |
+| R-0199 | App A, A.8 — Dataset | Tested | CT-CFG-025 |
 | R-0200 | App A, A.8 — Dataset | Tested | CT-DSR-001 |
 | R-0201 | App A, A.8 — Dataset | Tested | CT-DSR-002 |
-| R-0202 | App A, A.8 — Dataset | Field | presence not separately tested |
-| R-0203 | App A, A.8 — Dataset | Field | presence not separately tested |
+| R-0202 | App A, A.8 — Dataset | Tested | CT-CFG-025 |
+| R-0203 | App A, A.8 — Dataset | Tested | CT-CFG-025 |
 | R-0204 | App A, A.8 — Dataset | Tested | CT-DSR-001 |
 | R-0205 | App A, A.8 — Dataset | Tested | CT-DSR-001 |
 | R-0206 | App A, A.8 — Dataset | Tested | CT-DSR-002 |
@@ -247,15 +247,15 @@ their IDs and are marked.
 | R-0208 | App A, A.8 — Dataset | Tested | CT-DSR-002 |
 | R-0209 | App A, A.8 — Dataset | Tested | CT-DSR-002 |
 | R-0210 | App A, A.8 — Dataset | Tested | CT-DSR-002 |
-| R-0211 | App A, A.8 — Dataset | Field | presence not separately tested |
+| R-0211 | App A, A.8 — Dataset | Tested | CT-CFG-025 |
 | R-0212 | App A, A.9 — ExecutionConfig | Tested | CT-EXE-006 |
-| R-0213 | App A, A.9 — ExecutionConfig | Field | presence not separately tested |
+| R-0213 | App A, A.9 — ExecutionConfig | Tested | CT-CFG-025 |
 | R-0214 | App A, A.9 — ExecutionConfig | Tested | CT-CFG-010 |
 | R-0215 | App A, A.9 — ExecutionConfig | Tested | CT-CFG-010 |
-| R-0216 | App A, A.10 — Quality Gates | Field | presence not separately tested |
-| R-0217 | App A, A.10 — Quality Gates | Field | presence not separately tested |
-| R-0218 | App A, A.10 — Quality Gates | Field | presence not separately tested |
-| R-0219 | App A, A.10 — Quality Gates | Field | presence not separately tested |
+| R-0216 | App A, A.10 — Quality Gates | Tested | CT-CFG-025 |
+| R-0217 | App A, A.10 — Quality Gates | Tested | CT-CFG-025 |
+| R-0218 | App A, A.10 — Quality Gates | Tested | CT-CFG-025 |
+| R-0219 | App A, A.10 — Quality Gates | Tested | CT-CFG-025 |
 | R-0220 | App A, A.10 — Quality Gates | Tested | CT-REL-002, CT-REL-003 |
 | R-0221 | App A, A.10 — Quality Gates | Tested | CT-CFG-024 |
 | R-0222 | App A, A.11 — Baseline | Tested | CT-REL-021 |
@@ -352,7 +352,7 @@ their IDs and are marked.
 | R-0313 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-REL-020 |
 | R-0314 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-REL-018 |
 | R-0315 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-REL-013 |
-| R-0316 | App C | Tested | CT-SDK-002 |
+| R-0316 | App C | Tested | CT-SDK-001, CT-SDK-002 |
 | R-0317 | App C, C.1 — Design Principles | Tested | CT-EXE-007 |
 | R-0318 | App C, C.3 — Operations by Resource | Tested | CT-CFG-017 |
 | R-0319 | App C, C.3 — Operations by Resource | Tested | CT-DEC-015 |
@@ -397,7 +397,7 @@ their IDs and are marked.
 | R-0358 | App D | Restates | R-0080 |
 | R-0359 | App D | Tested | CT-SDK-002 |
 | R-0360 | App D | Restates | R-0007 (CT-ASM-004) |
-| R-0361 | App D | Restates | R-0316 (CT-SDK-002) |
+| R-0361 | App D | Restates | R-0316 (CT-SDK-001, CT-SDK-002) |
 | R-0362 | App D | Restates | R-0090 (CT-SCT-003, CT-SCT-004) |
 | R-0363 | App D | Restates | R-0006 (CT-ASM-003, CT-ASM-009) |
 | R-0364 | App H, H.4 — Contract Composition and Reusable Contracts | Restates | R-0084 (CT-CFG-007); text revised in v0.37 or later |
@@ -419,7 +419,7 @@ their IDs and are marked.
 | R-0380 | App I, I.6 — Governance | Restates | R-0110 |
 | R-0381 | App I, I.6 — Governance | Not testable | applies to people |
 | R-0382 | App I, I.7 — CI/CD Integration | Restates | R-0113 (CT-REL-024) |
-| R-0383 | App I, I.7 — CI/CD Integration | Tested | CT-SDK-002 |
+| R-0383 | App I, I.7 — CI/CD Integration | Tested | CT-SDK-001, CT-SDK-002 |
 | R-0384 | App I, I.8 — Extensibility | Tested | CT-PLG-001 |
 | R-0385 | App I, I.8 — Extensibility | Restates | R-0282 (CT-CFG-018, CT-DSR-003) |
 | R-0386 | App I, I.9 — Common Mistakes | Restates | R-0056 (CT-EXE-004, CT-EXE-005) |
@@ -443,7 +443,7 @@ their IDs and are marked.
 | R-0404 | App A, A.14 — Release Policy | Tested | CT-REL-031; added in v0.37 |
 | R-0405 | App A, A.14 — Release Policy | Tested | CT-REL-031; added in v0.37 |
 | R-0406 | App A, A.14 — Release Policy | Tested | CT-REL-031; added in v0.37 |
-| R-0407 | App A, A.14 — Release Policy | Field | presence not separately tested; added in v0.37 |
+| R-0407 | App A, A.14 — Release Policy | Tested | CT-REL-018; added in v0.37 |
 | R-0408 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-CFG-015; added in v0.37 |
 | R-0409 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-CFG-011, CT-CFG-014; added in v0.37 |
 | R-0410 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-CFG-016; added in v0.37 |
@@ -471,7 +471,11 @@ their IDs and are marked.
 
 ## 90.4 Not yet covered
 
-None. Apart from the presence of required fields (status Field), every testable requirement in the inventory, core and scoped, has at least one test.
+None. Every testable requirement in the inventory, core and scoped, has at least one test.
+
+This is a statement about the tests written, not about any implementation. A requirement
+whose tests are all `NOT_RUN` or `NOT_APPLICABLE` in a test run was not verified in that
+run; the test report lists it (1.7).
 
 ## 90.5 Test → requirement
 
@@ -501,6 +505,7 @@ None. Apart from the presence of required fields (status Field), every testable 
 | CT-CFG-022 | R-0158, R-0279, R-0161 |
 | CT-CFG-023 | R-0172 |
 | CT-CFG-024 | R-0221 |
+| CT-CFG-025 | R-0129, R-0132, R-0137, R-0138, R-0139, R-0140, R-0142, R-0151, R-0155, R-0175, R-0176, R-0177, R-0185, R-0187, R-0195, R-0198, R-0199, R-0202, R-0203, R-0211, R-0213, R-0216, R-0217, R-0218, R-0219 |
 | CT-EXE-001 | R-0048 |
 | CT-EXE-002 | R-0057, R-0162 |
 | CT-EXE-003 | R-0055 |
@@ -572,7 +577,7 @@ None. Apart from the presence of required fields (status Field), every testable 
 | CT-REL-015 | R-0329, R-0330 |
 | CT-REL-016 | R-0311, R-0329, R-0330 |
 | CT-REL-017 | R-0105, R-0226, R-0312 |
-| CT-REL-018 | R-0107, R-0237, R-0314, R-0395, R-0412 |
+| CT-REL-018 | R-0107, R-0237, R-0314, R-0395, R-0412, R-0407 |
 | CT-REL-019 | R-0103, R-0328 |
 | CT-REL-020 | R-0106, R-0313 |
 | CT-REL-021 | R-0094, R-0311, R-0222, R-0223, R-0224, R-0225, R-0226, R-0227, R-0228, R-0229 |
@@ -634,7 +639,7 @@ None. Apart from the presence of required fields (status Field), every testable 
 | CT-PLG-005 | R-0121 |
 | CT-PLG-006 | R-0124 |
 | CT-PLG-007 | R-0125 |
-| CT-SDK-001 | R-0115 |
+| CT-SDK-001 | R-0115, R-0316, R-0383 |
 | CT-SDK-002 | R-0316, R-0352, R-0359, R-0383 |
 | CT-RUI-001 | R-0116 |
 | CT-RUI-002 | R-0117, R-0118 |

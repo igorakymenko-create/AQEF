@@ -146,8 +146,8 @@ only if the Response the Judge receives contains it.
   "Body MUST include a non-empty `reason`"; `seeded_control_invalidate` "is an ordinary
   checked Permission."
 - **Method:** Automated
-- **Fixture:** As CT-DEC-015, after its Action. `P-INVALIDATE` is a Person holding
-  `read` and `seeded_control_invalidate`.
+- **Fixture:** F-SEED-MISSED (2.7). `P-INVALIDATE` is a Person holding `read` and
+  `seeded_control_invalidate`.
 - **Action:** `POST .../executions/{execution}/seeded-controls/s-control/invalidate`
   (a) as `P-INVALIDATE` with `reason: ""`; (b) as `P-NOPERM` with a non-empty reason;
   (c) as `P-INVALIDATE` with `reason: "Judge prompt changed today"`. Evaluate the Gates.
@@ -170,12 +170,12 @@ only if the Response the Judge receives contains it.
   class, was `caught` by that Oracle configuration, and is not a control any Oracle
   missed in a run whose Results the requalification will be used to re-assess."
 - **Method:** Automated
-- **Fixture:** As CT-DEC-015, after its Action, with `s-greeting`'s Result invalidated
-  (not `not_assessed`; if the implementation left it `not_assessed`, the same steps
-  apply to that Result). A corrected Judge configuration: model
-  `cts-scripted-judge@2`, behaving as `J-CATCH`, with the same criteria. A fresh control
-  `s-control-2`: as `s-control`, with the fixed Response `"Bye now."`, which `J-CATCH`
-  also fails.
+- **Fixture:** F-SEED-MISSED (2.7), with `s-greeting`'s Result invalidated (not
+  `not_assessed`; if the implementation left it `not_assessed`, the same steps apply to
+  that Result). A corrected Judge configuration: model `cts-scripted-judge@2`, behaving
+  as `J-CATCH`, with the same criteria. A fresh control `s-control-2`: as `s-control`,
+  with the fixed Response `"Bye now."`, which `J-CATCH` also fails (13.1). Setup check:
+  `J-CATCH` passed its self-test for `Goodbye.` and `Bye now.` (2.8).
 - **Action:** (a) Request that `cts-scripted-judge@2` re-assess `s-greeting`'s stored
   Evidence. (b) Run `s-control` and `s-control-2` against `cts-scripted-judge@2`.
   (c) `POST /projects/cts-base/requalifications` for `cts-scripted-judge@2` and

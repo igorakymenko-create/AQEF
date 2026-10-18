@@ -1,6 +1,6 @@
 # AQEF Conformance Test Specification
 
-**Status:** Working Draft 5. Tests for AQEF Working Draft 0.38; valid for 0.39, which
+**Status:** Working Draft 6. Tests for AQEF Working Draft 0.38; valid for 0.39, which
 makes no normative change.
 
 **License:** CC BY 4.0, as the specification.
@@ -48,8 +48,8 @@ when the requirement it checks changes.
 
 | Section | Content |
 |---|---|
-| 1 | Conventions: test format, outcomes, verification methods, test harness |
-| 2 | Fixtures: the base configuration and the scripted subject and Judge |
+| 1 | Conventions: test format, outcomes, verification methods, test harness, isolation, test report |
+| 2 | Fixtures: the base configuration, the scripted subject and Judge, postcondition fixtures, harness self-test |
 | 10 | Configuration and Definition |
 | 11 | Execution and Evidence |
 | 12 | Assessment |
@@ -64,3 +64,26 @@ when the requirement it checks changes.
 | 25 | Capabilities `plugins:<type>` |
 | 26 | Capabilities `cli`, `sdk:<language>`, `reference_ui`, `test_type:<name>` |
 | 90 | Traceability: requirement → test |
+
+### 0.6 Changes from Working Draft 5
+
+Working Draft 6 answers an external review of Working Draft 5 (20 findings). No
+requirement of the specification changed; the tests did.
+
+- **Outcomes.** **Fails if** is no longer a closed list: any departure from **Expected**
+  fails a test (1.1, 1.2). A test that needs an operation Appendix C specifies and the
+  implementation lacks now fails instead of passing (13.1). A test of an optional
+  feature the implementation does not offer is `NOT_APPLICABLE`, not `PASS`.
+- **Isolation.** Every test runs in a Project and a harness session of its own (1.6).
+  States that tests used to take over from other tests are built as named postcondition
+  fixtures (2.7), and the harness is checked before a run (2.8).
+- **Fixtures.** `J-CATCH` fails both `Goodbye.` and `Bye now.`, as CT-SCT-008 requires.
+  CT-CFG-016 uses `cts-len` instead of an undefined Validator.
+- **Tests revised.** CT-ASM-009, CT-ASM-014, CT-ASM-016, CT-ASM-018, CT-ASM-019,
+  CT-DEC-012, CT-DEC-013, CT-DEC-014, CT-DEC-018, CT-REL-018, CT-REL-032, CT-REL-036,
+  CT-API-001, CT-API-002, CT-HRV-002, CT-MJG-006, CT-PLG-003, CT-PLG-005, CT-SDK-001,
+  CT-SDK-002; and the fixtures of the tests that took over another test's state.
+- **Tests added.** CT-CFG-025, one case per required configuration field of Appendix A,
+  so that no row of Section 90 is left as Field.
+- **Test reports** list every requirement whose tests did not run (1.7).
+
