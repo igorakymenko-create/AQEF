@@ -1,0 +1,14 @@
+{
+  "contract_version": "0.3",
+  "operation": "load_config",
+  "run_id": "run-1",
+  "case_id": "CT-CFG-025.05",
+  "session_id": "sess-CFG-025.05",
+  "correlation_id": "corr-0101",
+  "timeout_ms": 30000,
+  "actor_ref": "identity://P-APPROVER",
+  "arguments": {
+    "project_id": "cts-base-CT-CFG-025.05",
+    "config_ref": "evidence://config-CFG-025.05.yaml"
+  }
+}

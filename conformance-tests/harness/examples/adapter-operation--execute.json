@@ -1,0 +1,15 @@
+{
+  "contract_version": "0.3",
+  "operation": "execute",
+  "run_id": "run-1",
+  "case_id": "CT-EXE-003",
+  "session_id": "sess-EXE-003",
+  "correlation_id": "corr-0007",
+  "timeout_ms": 30000,
+  "actor_ref": "identity://P-NOPERM",
+  "arguments": {
+    "project_id": "cts-base-CT-EXE-003",
+    "suite": "cts-suite",
+    "environment": "cts-env"
+  }
+}

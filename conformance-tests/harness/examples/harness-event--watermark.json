@@ -1,0 +1,16 @@
+{
+  "event_id": "ev-0050",
+  "run_id": "run-1",
+  "case_id": "CT-ASM-001",
+  "session_id": "sess-ASM-001",
+  "sequence": 6,
+  "type": "observation_watermark",
+  "source": "harness",
+  "clock_id": "harness-host-1",
+  "observed_monotonic_ns": 7100000000,
+  "attributes": {
+    "up_to_sequence": 5,
+    "drain_ms": 5000,
+    "terminal_event": "ev-0047"
+  }
+}

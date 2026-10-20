@@ -1,0 +1,14 @@
+{
+  "contract_version": "0.3",
+  "operation": "evaluate_gates",
+  "correlation_id": "corr-0044",
+  "success": false,
+  "error": {
+    "origin": "network",
+    "phase": "action",
+    "code": "SUT_TRANSPORT_FAILED",
+    "message": "connection reset before any response",
+    "retryable": true,
+    "evidence_ref": "evidence://net-0044.log"
+  }
+}

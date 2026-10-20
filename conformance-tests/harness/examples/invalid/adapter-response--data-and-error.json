@@ -1,0 +1,20 @@
+{
+  "contract_version": "0.3",
+  "operation": "execute",
+  "correlation_id": "c",
+  "success": true,
+  "data": {
+    "sut": {
+      "outcome": "accepted",
+      "body_ref": "evidence://x",
+      "body_sha256": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881"
+    }
+  },
+  "error": {
+    "origin": "sut",
+    "phase": "action",
+    "code": "SUT_SERVER_ERROR",
+    "message": "m",
+    "retryable": false
+  }
+}

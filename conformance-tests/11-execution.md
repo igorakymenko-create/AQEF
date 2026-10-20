@@ -178,8 +178,10 @@ Conversations, and Artifacts that result, and the calls the scripted subject rec
   Result. Then switch to `SR-OK` and execute again.
 - **Expected:** The first Execution's Artifacts record a latency of at least 200 ms and
   the request exactly as the harness received it; its latency Result is `fail`. The
-  second Execution's latency Result is `pass`, provided the harness answered within
-  100 ms, which the tester confirms from the harness log.
+  second Execution's latency Result is `pass`. If the harness log shows that the harness
+  itself took 100 ms or more to answer the second Execution, that Execution is repeated,
+  up to three times; if none is answered in under 100 ms, the test is `NOT_RUN`, with the
+  harness's times as the reason.
 - **Fails if:** The recorded latency is below what the harness observed, the recorded
   request differs from the one received, or either latency Result contradicts the
   harness log.

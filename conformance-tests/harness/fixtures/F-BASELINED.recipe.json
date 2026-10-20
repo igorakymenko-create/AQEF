@@ -1,0 +1,113 @@
+{
+  "fixture_id": "F-BASELINED",
+  "recipe_version": "0.3.0",
+  "cts_ref": "CTS WD7 §2.7",
+  "base": "F-BASE",
+  "base_changes": [],
+  "behaviors": {
+    "cts-scripted-subject@1": "SR-OK",
+    "cts-scripted-judge@1": "J-PASS-90"
+  },
+  "steps": [
+    {
+      "step_id": "load",
+      "operation": "load_config",
+      "arguments": {
+        "project_id": "${project_id}",
+        "config_ref": "cts://fixture"
+      },
+      "actor_ref": "identity://P-APPROVER"
+    },
+    {
+      "step_id": "b1.exec",
+      "operation": "execute",
+      "arguments": {
+        "project_id": "${project_id}",
+        "suite": "cts-suite",
+        "environment": "cts-env"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "load"
+      ]
+    },
+    {
+      "step_id": "b1.wait",
+      "operation": "poll_execution",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b1.exec.batch_id}",
+        "budget_ms": 120000
+      },
+      "after": [
+        "b1.exec"
+      ]
+    },
+    {
+      "step_id": "b2.exec",
+      "operation": "execute",
+      "arguments": {
+        "project_id": "${project_id}",
+        "suite": "cts-suite",
+        "environment": "cts-env"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "b1.wait"
+      ]
+    },
+    {
+      "step_id": "b2.wait",
+      "operation": "poll_execution",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b2.exec.batch_id}",
+        "budget_ms": 120000
+      },
+      "after": [
+        "b2.exec"
+      ]
+    },
+    {
+      "step_id": "baseline",
+      "operation": "designate_baseline",
+      "arguments": {
+        "project_id": "${project_id}",
+        "scenario": "s-greeting",
+        "environment": "cts-env",
+        "execution_id": "${b1.exec.execution_ids[0]}"
+      },
+      "actor_ref": "identity://P-APPROVER",
+      "after": [
+        "b2.wait"
+      ]
+    },
+    {
+      "step_id": "gates",
+      "operation": "evaluate_gates",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b1.exec.batch_id}"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "baseline"
+      ]
+    }
+  ],
+  "setup_checks": [
+    {
+      "check_id": "baseline",
+      "predicate": "The Baseline is recorded.",
+      "from_step": "baseline"
+    },
+    {
+      "check_id": "snapshot",
+      "predicate": "The evaluation returned a snapshot_id.",
+      "from_step": "gates"
+    }
+  ],
+  "cleanup": [
+    "delete project ${project_id}"
+  ]
+}

@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.3/common.schema.json",
+  "title": "AQEF CTS Harness Contract 0.3 — shared definitions",
+  "$defs": {
+    "contract_version": {
+      "const": "0.3"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "test_id": {
+      "type": "string",
+      "pattern": "^CT-[A-Z]{3}-[0-9]{3}$"
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^CT-[A-Z]{3}-[0-9]{3}(\\.[0-9]{2})?$",
+      "description": "A test ID, or a test ID followed by a case number (CTS 1.2, Cases). A test without numbered cases is reported as one case whose ID is the test ID."
+    },
+    "requirement_id": {
+      "type": "string",
+      "pattern": "^R-[0-9]{4}$"
+    },
+    "outcome": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "NOT_RUN",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "An indirection (evidence://, secret://, harness://, project://, ...). Never a raw secret."
+    },
+    "origin": {
+      "enum": [
+        "harness",
+        "adapter",
+        "network",
+        "sut"
+      ]
+    },
+    "phase": {
+      "enum": [
+        "preflight",
+        "setup",
+        "action",
+        "observation",
+        "cleanup"
+      ]
+    },
+    "operation": {
+      "enum": [
+        "describe",
+        "begin_case",
+        "end_case",
+        "cleanup",
+        "provision_principal",
+        "load_config",
+        "get_config",
+        "update_config",
+        "delete_resource",
+        "register_dataset",
+        "create_dataset_version",
+        "generate_dataset",
+        "get_dataset",
+        "execute",
+        "poll_execution",
+        "list_executions",
+        "get_execution",
+        "get_conversation",
+        "get_artifacts",
+        "get_results",
+        "review_result",
+        "reassess_result",
+        "recheck_validator",
+        "confirm_control",
+        "invalidate_control",
+        "requalify_oracle",
+        "list_requalifications",
+        "evaluate_gates",
+        "get_gate_results",
+        "override_gate",
+        "get_snapshot",
+        "designate_baseline",
+        "list_baselines",
+        "get_report",
+        "record_release",
+        "list_releases",
+        "approve_policy",
+        "revoke_policy",
+        "get_policy",
+        "audit_query",
+        "list_approvals",
+        "approve_change",
+        "register_plugin",
+        "deprecate_plugin",
+        "run_cli",
+        "run_sdk",
+        "run_pipeline",
+        "capture_ui",
+        "raw_request",
+        "configure_behavior",
+        "reset_harness",
+        "read_call_log",
+        "inject_failure",
+        "clock_capabilities",
+        "self_test",
+        "close_observation"
+      ]
+    },
+    "sut_operation": {
+      "enum": [
+        "cleanup",
+        "provision_principal",
+        "load_config",
+        "get_config",
+        "update_config",
+        "delete_resource",
+        "register_dataset",
+        "create_dataset_version",
+        "generate_dataset",
+        "get_dataset",
+        "execute",
+        "poll_execution",
+        "list_executions",
+        "get_execution",
+        "get_conversation",
+        "get_artifacts",
+        "get_results",
+        "review_result",
+        "reassess_result",
+        "recheck_validator",
+        "confirm_control",
+        "invalidate_control",
+        "requalify_oracle",
+        "list_requalifications",
+        "evaluate_gates",
+        "get_gate_results",
+        "override_gate",
+        "get_snapshot",
+        "designate_baseline",
+        "list_baselines",
+        "get_report",
+        "record_release",
+        "list_releases",
+        "approve_policy",
+        "revoke_policy",
+        "get_policy",
+        "audit_query",
+        "list_approvals",
+        "approve_change",
+        "register_plugin",
+        "deprecate_plugin",
+        "run_cli",
+        "run_sdk",
+        "run_pipeline",
+        "capture_ui",
+        "raw_request"
+      ]
+    },
+    "sut_outcome": {
+      "enum": [
+        "accepted",
+        "rejected"
+      ],
+      "description": "accepted: the SUT carried out the request. rejected: the SUT refused it with an error of its own. Either can be what a test expects."
+    },
+    "evidence_grade": {
+      "enum": [
+        "observed",
+        "sampled",
+        "inspected",
+        "declared"
+      ]
+    },
+    "reason_code": {
+      "enum": [
+        "EXPECTED_MET",
+        "EXPECTED_VIOLATED",
+        "REQUIRED_OPERATION_MISSING",
+        "SUT_ERROR",
+        "CAPABILITY_NOT_CLAIMED",
+        "OPTIONAL_FEATURE_ABSENT",
+        "SETUP_FAILED",
+        "FIXTURE_UNAVAILABLE",
+        "ADAPTER_GAP",
+        "HARNESS_SELF_TEST_FAILED",
+        "HARNESS_FAILURE",
+        "TRANSPORT_FAILED",
+        "OBSERVATION_INCOMPLETE",
+        "CORRELATION_UNCERTAIN",
+        "BUDGET_EXCEEDED",
+        "EVIDENCE_INTEGRITY_FAILED",
+        "MANUAL_REVIEW_PENDING",
+        "REVIEW_DISPUTED"
+      ]
+    }
+  }
+}

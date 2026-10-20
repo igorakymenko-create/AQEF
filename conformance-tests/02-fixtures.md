@@ -109,7 +109,8 @@ Result, a missed Seeded Control, an override. Each such state is named here, wit
 steps that build it and the checks that confirm it was built. A test builds it in its
 own Project as setup (1.6); it never relies on another test having run. Words such as
 "evaluate the Gates", "override", and "a governed change" have the meanings of Sections
-13.1 and 14.1.
+13.1 and 14.1. A machine form of each, for a harness, is in `harness/fixtures/`; where it
+differs from this table, this table is right.
 
 | Fixture | Built by | Setup checks |
 |---|---|---|
@@ -125,7 +126,7 @@ own Project as setup (1.6); it never relies on another test having run. Words su
 ## 2.8 Harness self-test
 
 Before a test run, and after any change to the harness, the tester calls each scripted
-behavior directly, without the implementation, and checks that it does what Sections
+behavior directly, without the implementation (Harness Contract §8.6), and checks that it does what Sections
 2.2, 2.3, 13.1, 22, and 23 say: each subject code returns its Response or fails as
 stated; each Judge code returns its verdict and Confidence; `J-MAP` follows its
 mapping; `J-CATCH` returns `fail` with Confidence `0.90` for `Goodbye.` and for

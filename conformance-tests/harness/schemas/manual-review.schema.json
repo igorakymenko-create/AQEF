@@ -1,0 +1,252 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.3/manual-review.schema.json",
+  "title": "Manual review record 0.3",
+  "description": "Decision of a named reviewer for an Inspection or Declaration test (CTS 1.8).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "review_id",
+    "test_id",
+    "case_id",
+    "method",
+    "reviewer",
+    "checklist",
+    "decision",
+    "reason_code",
+    "signed_at",
+    "signature_ref"
+  ],
+  "properties": {
+    "review_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "test_id": {
+      "$ref": "common.schema.json#/$defs/test_id"
+    },
+    "case_id": {
+      "$ref": "common.schema.json#/$defs/case_id"
+    },
+    "method": {
+      "enum": [
+        "inspection",
+        "declaration"
+      ]
+    },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "role"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "role": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "affiliation": {
+          "type": "string"
+        }
+      }
+    },
+    "checklist": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "item_id",
+          "statement",
+          "answer",
+          "evidence_refs"
+        ],
+        "properties": {
+          "item_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "statement": {
+            "type": "string",
+            "description": "The statement of Expected, verbatim."
+          },
+          "answer": {
+            "enum": [
+              "met",
+              "not_met",
+              "undecided"
+            ]
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/ref"
+            }
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "decision": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "NOT_RUN"
+      ]
+    },
+    "reason_code": {
+      "enum": [
+        "VERIFIED",
+        "VIOLATION",
+        "INSUFFICIENT_EVIDENCE",
+        "UNRESOLVED_INTERPRETATION",
+        "DISPUTED",
+        "PENDING"
+      ]
+    },
+    "declaration_ref": {
+      "$ref": "common.schema.json#/$defs/ref",
+      "description": "The implementation's statement, kept as a statement, never as a measurement."
+    },
+    "second_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_id",
+        "blind"
+      ],
+      "properties": {
+        "review_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "blind": {
+          "type": "boolean"
+        }
+      }
+    },
+    "signed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signature_ref": {
+      "$ref": "common.schema.json#/$defs/ref"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "const": "PASS"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "reason_code": {
+            "const": "VERIFIED"
+          },
+          "checklist": {
+            "items": {
+              "properties": {
+                "answer": {
+                  "const": "met"
+                },
+                "evidence_refs": {
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "const": "FAIL"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "reason_code": {
+            "const": "VIOLATION"
+          },
+          "checklist": {
+            "contains": {
+              "properties": {
+                "answer": {
+                  "const": "not_met"
+                },
+                "evidence_refs": {
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "answer"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "const": "NOT_RUN"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "reason_code": {
+            "enum": [
+              "INSUFFICIENT_EVIDENCE",
+              "UNRESOLVED_INTERPRETATION",
+              "DISPUTED",
+              "PENDING"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "method": {
+            "const": "declaration"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "declaration_ref"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reason_code": {
+            "const": "DISPUTED"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "second_review"
+        ]
+      }
+    }
+  ]
+}

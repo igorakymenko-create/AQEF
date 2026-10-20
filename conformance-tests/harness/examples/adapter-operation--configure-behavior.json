@@ -1,0 +1,14 @@
+{
+  "contract_version": "0.3",
+  "operation": "configure_behavior",
+  "run_id": "run-1",
+  "case_id": "CT-DEC-008",
+  "session_id": "sess-DEC-008",
+  "correlation_id": "corr-0002",
+  "timeout_ms": 5000,
+  "arguments": {
+    "endpoint_id": "cts-scripted-judge@1",
+    "behavior": "J-MAP(J-FAIL-90, J-PASS-60, J-PASS-90)",
+    "applies": "now"
+  }
+}

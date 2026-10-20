@@ -1,0 +1,118 @@
+{
+  "fixture_id": "F-OVERRIDDEN",
+  "recipe_version": "0.3.0",
+  "cts_ref": "CTS WD7 §2.7",
+  "base": "F-BASE",
+  "base_changes": [
+    "add semantic-gate (CTS 13.1) to the Project's quality_gates"
+  ],
+  "behaviors": {
+    "cts-scripted-subject@1": "SR-OK",
+    "cts-scripted-judge@1": "J-FAIL-90"
+  },
+  "steps": [
+    {
+      "step_id": "load",
+      "operation": "load_config",
+      "arguments": {
+        "project_id": "${project_id}",
+        "config_ref": "cts://fixture"
+      },
+      "actor_ref": "identity://P-APPROVER"
+    },
+    {
+      "step_id": "b1.exec",
+      "operation": "execute",
+      "arguments": {
+        "project_id": "${project_id}",
+        "suite": "cts-suite",
+        "environment": "cts-env"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "load"
+      ]
+    },
+    {
+      "step_id": "b1.wait",
+      "operation": "poll_execution",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b1.exec.batch_id}",
+        "budget_ms": 120000
+      },
+      "after": [
+        "b1.exec"
+      ]
+    },
+    {
+      "step_id": "b1.gates",
+      "operation": "evaluate_gates",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b1.exec.batch_id}"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "b1.wait"
+      ]
+    },
+    {
+      "step_id": "override",
+      "operation": "override_gate",
+      "arguments": {
+        "project_id": "${project_id}",
+        "gate": "semantic-gate",
+        "gate_result_id": "${b1.gates.semantic-gate.id}",
+        "batch_id": "${b1.exec.batch_id}",
+        "justification": "CTS override"
+      },
+      "actor_ref": "identity://P-APPROVER",
+      "after": [
+        "b1.gates"
+      ]
+    },
+    {
+      "step_id": "report",
+      "operation": "get_report",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b1.exec.batch_id}"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "override"
+      ]
+    },
+    {
+      "step_id": "release",
+      "operation": "record_release",
+      "arguments": {
+        "project_id": "${project_id}",
+        "body": {
+          "template": "CTS 14.1",
+          "decision": "overridden"
+        }
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "report"
+      ]
+    }
+  ],
+  "setup_checks": [
+    {
+      "check_id": "override",
+      "predicate": "The semantic-gate GateResult carries override.",
+      "from_step": "override"
+    },
+    {
+      "check_id": "release",
+      "predicate": "The Release Decision is accepted.",
+      "from_step": "release"
+    }
+  ],
+  "cleanup": [
+    "delete project ${project_id}"
+  ]
+}

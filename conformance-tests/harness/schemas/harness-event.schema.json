@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.3/harness-event.schema.json",
+  "title": "Harness event 0.3",
+  "description": "One append-only observation. Sequence numbers are per session and strictly increasing.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "run_id",
+    "case_id",
+    "session_id",
+    "sequence",
+    "type",
+    "source",
+    "clock_id",
+    "observed_monotonic_ns"
+  ],
+  "properties": {
+    "event_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "run_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "case_id": {
+      "$ref": "common.schema.json#/$defs/case_id"
+    },
+    "session_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "correlation_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "type": {
+      "enum": [
+        "call_received",
+        "response_sent",
+        "fault_injected",
+        "behavior_configured",
+        "behavior_switched",
+        "reset",
+        "self_test",
+        "setup_check",
+        "sut_request_sent",
+        "sut_response_received",
+        "probe",
+        "sut_terminal_observed",
+        "observation_watermark",
+        "observation_closed",
+        "late_call",
+        "cleanup_completed"
+      ]
+    },
+    "source": {
+      "enum": [
+        "harness",
+        "adapter",
+        "runner"
+      ]
+    },
+    "endpoint_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "behavior": {
+      "type": "string"
+    },
+    "clock_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The monotonic clock observed_monotonic_ns was read from; values from different clocks are not compared."
+    },
+    "observed_monotonic_ns": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "raw_ref": {
+      "$ref": "common.schema.json#/$defs/ref"
+    },
+    "raw_sha256": {
+      "$ref": "common.schema.json#/$defs/sha256"
+    },
+    "redacted_ref": {
+      "$ref": "common.schema.json#/$defs/ref"
+    },
+    "redacted_sha256": {
+      "$ref": "common.schema.json#/$defs/sha256"
+    },
+    "attributes": {
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "call_received",
+              "response_sent",
+              "sut_request_sent",
+              "sut_response_received",
+              "probe",
+              "fault_injected"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "raw_ref",
+          "raw_sha256",
+          "correlation_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "observation_watermark"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "attributes"
+        ],
+        "properties": {
+          "attributes": {
+            "required": [
+              "up_to_sequence",
+              "drain_ms"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "redacted_ref"
+        ]
+      },
+      "then": {
+        "required": [
+          "redacted_sha256"
+        ]
+      }
+    }
+  ]
+}

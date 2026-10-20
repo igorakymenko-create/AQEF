@@ -1,0 +1,14 @@
+{
+  "contract_version": "0.2",
+  "operation": "execute",
+  "run_id": "r",
+  "case_id": "CT-EXE-003",
+  "session_id": "s",
+  "correlation_id": "c",
+  "timeout_ms": 1000,
+  "arguments": {
+    "project_id": "p",
+    "suite": "cts-suite",
+    "environment": "cts-env"
+  }
+}

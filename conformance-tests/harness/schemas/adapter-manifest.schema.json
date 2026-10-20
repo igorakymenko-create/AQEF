@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.3/adapter-manifest.schema.json",
+  "title": "Adapter manifest 0.3",
+  "description": "What this adapter and harness can do. Not the SUT's Conformance Statement: applicability is read from the statement referenced here, never from this manifest.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "adapter_id",
+    "adapter_version",
+    "harness_version",
+    "sut",
+    "surface",
+    "conformance_statement_ref",
+    "operations",
+    "identity_modes",
+    "model_binding",
+    "clock_profile"
+  ],
+  "properties": {
+    "contract_version": {
+      "$ref": "common.schema.json#/$defs/contract_version"
+    },
+    "adapter_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "adapter_version": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "harness_version": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "sut": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "version": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "instance_ref": {
+          "$ref": "common.schema.json#/$defs/ref"
+        }
+      }
+    },
+    "surface": {
+      "enum": [
+        "appendix_c_rest",
+        "equivalent"
+      ]
+    },
+    "equivalence_evidence_ref": {
+      "$ref": "common.schema.json#/$defs/ref",
+      "description": "Required when surface is equivalent: how each mapped operation corresponds to its Appendix C operation."
+    },
+    "conformance_statement_ref": {
+      "$ref": "common.schema.json#/$defs/ref"
+    },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "operation",
+          "status"
+        ],
+        "properties": {
+          "operation": {
+            "$ref": "common.schema.json#/$defs/operation"
+          },
+          "status": {
+            "enum": [
+              "supported",
+              "unsupported",
+              "not_configured",
+              "unknown"
+            ]
+          },
+          "probe_ref": {
+            "$ref": "common.schema.json#/$defs/ref"
+          },
+          "maps_to": {
+            "type": "string",
+            "description": "The SUT operation used, e.g. 'POST /projects/{project}/gates/check'."
+          }
+        }
+      }
+    },
+    "identity_modes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "person",
+          "service_account",
+          "unauthenticated"
+        ]
+      }
+    },
+    "model_binding": {
+      "enum": [
+        "per_project",
+        "global"
+      ],
+      "description": "per_project: each case's model identifiers reach session-scoped harness endpoints. global: they do not, and cases that read the harness log run one at a time."
+    },
+    "clock_profile": {
+      "enum": [
+        "monotonic_real",
+        "injected_for_harness_only"
+      ]
+    },
+    "fault_profiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "profile",
+          "mechanism"
+        ],
+        "properties": {
+          "profile": {
+            "type": "string"
+          },
+          "mechanism": {
+            "enum": [
+              "harness_only",
+              "sut_documented_hook",
+              "test_plugin"
+            ]
+          },
+          "documentation_ref": {
+            "$ref": "common.schema.json#/$defs/ref"
+          }
+        }
+      }
+    },
+    "capability_adapters": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "cli",
+          "sdk",
+          "ci_cd",
+          "reference_ui",
+          "dataset_generator"
+        ]
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "surface": {
+            "const": "equivalent"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "equivalence_evidence_ref"
+        ]
+      }
+    }
+  ]
+}

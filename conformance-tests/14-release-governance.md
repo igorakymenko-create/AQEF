@@ -472,7 +472,8 @@ Workflow governs it.
 - **Action:** Run the pipeline; do not answer the review.
 - **Expected:** When the pipeline's timeout is reached, the pipeline fails as for a
   failed blocking Gate.
-- **Fails if:** The pipeline passes, or keeps waiting beyond its timeout.
+- **Fails if:** The pipeline passes, or is still waiting when its timeout plus the grace
+  period of the waiting budget (1.6) has passed.
 
 ### CT-REL-026 — The basic loop runs end to end through all five layers
 

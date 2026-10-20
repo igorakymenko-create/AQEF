@@ -1,0 +1,30 @@
+{
+  "review_id": "rev-abd-007-1",
+  "test_id": "CT-ABD-007",
+  "case_id": "CT-ABD-007",
+  "method": "declaration",
+  "reviewer": {
+    "id": "reviewer://a.tester",
+    "role": "cts-reviewer"
+  },
+  "checklist": [
+    {
+      "item_id": "1",
+      "statement": "(the first statement of CT-ABD-007's Expected, verbatim)",
+      "answer": "undecided",
+      "evidence_refs": [
+        "evidence://abd-007-statement.md"
+      ],
+      "note": "Statement and observed Artifact disagree."
+    }
+  ],
+  "decision": "NOT_RUN",
+  "reason_code": "DISPUTED",
+  "declaration_ref": "evidence://abd-007-statement.md",
+  "second_review": {
+    "review_id": "rev-abd-007-2",
+    "blind": true
+  },
+  "signed_at": "2026-10-19T19:05:00Z",
+  "signature_ref": "evidence://sig-rev-abd-007-1"
+}

@@ -1,0 +1,22 @@
+{
+  "review_id": "r",
+  "test_id": "CT-DEC-009",
+  "case_id": "CT-DEC-009",
+  "method": "inspection",
+  "reviewer": {
+    "id": "x",
+    "role": "y"
+  },
+  "checklist": [
+    {
+      "item_id": "1",
+      "statement": "s",
+      "answer": "undecided",
+      "evidence_refs": []
+    }
+  ],
+  "decision": "PASS",
+  "reason_code": "VERIFIED",
+  "signed_at": "2026-10-19T19:00:00Z",
+  "signature_ref": "evidence://s"
+}

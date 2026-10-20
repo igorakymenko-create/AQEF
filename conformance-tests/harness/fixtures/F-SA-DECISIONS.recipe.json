@@ -1,0 +1,211 @@
+{
+  "fixture_id": "F-SA-DECISIONS",
+  "recipe_version": "0.3.0",
+  "cts_ref": "CTS WD7 §2.7",
+  "base": "F-BASE",
+  "base_changes": [
+    "add semantic-gate (CTS 13.1) to the Project's quality_gates"
+  ],
+  "behaviors": {
+    "cts-scripted-subject@1": "SR-OK",
+    "cts-scripted-judge@1": "J-PASS-90"
+  },
+  "steps": [
+    {
+      "step_id": "load",
+      "operation": "load_config",
+      "arguments": {
+        "project_id": "${project_id}",
+        "config_ref": "cts://fixture"
+      },
+      "actor_ref": "identity://P-APPROVER"
+    },
+    {
+      "step_id": "policy",
+      "operation": "approve_policy",
+      "arguments": {
+        "project_id": "${project_id}",
+        "policy": {
+          "id": "RP-1",
+          "suites": [
+            "cts-suite"
+          ],
+          "environments": [
+            "cts-env"
+          ],
+          "service_accounts": [
+            "SA-CI"
+          ]
+        }
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "load"
+      ]
+    },
+    {
+      "step_id": "b1.exec",
+      "operation": "execute",
+      "arguments": {
+        "project_id": "${project_id}",
+        "suite": "cts-suite",
+        "environment": "cts-env"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "policy"
+      ]
+    },
+    {
+      "step_id": "b1.wait",
+      "operation": "poll_execution",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b1.exec.batch_id}",
+        "budget_ms": 120000
+      },
+      "after": [
+        "b1.exec"
+      ]
+    },
+    {
+      "step_id": "b1.gates",
+      "operation": "evaluate_gates",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b1.exec.batch_id}"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "b1.wait"
+      ]
+    },
+    {
+      "step_id": "b1.report",
+      "operation": "get_report",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b1.exec.batch_id}"
+      },
+      "actor_ref": "identity://SA-CI",
+      "after": [
+        "b1.gates"
+      ]
+    },
+    {
+      "step_id": "decision_b",
+      "operation": "record_release",
+      "arguments": {
+        "project_id": "${project_id}",
+        "body": {
+          "template": "CTS 14.1",
+          "decision": "approved",
+          "release_policy": "RP-1"
+        }
+      },
+      "actor_ref": "identity://SA-CI",
+      "after": [
+        "b1.report"
+      ]
+    },
+    {
+      "step_id": "switch",
+      "operation": "configure_behavior",
+      "arguments": {
+        "endpoint_id": "cts-scripted-judge@1",
+        "behavior": "J-FAIL-90",
+        "applies": "next_call"
+      },
+      "after": [
+        "decision_b"
+      ]
+    },
+    {
+      "step_id": "b2.exec",
+      "operation": "execute",
+      "arguments": {
+        "project_id": "${project_id}",
+        "suite": "cts-suite",
+        "environment": "cts-env"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "switch"
+      ]
+    },
+    {
+      "step_id": "b2.wait",
+      "operation": "poll_execution",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b2.exec.batch_id}",
+        "budget_ms": 120000
+      },
+      "after": [
+        "b2.exec"
+      ]
+    },
+    {
+      "step_id": "b2.gates",
+      "operation": "evaluate_gates",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b2.exec.batch_id}"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "b2.wait"
+      ]
+    },
+    {
+      "step_id": "b2.report",
+      "operation": "get_report",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b2.exec.batch_id}"
+      },
+      "actor_ref": "identity://SA-CI",
+      "after": [
+        "b2.gates"
+      ]
+    },
+    {
+      "step_id": "decision_d",
+      "operation": "record_release",
+      "arguments": {
+        "project_id": "${project_id}",
+        "body": {
+          "template": "CTS 14.1",
+          "decision": "rejected",
+          "release_policy": "RP-1"
+        }
+      },
+      "actor_ref": "identity://SA-CI",
+      "after": [
+        "b2.report"
+      ]
+    },
+    {
+      "step_id": "revoke",
+      "operation": "revoke_policy",
+      "arguments": {
+        "project_id": "${project_id}",
+        "policy_id": "RP-1"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "decision_d"
+      ]
+    }
+  ],
+  "setup_checks": [
+    {
+      "check_id": "accepted",
+      "predicate": "Decisions (b) and (d) and the revocation are accepted.",
+      "from_step": "revoke"
+    }
+  ],
+  "cleanup": [
+    "delete project ${project_id}"
+  ]
+}

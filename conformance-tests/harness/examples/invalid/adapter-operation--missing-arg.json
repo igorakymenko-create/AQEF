@@ -1,0 +1,12 @@
+{
+  "contract_version": "0.3",
+  "operation": "evaluate_gates",
+  "run_id": "r",
+  "case_id": "CT-DEC-006",
+  "session_id": "s",
+  "correlation_id": "c",
+  "timeout_ms": 1000,
+  "arguments": {
+    "project_id": "p"
+  }
+}

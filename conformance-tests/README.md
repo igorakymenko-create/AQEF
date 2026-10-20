@@ -13,15 +13,16 @@ draft this is and which version of the specification its tests were written for.
 | File | Content |
 |---|---|
 | `00-introduction.md` | Purpose, what a test result means, scope, versioning |
-| `01-conventions.md` | Test format, outcomes, verification methods, test harness, isolation, test report |
+| `01-conventions.md` | Test format, outcomes, verification methods, test harness, isolation, test report, review of Inspection and Declaration |
 | `02-fixtures.md` | Base configuration, scripted subject and Judge, postcondition fixtures, harness self-test |
 | `10-…` to `15-…` | Tests of the non-negotiable core |
 | `20-…` to `26-…` | Tests of scoped capabilities, one section per capability |
 | `90-traceability.md` | Every requirement of the specification, and the tests that check it |
+| `harness/` | Harness Contract: the test infrastructure, a separate document with its own version, schemas, and examples |
 | `_inventory/` | The requirement inventory the traceability refers to (`R-nnnn`) |
 
 Each release of the specification carries this document as its own PDF, built from the
-numbered files above. This README and `_inventory/` are not part of the PDF.
+numbered files above. This README, `harness/`, and `_inventory/` are not part of the PDF.
 
 ## License
 

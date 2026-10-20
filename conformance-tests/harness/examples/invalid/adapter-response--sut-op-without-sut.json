@@ -1,0 +1,7 @@
+{
+  "contract_version": "0.3",
+  "operation": "execute",
+  "correlation_id": "c",
+  "success": true,
+  "data": {}
+}

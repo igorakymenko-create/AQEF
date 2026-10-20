@@ -194,10 +194,12 @@ calls the scripted Judge receives.
     expected: {}
   ```
   `cts-crash` is a Custom Validator (Volume V) that raises an error on every call and
-  returns no Result. If the implementation offers no way to define one, the outcome is
-  `NOT_RUN`, with that reason. No built-in Validator can be made to fail on demand
-  through configuration alone, so the requirement is then not verified for that
-  implementation, and the test report lists it as such (1.7).
+  returns no Result. Where the implementation offers no way to define one but documents
+  a test-only way to make a Validator unable to complete its check (a fault hook), the
+  tester may use that instead, on the schema Constraint, and the report names the hook.
+  With neither, the outcome is `NOT_RUN`, with that reason: no built-in Validator can be
+  made to fail on demand through configuration alone, so the requirement is then not
+  verified for that implementation, and the test report lists it as such (1.7).
 - **Action:** Execute `cts-suite`; retrieve every Result.
 - **Expected:** The `cts-crash` Result has `oracle_type: validator`,
   `disposition: oracle_unavailable`, `verdict: null`, and `confidence:

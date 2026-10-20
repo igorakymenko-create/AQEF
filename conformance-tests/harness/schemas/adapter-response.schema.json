@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.3/adapter-response.schema.json",
+  "title": "Adapter operation response 0.3",
+  "description": "Exactly one of data or error. For an operation that reaches the SUT, data.sut records the SUT's own outcome, accepted or rejected, with the unmodified body kept as evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "operation",
+    "correlation_id",
+    "success"
+  ],
+  "properties": {
+    "contract_version": {
+      "$ref": "common.schema.json#/$defs/contract_version"
+    },
+    "operation": {
+      "$ref": "common.schema.json#/$defs/operation"
+    },
+    "correlation_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "success": {
+      "type": "boolean"
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "sut": {
+          "$ref": "#/$defs/sut_exchange"
+        },
+        "normalized": {
+          "type": "object",
+          "description": "Field-name aliases only; never changes verdict, disposition, status, or any other meaning."
+        }
+      }
+    },
+    "error": {
+      "$ref": "adapter-error.schema.json"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/ref"
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "success": {
+          "const": true
+        }
+      },
+      "required": [
+        "data"
+      ],
+      "not": {
+        "required": [
+          "error"
+        ]
+      }
+    },
+    {
+      "properties": {
+        "success": {
+          "const": false
+        }
+      },
+      "required": [
+        "error"
+      ],
+      "not": {
+        "required": [
+          "data"
+        ]
+      }
+    }
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "success": {
+            "const": true
+          },
+          "operation": {
+            "$ref": "common.schema.json#/$defs/sut_operation"
+          }
+        },
+        "required": [
+          "success",
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "data": {
+            "required": [
+              "sut"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sut_exchange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "body_ref",
+        "body_sha256"
+      ],
+      "properties": {
+        "outcome": {
+          "$ref": "common.schema.json#/$defs/sut_outcome"
+        },
+        "status": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 599
+        },
+        "error_code": {
+          "type": "string"
+        },
+        "body_ref": {
+          "$ref": "common.schema.json#/$defs/ref"
+        },
+        "body_sha256": {
+          "$ref": "common.schema.json#/$defs/sha256"
+        },
+        "resource_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/ref"
+          }
+        },
+        "surface": {
+          "enum": [
+            "appendix_c_rest",
+            "equivalent"
+          ]
+        }
+      }
+    }
+  }
+}

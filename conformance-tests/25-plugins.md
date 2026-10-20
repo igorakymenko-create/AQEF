@@ -101,6 +101,8 @@ returns a Result with no `verdict` field at all.
     value (`confidence: "not_applicable"`, or the Result is `oracle_unavailable` because
     the returned Confidence made it malformed), and the ten Results have the same
     `verdict` or are all `oracle_unavailable`.
+  - Ten equal verdicts are a sampled consistency check, not a proof of determinism: the
+    report labels them so, and rests any claim of enforcement on the statement.
   - Reported, not judged: which of the clock, randomness, and network `cts-reach`
     reached, from its evidence and the harness log; any of them reached is a deviation
     from Volume V's SHOULD, which the report names.

@@ -1,0 +1,14 @@
+{
+  "contract_version": "0.3",
+  "operation": "raw_request",
+  "run_id": "run-1",
+  "case_id": "CT-REL-028",
+  "session_id": "sess-REL-028",
+  "correlation_id": "corr-0301",
+  "timeout_ms": 10000,
+  "arguments": {
+    "method": "GET",
+    "path": "/projects/cts-base-CT-REL-028",
+    "unauthenticated": true
+  }
+}

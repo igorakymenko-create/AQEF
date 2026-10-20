@@ -1,0 +1,289 @@
+{
+  "schema_version": "0.3",
+  "run_id": "run-1",
+  "provenance": {
+    "aqef_version": "0.39",
+    "cts_revision": "WD7",
+    "cts_commit": "0000000",
+    "harness_contract_version": "0.3",
+    "harness_version": "0.3.0",
+    "adapter_id": "example-rest-adapter",
+    "adapter_version": "0.3.0",
+    "sut_name": "Example Engine",
+    "sut_version": "1.2",
+    "conformance_statement_ref": "evidence://statement-example-engine-1.2.json",
+    "capabilities_claimed": [
+      "cli"
+    ],
+    "drain_ms": 5000
+  },
+  "started_at": "2026-10-19T18:00:00Z",
+  "ended_at": "2026-10-19T19:10:00Z",
+  "summary": {
+    "cases": {
+      "PASS": 3,
+      "FAIL": 1,
+      "NOT_RUN": 1,
+      "NOT_APPLICABLE": 2
+    },
+    "tests": {
+      "PASS": 2,
+      "FAIL": 1,
+      "NOT_RUN": 1,
+      "NOT_APPLICABLE": 1
+    },
+    "requirements": {
+      "verified": 2,
+      "violated": 3,
+      "unverified": 2,
+      "not_applicable": 1
+    }
+  },
+  "cases": [
+    {
+      "case_id": "CT-CFG-025.01",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.01"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.18",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "NOT_RUN",
+      "reason_code": "SETUP_FAILED",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.18"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "failed",
+      "cleanup_status": "complete",
+      "reason": "Starting configuration F-RETRY was rejected by the SUT."
+    },
+    {
+      "case_id": "CT-CFG-025.25",
+      "test_id": "CT-CFG-025",
+      "capability": "seeded_controls",
+      "outcome": "NOT_APPLICABLE",
+      "reason_code": "CAPABILITY_NOT_CLAIMED",
+      "evidence_refs": [],
+      "evidence_grades": [],
+      "setup_status": "not_needed",
+      "cleanup_status": "skipped"
+    },
+    {
+      "case_id": "CT-ASM-001",
+      "test_id": "CT-ASM-001",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-ASM-001"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-SDK-001",
+      "test_id": "CT-SDK-001",
+      "capability": "cli",
+      "outcome": "FAIL",
+      "reason_code": "EXPECTED_VIOLATED",
+      "evidence_refs": [
+        "evidence://CT-SDK-001"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-SDK-002",
+      "test_id": "CT-SDK-002",
+      "capability": "sdk:<language>",
+      "outcome": "NOT_APPLICABLE",
+      "reason_code": "CAPABILITY_NOT_CLAIMED",
+      "evidence_refs": [],
+      "evidence_grades": [],
+      "setup_status": "not_needed",
+      "cleanup_status": "skipped"
+    },
+    {
+      "case_id": "CT-REL-023",
+      "test_id": "CT-REL-023",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-REL-023"
+      ],
+      "evidence_grades": [
+        "inspected"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete",
+      "review_ids": [
+        "rev-023-1"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "test_id": "CT-CFG-025",
+      "outcome": "NOT_RUN",
+      "case_ids": [
+        "CT-CFG-025.01",
+        "CT-CFG-025.18",
+        "CT-CFG-025.25"
+      ]
+    },
+    {
+      "test_id": "CT-ASM-001",
+      "outcome": "PASS",
+      "case_ids": [
+        "CT-ASM-001"
+      ]
+    },
+    {
+      "test_id": "CT-SDK-001",
+      "outcome": "FAIL",
+      "case_ids": [
+        "CT-SDK-001"
+      ]
+    },
+    {
+      "test_id": "CT-SDK-002",
+      "outcome": "NOT_APPLICABLE",
+      "case_ids": [
+        "CT-SDK-002"
+      ]
+    },
+    {
+      "test_id": "CT-REL-023",
+      "outcome": "PASS",
+      "case_ids": [
+        "CT-REL-023"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "requirement_id": "R-0129",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.01"
+      ],
+      "evidence_grades": [
+        "observed"
+      ]
+    },
+    {
+      "requirement_id": "R-0213",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-025.18"
+      ]
+    },
+    {
+      "requirement_id": "R-0132",
+      "state": "not_applicable",
+      "traced_to": [
+        "CT-CFG-025.25"
+      ]
+    },
+    {
+      "requirement_id": "R-0067",
+      "state": "verified",
+      "traced_to": [
+        "CT-ASM-001"
+      ],
+      "evidence_grades": [
+        "observed"
+      ]
+    },
+    {
+      "requirement_id": "R-0021",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-001",
+        "CT-ASM-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0316",
+      "state": "violated",
+      "traced_to": [
+        "CT-SDK-001",
+        "CT-SDK-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0383",
+      "state": "violated",
+      "traced_to": [
+        "CT-SDK-001",
+        "CT-SDK-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0361",
+      "state": "violated",
+      "traced_to": [
+        "CT-SDK-001",
+        "CT-SDK-002"
+      ],
+      "derived_from": "R-0316"
+    }
+  ],
+  "manual_reviews": [
+    {
+      "review_id": "rev-023-1",
+      "test_id": "CT-REL-023",
+      "case_id": "CT-REL-023",
+      "method": "inspection",
+      "reviewer": {
+        "id": "reviewer://a.tester",
+        "role": "cts-reviewer",
+        "affiliation": "independent"
+      },
+      "checklist": [
+        {
+          "item_id": "1",
+          "statement": "The reviewer reaches every link, citing the record used at each step.",
+          "answer": "met",
+          "evidence_refs": [
+            "evidence://rel-023-release.json",
+            "evidence://rel-023-report.json",
+            "evidence://rel-023-snapshot.json",
+            "evidence://rel-023-gates.json",
+            "evidence://rel-023-override.json",
+            "evidence://rel-023-results.json",
+            "evidence://rel-023-conversation.json"
+          ]
+        }
+      ],
+      "decision": "PASS",
+      "reason_code": "VERIFIED",
+      "signed_at": "2026-10-19T19:00:00Z",
+      "signature_ref": "evidence://sig-rev-023-1"
+    }
+  ],
+  "harness_findings": [],
+  "evidence_manifest_ref": "evidence://manifest-run-1.json",
+  "evidence_manifest_sha256": "6df57a21d6df3ac74d4c498600b57373fb08f7367a6eb7be401b2c4b3c992c51"
+}

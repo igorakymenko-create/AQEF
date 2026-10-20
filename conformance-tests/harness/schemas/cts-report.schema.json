@@ -1,0 +1,469 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.3/cts-report.schema.json",
+  "title": "CTS run report 0.3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "provenance",
+    "started_at",
+    "ended_at",
+    "summary",
+    "cases",
+    "tests",
+    "requirements",
+    "evidence_manifest_ref",
+    "evidence_manifest_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "common.schema.json#/$defs/contract_version"
+    },
+    "run_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aqef_version",
+        "cts_revision",
+        "harness_contract_version",
+        "harness_version",
+        "adapter_id",
+        "adapter_version",
+        "sut_name",
+        "sut_version",
+        "conformance_statement_ref"
+      ],
+      "properties": {
+        "aqef_version": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "cts_revision": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "cts_commit": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "harness_contract_version": {
+          "$ref": "common.schema.json#/$defs/contract_version"
+        },
+        "harness_version": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "adapter_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "adapter_version": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sut_name": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sut_version": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "conformance_statement_ref": {
+          "$ref": "common.schema.json#/$defs/ref"
+        },
+        "capabilities_claimed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "drain_ms": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cases",
+        "tests",
+        "requirements"
+      ],
+      "properties": {
+        "cases": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "PASS",
+            "FAIL",
+            "NOT_RUN",
+            "NOT_APPLICABLE"
+          ],
+          "properties": {
+            "PASS": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "FAIL": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "NOT_RUN": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "NOT_APPLICABLE": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "tests": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "PASS",
+            "FAIL",
+            "NOT_RUN",
+            "NOT_APPLICABLE"
+          ],
+          "properties": {
+            "PASS": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "FAIL": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "NOT_RUN": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "NOT_APPLICABLE": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "requirements": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "verified",
+            "violated",
+            "unverified",
+            "not_applicable"
+          ],
+          "properties": {
+            "verified": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "violated": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "unverified": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "not_applicable": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/case"
+      }
+    },
+    "tests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "test_id",
+          "outcome",
+          "case_ids"
+        ],
+        "properties": {
+          "test_id": {
+            "$ref": "common.schema.json#/$defs/test_id"
+          },
+          "outcome": {
+            "$ref": "common.schema.json#/$defs/outcome"
+          },
+          "case_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "common.schema.json#/$defs/case_id"
+            }
+          }
+        }
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requirement_id",
+          "state",
+          "traced_to"
+        ],
+        "properties": {
+          "requirement_id": {
+            "$ref": "common.schema.json#/$defs/requirement_id"
+          },
+          "state": {
+            "enum": [
+              "verified",
+              "violated",
+              "unverified",
+              "not_applicable"
+            ]
+          },
+          "traced_to": {
+            "type": "array",
+            "items": {
+              "$ref": "common.schema.json#/$defs/case_id"
+            }
+          },
+          "derived_from": {
+            "$ref": "common.schema.json#/$defs/requirement_id"
+          },
+          "evidence_grades": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "common.schema.json#/$defs/evidence_grade"
+            }
+          }
+        }
+      }
+    },
+    "manual_reviews": {
+      "type": "array",
+      "items": {
+        "$ref": "manual-review.schema.json"
+      }
+    },
+    "harness_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "case_id",
+          "origin",
+          "code"
+        ],
+        "properties": {
+          "case_id": {
+            "$ref": "common.schema.json#/$defs/case_id"
+          },
+          "origin": {
+            "$ref": "common.schema.json#/$defs/origin"
+          },
+          "code": {
+            "type": "string"
+          },
+          "evidence_ref": {
+            "$ref": "common.schema.json#/$defs/ref"
+          }
+        }
+      },
+      "description": "Failures of the harness, adapter, or network: reported apart from SUT outcomes."
+    },
+    "evidence_manifest_ref": {
+      "$ref": "common.schema.json#/$defs/ref"
+    },
+    "evidence_manifest_sha256": {
+      "$ref": "common.schema.json#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "test_id",
+        "capability",
+        "outcome",
+        "reason_code",
+        "evidence_refs",
+        "evidence_grades",
+        "setup_status",
+        "cleanup_status"
+      ],
+      "properties": {
+        "case_id": {
+          "$ref": "common.schema.json#/$defs/case_id"
+        },
+        "test_id": {
+          "$ref": "common.schema.json#/$defs/test_id"
+        },
+        "capability": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "outcome": {
+          "$ref": "common.schema.json#/$defs/outcome"
+        },
+        "reason_code": {
+          "$ref": "common.schema.json#/$defs/reason_code"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/ref"
+          }
+        },
+        "evidence_grades": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/evidence_grade"
+          }
+        },
+        "setup_status": {
+          "enum": [
+            "ready",
+            "failed",
+            "not_needed"
+          ]
+        },
+        "cleanup_status": {
+          "enum": [
+            "complete",
+            "failed",
+            "skipped"
+          ]
+        },
+        "surface": {
+          "type": "string"
+        },
+        "review_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "common.schema.json#/$defs/id"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "PASS"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "reason_code": {
+                "const": "EXPECTED_MET"
+              },
+              "evidence_refs": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "FAIL"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "reason_code": {
+                "enum": [
+                  "EXPECTED_VIOLATED",
+                  "REQUIRED_OPERATION_MISSING",
+                  "SUT_ERROR"
+                ]
+              },
+              "evidence_refs": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "NOT_APPLICABLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "reason_code": {
+                "enum": [
+                  "CAPABILITY_NOT_CLAIMED",
+                  "OPTIONAL_FEATURE_ABSENT"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "NOT_RUN"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "reason"
+            ],
+            "properties": {
+              "reason_code": {
+                "enum": [
+                  "SETUP_FAILED",
+                  "FIXTURE_UNAVAILABLE",
+                  "ADAPTER_GAP",
+                  "HARNESS_SELF_TEST_FAILED",
+                  "HARNESS_FAILURE",
+                  "TRANSPORT_FAILED",
+                  "OBSERVATION_INCOMPLETE",
+                  "CORRELATION_UNCERTAIN",
+                  "BUDGET_EXCEEDED",
+                  "EVIDENCE_INTEGRITY_FAILED",
+                  "MANUAL_REVIEW_PENDING",
+                  "REVIEW_DISPUTED"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

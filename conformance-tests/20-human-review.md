@@ -58,8 +58,9 @@ holds `review` but only a Role named `qa`.
   as a pass."
 - **Method:** Automated
 - **Fixture:** F-HR, with `review_timeout` set to the shortest duration the
-  implementation accepts and no `on_timeout`.
-- **Action:** Execute `cts-suite`. Wait until `review_timeout` has passed; do not review.
+  implementation accepts and no `on_timeout`. The tester states the waiting budget
+  (1.6).
+- **Action:** Execute `cts-suite`. Within the budget, wait until the implementation records that `review_timeout` was reached; do not review.
   Evaluate the Gates.
 - **Expected:** The Result has no verdict and is not `actionable`, and `semantic-gate`
   fails with `non_actionable_results`. The implementation's records show that the
@@ -94,10 +95,12 @@ holds `review` but only a Role named `qa`.
   escalated."
 - **Method:** Automated
 - **Fixture:** F-HR with `review_timeout` set to the shortest duration the implementation
-  accepts, `on_timeout: escalate`, and `escalate_to: lead`. `P-LEAD` is a Person holding
+  accepts, `on_timeout: escalate`, and `escalate_to: lead`. The tester states the waiting
+  budget (1.6). `P-LEAD` is a Person holding
   `review` and only the Role `lead`.
 - **Action:** Execute `cts-suite`. Before the timeout, attempt the review as `P-LEAD`.
-  Wait until the timeout has passed; evaluate the Gates. Review with verdict `pass` as
+  Within the budget, wait until the implementation records the escalation; evaluate the
+  Gates. Review with verdict `pass` as
   `P-LEAD`; evaluate the Gates again.
 - **Expected:** The review before the timeout is rejected. After the timeout, the Result
   is still `awaiting_review`, with no verdict, and `semantic-gate` fails with

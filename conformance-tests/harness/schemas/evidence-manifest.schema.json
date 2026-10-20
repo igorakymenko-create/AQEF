@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.3/evidence-manifest.schema.json",
+  "title": "Evidence manifest 0.3",
+  "description": "Index of every evidence object of a run. raw_sha256 is computed over the exact bytes captured; redacted_sha256 over the exact bytes published. manifest_sha256 is SHA-256 over the RFC 8785 (JCS) serialization of this object without manifest_sha256.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "created_at",
+    "canonicalization",
+    "entries",
+    "manifest_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "$ref": "common.schema.json#/$defs/contract_version"
+    },
+    "run_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "canonicalization": {
+      "const": "RFC8785"
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raw_days",
+        "redacted_days"
+      ],
+      "properties": {
+        "raw_days": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "redacted_days": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_id",
+          "kind",
+          "raw_ref",
+          "raw_sha256",
+          "raw_size",
+          "collected_at",
+          "redaction_policy"
+        ],
+        "properties": {
+          "evidence_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "case_id": {
+            "$ref": "common.schema.json#/$defs/case_id"
+          },
+          "kind": {
+            "enum": [
+              "sut_request",
+              "sut_response",
+              "harness_call",
+              "harness_response",
+              "event_log",
+              "config",
+              "review",
+              "screenshot",
+              "pipeline_log",
+              "cli_trace",
+              "probe",
+              "statement",
+              "other"
+            ]
+          },
+          "raw_ref": {
+            "$ref": "common.schema.json#/$defs/ref"
+          },
+          "raw_sha256": {
+            "$ref": "common.schema.json#/$defs/sha256"
+          },
+          "raw_size": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "redacted_ref": {
+            "$ref": "common.schema.json#/$defs/ref"
+          },
+          "redacted_sha256": {
+            "$ref": "common.schema.json#/$defs/sha256"
+          },
+          "redaction_policy": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "collected_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "manifest_sha256": {
+      "$ref": "common.schema.json#/$defs/sha256"
+    }
+  }
+}

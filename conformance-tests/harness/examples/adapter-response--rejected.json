@@ -1,0 +1,19 @@
+{
+  "contract_version": "0.3",
+  "operation": "load_config",
+  "correlation_id": "corr-0101",
+  "success": true,
+  "data": {
+    "sut": {
+      "outcome": "rejected",
+      "status": 422,
+      "error_code": "missing_field",
+      "body_ref": "evidence://res-0101.json",
+      "body_sha256": "764011bcf860a6cb78c7d8c8c8f4a4ef484cefebda59d27883e209eaf5899321",
+      "surface": "appendix_c_rest"
+    }
+  },
+  "evidence_refs": [
+    "evidence://res-0101.json"
+  ]
+}

@@ -39,8 +39,8 @@ not run, and a test with any case `NOT_RUN` is not reported as passed.
 |---|---|
 | **Automated** | The outcome is read from the implementation's own records or responses: the Results, Gate Results, Release Decisions, Execution records, and errors it produces. |
 | **Harness** | The outcome is read from the test harness (1.4): which calls the subject and the Judge actually received, in what order, how many times. |
-| **Inspection** | A reviewer examines the implementation's documentation, configuration, or records and states what was found. Used where a requirement cannot be observed from outside, such as how scheduling decisions are recorded. |
-| **Declaration** | The implementation states how it meets the requirement, and the reviewer records the statement and whether it is plausible. Used only where neither of the above can reach, such as whether a Validator is pure in the sense of Volume V. A Declaration is evidence of intent, not of behavior, and a report says so. |
+| **Inspection** | A reviewer, following 1.8, examines the implementation's documentation, configuration, or records and states what was found. Used where a requirement cannot be observed from outside, such as how scheduling decisions are recorded. |
+| **Declaration** | The implementation states how it meets the requirement, and the reviewer records the statement and whether it is plausible, following 1.8. Used only where neither of the above can reach, such as whether a Validator is pure in the sense of Volume V. A Declaration is evidence of intent, not of behavior, and a report says so. |
 
 Tests are written against observable behavior. Where an implementation exposes it
 through the REST API (Appendix C), the API is the natural place to observe it; where it
@@ -62,6 +62,12 @@ harness. Neither stand-in is a probabilistic subject or a real Judge, and the
 specification does not require one to be: the subject is whatever its Environment points
 to (Volume II), and a scripted Judge still satisfies Independent Oracles, since its
 identifier differs from the subject's.
+
+The interfaces of the harness, the adapter between tester and implementation, the
+records a run keeps, and the format of the test report are specified in the **Harness
+Contract** (`harness/`), a separate, non-normative document versioned on its own. It
+binds a harness, never an implementation, and adds no test: where it and this document
+disagree, this document is right.
 
 ## 1.5 Notation
 
@@ -87,7 +93,7 @@ tests ran before it.
   Judge are reset: their call logs are emptied, their scripted behaviors set to the
   defaults of Sections 2.2 and 2.3 or to what the test names, and every counter cleared,
   so that a "first call" is the first call within this test. Each variant gets its own
-  session. Calls are logged against the test and variant they belong to, and a harness
+  session. (Harness Contract §8.2 and §8.3.) Calls are logged against the test and variant they belong to, and a harness
   observation counts only those. A test that switches a behavior during its **Action**
   changes it from the next call on, without clearing the counters.
 - **Setup.** A test whose **Fixture** names a postcondition fixture (2.7) builds it in
@@ -98,13 +104,48 @@ tests ran before it.
   as a `FAIL` there.
 - **Reusing a configuration.** "As CT-xxx" in a **Fixture**, without "after", reuses that
   test's configuration only. No test relies on another test having run.
+- **Waiting.** Where a test waits for something to happen (a review timeout, a pipeline
+  timeout), the tester states a budget before the run: the configured duration plus a
+  grace period. The tester watches for the event the test names, such as a record or a
+  change of state, rather than sleeping for a fixed time, and stops at the end of the
+  budget. If the shortest duration the implementation accepts is longer than the run can
+  wait, the test is `NOT_RUN`, with that reason. Durations are measured by the harness
+  on a monotonic clock; the harness's time is never taken as the implementation's.
 
 ## 1.7 Test report
 
 A test report gives, for each test and each case (1.2), its outcome and, for `NOT_RUN`
-and `NOT_APPLICABLE`, the reason. It also lists every requirement of Section 90 whose
-tests and cases were all `NOT_RUN` or `NOT_APPLICABLE` for that implementation: those
-requirements were not verified, and a summary of the run says so rather than counting
-them as covered. A requirement traced to a case is verified only by that case, never by
-the outcome of the test it belongs to.
+and `NOT_APPLICABLE`, the reason. It also gives every requirement of Section 90 a state,
+from the tests and cases Section 90 traces it to, leaving out those `NOT_APPLICABLE`:
+
+| Tests and cases traced | State |
+|---|---|
+| Any `FAIL` | violated |
+| Otherwise any `NOT_RUN`, or any the run left out | unverified |
+| Otherwise at least one `PASS` | verified |
+| Otherwise | not applicable |
+
+A requirement is therefore verified only when every applicable test or case traced to
+it passed: a `PASS` in one test never covers a `NOT_RUN` in another, and a requirement
+traced to a case is decided by that case, never by the outcome of the test it belongs
+to. A row of status Restates takes the state of the row it restates. A summary of the
+run lists every unverified requirement rather than counting it as covered. The report's
+format is the Harness Contract's (§14, §15).
+
+## 1.8 Review of Inspection and Declaration tests
+
+A test whose method is Inspection or Declaration is decided by a named reviewer, in a
+way a second reviewer can repeat:
+
+- The reviewer turns **Expected** into a checklist, one item per statement, and records
+  for each item whether it is met and the evidence used: an identifier of the record,
+  document, response, or screen, kept with the test report.
+- The test is `PASS` only when every item is met and has its evidence recorded. An item
+  without evidence, or one the reviewer cannot decide, makes the test `NOT_RUN`, never
+  `PASS`. An item shown not to be met makes it `FAIL`.
+- Where the outcome is disputed, a second reviewer decides from the same evidence
+  without seeing the first decision. Until both agree, the test is `NOT_RUN`, and the
+  report keeps both records.
+
+The record of a review is specified in the Harness Contract (§13).
 

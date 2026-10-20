@@ -1,0 +1,97 @@
+{
+  "fixture_id": "F-REVIEWED",
+  "recipe_version": "0.3.0",
+  "cts_ref": "CTS WD7 §2.7",
+  "base": "F-BASE",
+  "base_changes": [
+    "add semantic-gate (CTS 13.1) to the Project's quality_gates"
+  ],
+  "behaviors": {
+    "cts-scripted-subject@1": "SR-OK",
+    "cts-scripted-judge@1": "J-PASS-60"
+  },
+  "steps": [
+    {
+      "step_id": "load",
+      "operation": "load_config",
+      "arguments": {
+        "project_id": "${project_id}",
+        "config_ref": "cts://fixture"
+      },
+      "actor_ref": "identity://P-APPROVER"
+    },
+    {
+      "step_id": "b1.exec",
+      "operation": "execute",
+      "arguments": {
+        "project_id": "${project_id}",
+        "suite": "cts-suite",
+        "environment": "cts-env"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "load"
+      ]
+    },
+    {
+      "step_id": "b1.wait",
+      "operation": "poll_execution",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b1.exec.batch_id}",
+        "budget_ms": 120000
+      },
+      "after": [
+        "b1.exec"
+      ]
+    },
+    {
+      "step_id": "b1.gates",
+      "operation": "evaluate_gates",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b1.exec.batch_id}"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "b1.wait"
+      ]
+    },
+    {
+      "step_id": "results",
+      "operation": "get_results",
+      "arguments": {
+        "project_id": "${project_id}",
+        "execution_id": "${b1.exec.execution_ids[0]}"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "b1.gates"
+      ]
+    },
+    {
+      "step_id": "review",
+      "operation": "review_result",
+      "arguments": {
+        "project_id": "${project_id}",
+        "execution_id": "${b1.exec.execution_ids[0]}",
+        "result_id": "${results.expectation_result_id}",
+        "verdict": "pass"
+      },
+      "actor_ref": "identity://P-REVIEWER",
+      "after": [
+        "results"
+      ]
+    }
+  ],
+  "setup_checks": [
+    {
+      "check_id": "reviewed",
+      "predicate": "The Human Reviewer Result is recorded, with resolves naming the Judge's Result.",
+      "from_step": "review"
+    }
+  ],
+  "cleanup": [
+    "delete project ${project_id}"
+  ]
+}

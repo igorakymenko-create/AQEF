@@ -1,0 +1,31 @@
+{
+  "review_id": "rev-023-1",
+  "test_id": "CT-REL-023",
+  "case_id": "CT-REL-023",
+  "method": "inspection",
+  "reviewer": {
+    "id": "reviewer://a.tester",
+    "role": "cts-reviewer",
+    "affiliation": "independent"
+  },
+  "checklist": [
+    {
+      "item_id": "1",
+      "statement": "The reviewer reaches every link, citing the record used at each step.",
+      "answer": "met",
+      "evidence_refs": [
+        "evidence://rel-023-release.json",
+        "evidence://rel-023-report.json",
+        "evidence://rel-023-snapshot.json",
+        "evidence://rel-023-gates.json",
+        "evidence://rel-023-override.json",
+        "evidence://rel-023-results.json",
+        "evidence://rel-023-conversation.json"
+      ]
+    }
+  ],
+  "decision": "PASS",
+  "reason_code": "VERIFIED",
+  "signed_at": "2026-10-19T19:00:00Z",
+  "signature_ref": "evidence://sig-rev-023-1"
+}

@@ -1,6 +1,6 @@
 # AQEF Conformance Test Specification
 
-**Status:** Working Draft 6. Tests for AQEF Working Draft 0.38; valid for 0.39, which
+**Status:** Working Draft 7. Tests for AQEF Working Draft 0.38; valid for 0.39, which
 makes no normative change.
 
 **License:** CC BY 4.0, as the specification.
@@ -48,7 +48,7 @@ when the requirement it checks changes.
 
 | Section | Content |
 |---|---|
-| 1 | Conventions: test format, outcomes, verification methods, test harness, isolation, test report |
+| 1 | Conventions: test format, outcomes, verification methods, test harness, isolation, test report, review of Inspection and Declaration |
 | 2 | Fixtures: the base configuration, the scripted subject and Judge, postcondition fixtures, harness self-test |
 | 10 | Configuration and Definition |
 | 11 | Execution and Evidence |
@@ -64,10 +64,26 @@ when the requirement it checks changes.
 | 25 | Capabilities `plugins:<type>` |
 | 26 | Capabilities `cli`, `sdk:<language>`, `reference_ui`, `test_type:<name>` |
 | 90 | Traceability: requirement → test |
+| `harness/` | Harness Contract: a separate document specifying the test infrastructure (1.4) |
 
-### 0.6 Changes from Working Draft 5
+### 0.6 Changes
 
-Working Draft 6 answers an external review of Working Draft 5 (20 findings). No
+**Working Draft 7** answers a feasibility review of Working Draft 6: whether an
+independent developer can carry out each test without asking the author.
+
+- **Review.** Inspection and Declaration tests are decided by a checklist with recorded
+  evidence, and a disputed outcome goes to a second reviewer (1.8).
+- **Waiting.** A test that waits for a timeout has a stated budget and watches for an
+  event instead of sleeping (1.6); CT-HRV-003, CT-HRV-005, CT-REL-025, and CT-EXE-012
+  are bounded accordingly.
+- **Tests revised.** CT-ASM-014 may use a documented fault hook; CT-DSR-003 names how
+  regeneration is requested and is `NOT_APPLICABLE` where it is not offered; CT-PLG-005
+  calls its repeated runs a sampled check, not a proof.
+- **Harness Contract.** The test infrastructure is specified in a separate document,
+  `harness/` (1.4). Requirement states in a test report follow a stated rule: verified
+  only when every applicable test or case traced to the requirement passed (1.7).
+
+**Working Draft 6** answers an external review of Working Draft 5 (20 findings). No
 requirement of the specification changed; the tests did.
 
 - **Outcomes.** **Fails if** is no longer a closed list: any departure from **Expected**

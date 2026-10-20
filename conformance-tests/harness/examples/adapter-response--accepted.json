@@ -1,0 +1,23 @@
+{
+  "contract_version": "0.3",
+  "operation": "execute",
+  "correlation_id": "corr-0007",
+  "success": true,
+  "data": {
+    "sut": {
+      "outcome": "accepted",
+      "status": 202,
+      "body_ref": "evidence://res-0007.json",
+      "body_sha256": "d564fea2ab78b883b2dd5399534dee628a4aa82e0aff67910a88871186589707",
+      "resource_refs": [
+        "batch://b-1"
+      ]
+    },
+    "normalized": {
+      "batch_id": "b-1"
+    }
+  },
+  "evidence_refs": [
+    "evidence://res-0007.json"
+  ]
+}

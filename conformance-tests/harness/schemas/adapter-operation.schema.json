@@ -1,0 +1,1006 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.3/adapter-operation.schema.json",
+  "title": "Adapter operation request 0.3",
+  "description": "One request from the CTS runner to the adapter or the harness. Operations whose arguments are typed in $defs/args are fixed in 0.3; for the others, arguments are an object whose fields the Stage C operation profile fixes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "operation",
+    "run_id",
+    "case_id",
+    "session_id",
+    "correlation_id",
+    "timeout_ms",
+    "arguments"
+  ],
+  "properties": {
+    "contract_version": {
+      "$ref": "common.schema.json#/$defs/contract_version"
+    },
+    "operation": {
+      "$ref": "common.schema.json#/$defs/operation"
+    },
+    "run_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "case_id": {
+      "$ref": "common.schema.json#/$defs/case_id"
+    },
+    "session_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "correlation_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "timeout_ms": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3600000,
+      "description": "Bound on this one operation. A test's waiting budget (CTS 1.6) is separate and may span many operations."
+    },
+    "actor_ref": {
+      "$ref": "common.schema.json#/$defs/ref",
+      "description": "The Principal the SUT request is made as (CTS 14.1). Absent for harness operations. raw_request with unauthenticated: true sends no credentials."
+    },
+    "idempotency_key": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "arguments": {
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "describe"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/describe"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "begin_case"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/begin_case"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "end_case"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/end_case"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "cleanup"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/cleanup"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "reset_harness"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/reset_harness"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "configure_behavior"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/configure_behavior"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "read_call_log"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/read_call_log"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "inject_failure"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/inject_failure"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "clock_capabilities"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/clock_capabilities"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "self_test"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/self_test"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "close_observation"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/close_observation"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "provision_principal"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/provision_principal"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "load_config"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/load_config"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "execute"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/execute"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "poll_execution"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/poll_execution"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "get_conversation"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/get_conversation"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "get_results"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/get_results"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "evaluate_gates"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/evaluate_gates"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "override_gate"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/override_gate"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "review_result"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/review_result"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "reassess_result"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/reassess_result"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "get_report"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/get_report"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "record_release"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/record_release"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "raw_request"
+          }
+        },
+        "required": [
+          "operation"
+        ]
+      },
+      "then": {
+        "properties": {
+          "arguments": {
+            "$ref": "#/$defs/args/raw_request"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "args": {
+      "describe": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {}
+      },
+      "begin_case": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "test_id",
+          "case_id"
+        ],
+        "properties": {
+          "test_id": {
+            "$ref": "common.schema.json#/$defs/test_id"
+          },
+          "case_id": {
+            "$ref": "common.schema.json#/$defs/case_id"
+          },
+          "variant": {
+            "type": "string",
+            "pattern": "^[a-z]$"
+          },
+          "project_alias": {
+            "const": "cts-base"
+          }
+        }
+      },
+      "end_case": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {}
+      },
+      "cleanup": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "project_id"
+        ],
+        "properties": {
+          "project_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          }
+        }
+      },
+      "reset_harness": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {}
+      },
+      "configure_behavior": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "endpoint_id",
+          "behavior"
+        ],
+        "properties": {
+          "endpoint_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "behavior": {
+            "type": "string",
+            "pattern": "^(SR|J|H)-[A-Z0-9-]+(\\(.*\\))?$"
+          },
+          "applies": {
+            "enum": [
+              "now",
+              "next_call"
+            ],
+            "default": "next_call"
+          }
+        }
+      },
+      "read_call_log": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {
+          "endpoint_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "after_sequence": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "inject_failure": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "profile",
+          "target"
+        ],
+        "properties": {
+          "profile": {
+            "enum": [
+              "subject.pre_response_503",
+              "judge.unreachable",
+              "validator.crash",
+              "validator.malformed",
+              "subject.latency",
+              "review.timeout",
+              "tool.boundary_attempt"
+            ]
+          },
+          "target": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "parameters": {
+            "type": "object"
+          }
+        }
+      },
+      "clock_capabilities": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {}
+      },
+      "self_test": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {
+          "behaviors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "close_observation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "drain_ms"
+        ],
+        "properties": {
+          "drain_ms": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 600000
+          }
+        }
+      },
+      "provision_principal": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "principal",
+          "kind",
+          "permissions"
+        ],
+        "properties": {
+          "principal": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "kind": {
+            "enum": [
+              "person",
+              "service_account"
+            ]
+          },
+          "owner": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "permissions"
+              ],
+              "properties": {
+                "name": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
+                "permissions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "load_config": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "project_id"
+        ],
+        "properties": {
+          "project_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "config": {
+            "type": "object"
+          },
+          "config_ref": {
+            "$ref": "common.schema.json#/$defs/ref"
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "config"
+            ]
+          },
+          {
+            "required": [
+              "config_ref"
+            ]
+          }
+        ]
+      },
+      "execute": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "project_id",
+          "suite",
+          "environment"
+        ],
+        "properties": {
+          "project_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "suite": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "environment": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "scenarios": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "poll_execution": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "project_id",
+          "batch_id",
+          "budget_ms"
+        ],
+        "properties": {
+          "project_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "batch_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "budget_ms": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      },
+      "get_conversation": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "project_id",
+          "execution_id"
+        ],
+        "properties": {
+          "project_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "execution_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          }
+        }
+      },
+      "get_results": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "project_id",
+          "execution_id"
+        ],
+        "properties": {
+          "project_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "execution_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          }
+        }
+      },
+      "evaluate_gates": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "project_id",
+          "batch_id"
+        ],
+        "properties": {
+          "project_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "batch_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          }
+        }
+      },
+      "override_gate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "project_id",
+          "gate",
+          "gate_result_id",
+          "batch_id",
+          "justification"
+        ],
+        "properties": {
+          "project_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "gate": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "gate_result_id": {
+            "type": "string"
+          },
+          "batch_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "justification": {
+            "type": "string"
+          }
+        }
+      },
+      "review_result": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "project_id",
+          "execution_id",
+          "result_id",
+          "verdict"
+        ],
+        "properties": {
+          "project_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "execution_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "result_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "verdict": {
+            "enum": [
+              "pass",
+              "fail"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "supporting_evidence": {}
+        }
+      },
+      "reassess_result": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "project_id",
+          "execution_id",
+          "result_id",
+          "oracle"
+        ],
+        "properties": {
+          "project_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "execution_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "result_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "oracle": {
+            "$ref": "common.schema.json#/$defs/id"
+          }
+        }
+      },
+      "get_report": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "project_id"
+        ],
+        "properties": {
+          "project_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "report_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "batch_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "report_id"
+            ]
+          },
+          {
+            "required": [
+              "batch_id"
+            ]
+          }
+        ]
+      },
+      "record_release": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "project_id",
+          "body"
+        ],
+        "properties": {
+          "project_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "body": {
+            "type": "object",
+            "description": "The Release Decision body of CTS 14.1, as given by the test; sent unmodified."
+          }
+        }
+      },
+      "raw_request": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "method",
+          "path"
+        ],
+        "properties": {
+          "method": {
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "pattern": "^/"
+          },
+          "query": {
+            "type": "object"
+          },
+          "body": {},
+          "unauthenticated": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+    }
+  }
+}

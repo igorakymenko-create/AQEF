@@ -42,7 +42,11 @@ claim, the test is `NOT_APPLICABLE`. Static Datasets are core (Sections 10 and 1
   `query: "Gen-2"`. `s-greeting` uses `dataset: ds-gen@1.0.0` instead of `variables`;
   scripted subject `SR-ECHO`.
 - **Action:** Generate `ds-gen@1.0.0`; execute `cts-suite`. Ask the implementation to
-  generate `ds-gen` again; execute `cts-suite` again.
+  generate `ds-gen` again, by the operation it documents for that (through the REST API,
+  `POST .../datasets/ds-gen/versions`, where that triggers generation); retrieve
+  `ds-gen@1.0.0` and every version the request produced; execute `cts-suite` again. If
+  the implementation documents no way to generate a Dataset again, which the
+  specification does not require, the outcome is `NOT_APPLICABLE` (1.2).
 - **Expected:** Both Executions send the Prompt `Gen-1`. The second generation, if
   accepted, produced a new version; the rows of `ds-gen@1.0.0` are unchanged.
 - **Fails if:** The second Execution sends `Gen-2`, or `ds-gen@1.0.0`'s rows changed.

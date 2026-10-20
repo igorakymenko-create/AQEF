@@ -1,0 +1,83 @@
+{
+  "fixture_id": "F-SIGNALS",
+  "recipe_version": "0.3.0",
+  "cts_ref": "CTS WD7 §2.7",
+  "base": "F-MULTI",
+  "base_changes": [
+    "CT-REL-035's configuration: semantic-gate; execution: { scheduling: sequential, retry: { max_attempts: 2, on: infrastructure_failure } }"
+  ],
+  "behaviors": {
+    "cts-scripted-subject@1": "H-REL-035-SUBJECT",
+    "cts-scripted-judge@1": "J-MAP(J-PASS-60, J-PASS-60, J-PASS-90)"
+  },
+  "steps": [
+    {
+      "step_id": "load",
+      "operation": "load_config",
+      "arguments": {
+        "project_id": "${project_id}",
+        "config_ref": "cts://fixture"
+      },
+      "actor_ref": "identity://P-APPROVER"
+    },
+    {
+      "step_id": "b1.exec",
+      "operation": "execute",
+      "arguments": {
+        "project_id": "${project_id}",
+        "suite": "cts-suite",
+        "environment": "cts-env"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "load"
+      ]
+    },
+    {
+      "step_id": "b1.wait",
+      "operation": "poll_execution",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b1.exec.batch_id}",
+        "budget_ms": 120000
+      },
+      "after": [
+        "b1.exec"
+      ]
+    },
+    {
+      "step_id": "b1.gates",
+      "operation": "evaluate_gates",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b1.exec.batch_id}"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "b1.wait"
+      ]
+    },
+    {
+      "step_id": "report",
+      "operation": "get_report",
+      "arguments": {
+        "project_id": "${project_id}",
+        "batch_id": "${b1.exec.batch_id}"
+      },
+      "actor_ref": "identity://P-RELEASE",
+      "after": [
+        "b1.gates"
+      ]
+    }
+  ],
+  "setup_checks": [
+    {
+      "check_id": "report",
+      "predicate": "A Report for the batch can be retrieved.",
+      "from_step": "report"
+    }
+  ],
+  "cleanup": [
+    "delete project ${project_id}"
+  ]
+}

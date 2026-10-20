@@ -1,0 +1,19 @@
+{
+  "event_id": "ev-0042",
+  "run_id": "run-1",
+  "case_id": "CT-ASM-001",
+  "session_id": "sess-ASM-001",
+  "correlation_id": "corr-0042",
+  "sequence": 3,
+  "type": "call_received",
+  "source": "harness",
+  "endpoint_id": "cts-scripted-subject@1",
+  "behavior": "SR-EMPTY",
+  "clock_id": "harness-host-1",
+  "observed_monotonic_ns": 1840000000,
+  "observed_at": "2026-10-19T18:00:00Z",
+  "raw_ref": "evidence://call-0042.json",
+  "raw_sha256": "daec4ba069f441e9ac82cb854de5d3becc02706ea9d86dcf1a7a0e53635d2f68",
+  "redacted_ref": "evidence://call-0042.redacted.json",
+  "redacted_sha256": "678a81b89c1a9519f2144b3f9686be5e7fcf283ca5983a6cdbe4d5a9fa829e0d"
+}

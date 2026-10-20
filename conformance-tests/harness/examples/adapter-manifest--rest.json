@@ -1,0 +1,74 @@
+{
+  "contract_version": "0.3",
+  "adapter_id": "example-rest-adapter",
+  "adapter_version": "0.3.0",
+  "harness_version": "0.3.0",
+  "sut": {
+    "name": "Example Engine",
+    "version": "1.2",
+    "instance_ref": "secret://sut-test-instance"
+  },
+  "surface": "appendix_c_rest",
+  "conformance_statement_ref": "evidence://statement-example-engine-1.2.json",
+  "operations": [
+    {
+      "operation": "load_config",
+      "status": "supported",
+      "maps_to": "PUT /projects/{project}"
+    },
+    {
+      "operation": "execute",
+      "status": "supported",
+      "maps_to": "POST /projects/{project}/executions"
+    },
+    {
+      "operation": "evaluate_gates",
+      "status": "supported",
+      "maps_to": "POST /projects/{project}/gates/check"
+    },
+    {
+      "operation": "reassess_result",
+      "status": "supported",
+      "maps_to": "POST .../results/{result}/reassess",
+      "probe_ref": "evidence://probe-reassess.json"
+    },
+    {
+      "operation": "recheck_validator",
+      "status": "unsupported",
+      "probe_ref": "evidence://probe-recheck.json"
+    },
+    {
+      "operation": "run_pipeline",
+      "status": "not_configured"
+    },
+    {
+      "operation": "configure_behavior",
+      "status": "supported"
+    },
+    {
+      "operation": "close_observation",
+      "status": "supported"
+    }
+  ],
+  "identity_modes": [
+    "person",
+    "service_account",
+    "unauthenticated"
+  ],
+  "model_binding": "per_project",
+  "clock_profile": "monotonic_real",
+  "fault_profiles": [
+    {
+      "profile": "judge.unreachable",
+      "mechanism": "harness_only"
+    },
+    {
+      "profile": "validator.crash",
+      "mechanism": "test_plugin",
+      "documentation_ref": "evidence://cts-crash-plugin.md"
+    }
+  ],
+  "capability_adapters": [
+    "cli"
+  ]
+}
