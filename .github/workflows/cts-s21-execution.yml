@@ -1,0 +1,46 @@
+name: CTS Stage C S2.1 Execution Engine
+on:
+  push:
+    paths:
+      - 'conformance-tests/s2_execution/**'
+      - '.github/workflows/cts-s21-execution.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  execution:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout immutable commit
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Dependencies
+        run: python -m pip install 'jsonschema==4.23.0' 'referencing>=0.30'
+      - name: Published contract validation
+        run: python conformance-tests/harness/tools/validate.py
+      - name: S2.1 Execution Engine + fault injection
+        run: |
+          cd conformance-tests/s2_execution
+          python -m unittest discover -p 'test_*.py' -v
+      - name: Existing S1 and foundation regression
+        run: |
+          cd conformance-tests/s1_configuration
+          python -m unittest discover -p 'test_*.py' -v
+      - name: S2.1 traceable mock outcomes
+        run: |
+          cd conformance-tests/s2_execution
+          python - <<'PY'
+          import json,os
+          from engine import run_case
+          print(json.dumps({'cts_commit':os.environ['GITHUB_SHA'],
+            'scope':'S2.1_MOCK_ONLY',
+            'CT-EXE-003':run_case('CT-EXE-003'),
+            'CT-EXE-008':run_case('CT-EXE-008'),
+            'broken_retry':run_case('CT-EXE-003','failed_attempt_record'),
+            'broken_conversation':run_case('CT-EXE-008','alter_response')},indent=2))
+          PY
