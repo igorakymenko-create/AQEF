@@ -15,6 +15,7 @@ SCHEMA_TOOL=HERE.parent/'tools'
 if str(SCHEMA_TOOL) not in sys.path:sys.path.insert(0,str(SCHEMA_TOOL))
 import validate as v
 from harness import Harness,ENDPOINTS
+import selftest
 
 MAX_BODY=1024*1024
 
@@ -37,6 +38,22 @@ class Evidence:
                    'collected_at':datetime.now(timezone.utc).isoformat().replace('+00:00','Z')}
             self.entries.append((run_id,entry))
             return entry['raw_ref'],entry['raw_sha256']
+    def resolve_verified(self, ref, run_id):
+        """Read through the evidence resolver and validate exact captured bytes."""
+        if not ref.startswith('evidence://'):
+            raise ValueError('invalid evidence reference')
+        name=ref[len('evidence://'):]
+        if not name or '/' in name or '\\' in name or name in ('.','..'):
+            raise ValueError('unsafe evidence reference')
+        with self.lock:
+            matches=[e for rid,e in self.entries if rid==run_id and e['raw_ref']==ref]
+            if len(matches)!=1:
+                raise ValueError('evidence ref not uniquely registered in run')
+            entry=matches[0]
+            raw=(self.root/name).read_bytes()
+            if len(raw)!=entry['raw_size'] or sha(raw)!=entry['raw_sha256']:
+                raise ValueError('raw evidence integrity violation')
+            return raw
     def manifest(self,run_id):
         body={'schema_version':'0.4','run_id':run_id,
               'created_at':datetime.now(timezone.utc).isoformat().replace('+00:00','Z'),
@@ -91,8 +108,7 @@ class App:
             elif op=='end_case':
                 data={'session_id':sid,'ended':True}
             elif op=='self_test':
-                # A real comprehensive self_test is run by the separate unittest suite.
-                return 200,self.err(req,'ADAPTER_SURFACE_UNSUPPORTED','self_test contract operation pending full CTS 2.8 behavior matrix',origin='adapter')
+                data=selftest.run(self.harness,sid,arg.get('behaviors'))
             else:
                 return 200,self.err(req,'ADAPTER_SURFACE_UNSUPPORTED','SUT operation out of scope in S0.2',origin='adapter')
             return 200,self.resp(req,True,data)

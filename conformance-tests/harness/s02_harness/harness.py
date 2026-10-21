@@ -68,7 +68,7 @@ class Harness:
         if kind not in ('subject','judge'):raise ValueError('unknown kind')
         endpoint_id=endpoint_id or ENDPOINTS[kind]
         with s.lock:
-            if s.phase not in ('running','closed'):raise ValueError('unknown session phase')
+            if s.phase not in ('running','draining','closed'):raise ValueError('unknown session phase')
             if s.phase=='closed':
                 self._emit(s,'late_call',kind=kind,endpoint_id=endpoint_id,phase=phase,correlation_id=correlation_id)
                 raise RuntimeError('late call after observation closure')
