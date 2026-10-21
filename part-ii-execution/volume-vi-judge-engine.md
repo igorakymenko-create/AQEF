@@ -20,6 +20,7 @@ Volume V's Validator Pipeline hands off.
 | Consensus | How disagreement among Multi Judge Results gets resolved into one verdict |
 | Voting | One specific Consensus mechanism — counting discrete verdicts against a threshold |
 | Confidence | How a Judge produces its own Confidence value (production, not consumption — Chapter 6 covers consumption) |
+| Admission | Whether a Judge's verdicts agree with human judgment well enough to use it at all, shown before use |
 | Calibration | Whether a Judge's stated Confidence actually tracks its accuracy, against a reference |
 | Human Review | Where the Human Reviewer Oracle gets invoked — by Contract, low Confidence, disagreement, or as calibration ground truth |
 | Judge Drift | What Semantic Regression (Volume X) is to the subject, Judge Drift is to the Oracle |
@@ -47,7 +48,8 @@ The baseline case, the same role Single LLM plays among architectural patterns (
 7): one Judge assesses one Conversation against one Contract clause, producing one
 Confidence-qualified Result. Every other section below is naturally described as
 "Single Judge plus one added mechanism" — Multi Judge adds more Judges, Consensus and
-Voting add a way to reconcile them, Calibration and Judge Drift add tracking over time,
+Voting add a way to reconcile them, Admission adds a check before use, Calibration and
+Judge Drift add tracking over time,
 and Human Review adds a different kind of Oracle entirely. Single Judge alone already
 satisfies everything the Glossary and Chapter 3 require of a Judge; nothing below is
 required for correctness, only for the specific concerns — independence, disagreement,
@@ -143,6 +145,57 @@ reflects the Judge's own uncertainty in its verdict, not the underlying Quality
 dimension's importance (Business Quality weighting, Chapter 2) and not how many other
 Judges agreed with it (Consensus).
 
+## Admission
+
+Admission asks the question that comes before the others: whether a Judge's verdicts
+agree with human judgment well enough for it to be used at all. A Judge returns a verdict
+and a Confidence whatever its quality. Nothing in its output shows whether the verdict
+tracked reality, and a Judge that reports a defect in everything, with total conviction,
+looks diligent until its verdicts are compared with someone else's. Admission makes that
+comparison before the Judge's Results are relied on, against a **Reference Set**: items
+whose correct verdict Human Reviewers have established, which the Judge then assesses.
+
+A Judge configuration is **admitted** when a record of its agreement with a Reference Set
+shows that the agreement meets a threshold the Project set (Appendix C §C.3, Admission).
+The record MUST state the Reference Set and its version, how many items were scored and
+how their correct verdicts were distributed, the raw agreement, and an agreement measure
+corrected for chance, by name and value. Raw agreement alone misleads: where most items
+carry one verdict, a Judge that always gives it agrees with most of them and has shown
+nothing. Which measure to use and what threshold is enough are a Project's decisions, as
+the size of an Aggregate Basis is (Volume I, Chapter 6); this specification requires only
+that they are stated. The record is never modified, and a Judge that does not reach the
+threshold is recorded as not admitted.
+
+Admission belongs to one Judge configuration, as "the same Oracle" is decided on a
+Result's `oracle` (Appendix C §C.7): a changed model, prompt, or criteria is a different
+Judge and needs its own admission. A Multi Judge panel is admitted when every Judge
+configuration in it is. A Project MAY require admission before a Judge's Results count:
+a Quality Gate that declares `require_admitted_judges` (Appendix A §A.10) treats a Result
+from a Judge configuration without an admission as blocking, and records why
+(`judge_not_admitted`, Appendix A §A.12). Whether or not any Gate requires it, every
+Report shows the Judges in its scope that have not been admitted (Volume XI).
+
+A Reference Set is evidence about a Judge, and the rules that keep Seeded Controls
+honest apply to it (Volume VIII):
+
+- its verdicts SHOULD be established by Human Reviewers independent of whoever tunes the
+  Judge, and SHOULD NOT be updated from how the Judge performs on it;
+- items used to align the reviewers with each other SHOULD be left out of the score;
+- each reviewer SHOULD label each item without seeing the others' labels, and every
+  disagreement SHOULD be settled by an arbitration whose reasoning is recorded and
+  referenced from the record of admission;
+- it SHOULD draw items from more than one source, so that a Judge is not admitted on one
+  kind of input alone;
+- it SHOULD be versioned like a Dataset (Volume IV); an item seen by someone who tunes the
+  Judge is exposed, and SHOULD NOT be used to admit that Judge again.
+
+Admission, Calibration, and Seeded Controls answer different questions. Admission asks,
+before use, whether a Judge's verdicts agree with human judgment. Calibration (below)
+asks, over time, whether its Confidence tracks its accuracy. Seeded Controls ask, in each
+run, whether it can still see a class of defect, and whether it reports one that is not
+there. A Judge that is not admitted is not one to gate on; a Project MAY still use it to
+sort Results for a Human Reviewer, who then decides (Volume VII).
+
 ## Calibration
 
 Calibration checks whether a Judge's stated Confidence values actually track its real
@@ -161,12 +214,14 @@ Calibration looks back: it can show that a Judge has become unreliable only afte
 enough reviewed history has accumulated to reveal it, and every Result produced in the
 meantime is counted. It cannot catch a Judge that went blind today, whether through a
 changed prompt, a model version that resolves differently behind the same identifier,
-or a configuration error. That is the job of a Seeded Control (Volume VIII): a Scenario
-with a planted, known defect, run in the same Execution batch, that the Judge must
-detect before its other Results in that run are treated as `actionable`. The two
-mechanisms answer different questions. Calibration asks whether a Judge's Confidence
-tracks its accuracy over time. A Seeded Control asks whether the Judge can see this
-class of defect at all, right now.
+or a configuration error. That is the job of Seeded Controls (Volume VIII), run in the
+same Execution batch: a defect control, with a planted, known defect the Judge must
+detect, and a clean control, free of it, that the Judge must pass, before its other
+Results in that run are treated as `actionable`. The two mechanisms answer different
+questions. Calibration asks whether a Judge's Confidence tracks its accuracy over time. A
+Seeded Control asks whether the Judge can see this class of defect at all, right now,
+and only where it is there. Neither replaces Admission (above), which compares a Judge's
+verdicts with human judgment before it is used.
 
 ## Human Review
 
@@ -179,13 +234,13 @@ Scenario (safety-critical or high-stakes Business Quality cases, Chapter 2); Cha
 Confidence Model routes a Judge Result below its Contract's Confidence threshold to
 Human Review before it is allowed to affect an aggregate; unresolved Consensus
 disagreement among independent Judges is itself grounds for Human Review, above; and a
-Human Reviewer's Results serve as the reference Calibration and Judge Drift (below)
-measure against. The sixth is narrower: a Human Reviewer settles a Seeded Control — confirming that its
+Human Reviewer's Results serve as the reference Admission, Calibration, and Judge Drift
+(above and below) measure against. The sixth is narrower: a Human Reviewer settles a Seeded Control — confirming that its
 planted defect actually reached the Evidence where the control declares
 `confirmed_by: human_reviewer`, or confirming a control that no independent reference
 Oracle catches before it is used to gate an Oracle (Volume VIII). A Human Reviewer's own Result MAY carry a Confidence value (Volume II),
 assessed the same way a Judge's is, but a Human Reviewer is never itself subject to
-Calibration or Judge Drift tracking — those measure a Judge against a Human Reviewer as
+Admission, Calibration, or Judge Drift tracking — those measure a Judge against a Human Reviewer as
 ground truth, not the reverse. Where Human Review is triggered by a Judge's low
 Confidence or by unresolved Consensus, the Human Reviewer's Result resolves the Result
 that triggered it (Volume I, Chapter 6 — Result Resolution): the Judge's or panel's

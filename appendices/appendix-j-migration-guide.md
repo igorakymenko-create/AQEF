@@ -80,10 +80,11 @@ comparison (Baselines).
    that matter most — helpfulness, faithfulness, tone — and bind them to a Judge from
    a different model family than the system under test (Volume VI, Independent
    Oracles).
-2. Calibrate Judges against Human Review. Run a sample of Executions through both a
-   Judge and a Human Reviewer. Compare their verdicts. If the Judge's Confidence does
-   not track its actual accuracy, adjust the Confidence threshold or switch to a
-   different Judge (Volume VI — Calibration).
+2. Admit and calibrate Judges against Human Review. Before a Judge's Results feed a
+   Gate, compare its verdicts with a Reference Set that Human Reviewers labelled, and
+   record its admission (Volume VI — Admission). As Results accumulate, check that its
+   Confidence tracks its actual accuracy; where it does not, adjust the Confidence
+   threshold or switch to a different Judge (Volume VI — Calibration).
 3. Approve initial Baselines. For each Scenario, designate a specific Execution's
    Result as the reference standard through an explicit approval action (Volume X).
    Like defining a Contract in Stage 1, this is a Governance-controlled act — even

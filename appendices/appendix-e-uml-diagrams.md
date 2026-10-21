@@ -117,7 +117,8 @@ classDiagram
 ## E.2 — Oracle Hierarchy
 
 The three concrete Oracle types and their relationship to Contracts, Results, Seeded
-Controls, and requalification (Volume II, Volume V, Volume VI, Volume VIII).
+Controls of both kinds, requalification, and the admission of Judges (Volume II, Volume
+V, Volume VI, Volume VIII).
 
 ```mermaid
 classDiagram
@@ -150,12 +151,19 @@ classDiagram
         +name : String
     }
     class SeededControl {
+        +kind : String
         +defect_class : String
         +confirmed_by : String
     }
     class Requalification {
         +oracle : String
         +defect_class : String
+    }
+    class Admission {
+        +oracle : String
+        +reference_set : String
+        +chance_corrected_agreement : Float
+        +admitted : Boolean
     }
 
     Oracle <|-- Validator
@@ -165,6 +173,7 @@ classDiagram
     Contract --> Oracle : specifies
     SeededControl --> Oracle : tests
     Requalification --> Oracle : returns to use
+    Admission --> Judge : admits
 ```
 
 ## E.3 — Quality Dimensions

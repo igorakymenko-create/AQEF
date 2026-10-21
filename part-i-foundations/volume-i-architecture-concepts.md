@@ -728,7 +728,9 @@ it never lifts it. A missed Seeded Control does not mean the system failed. It m
 instrument could not be shown to work against that defect class in that run, so none of
 its Results in that class can support a decision to ship, including its passes. A Gate
 that does not pass for this reason records it as such (`seeded_control_miss`, Appendix A
-§A.12), not as a threshold failure. Results later produced by a requalified Oracle MAY
+§A.12), not as a threshold failure. A false alarm on a clean control is a miss for this
+rule (Volume VIII), recorded as such (`seeded_control_false_alarm`). Results later
+produced by a requalified Oracle MAY
 resolve the invalidated ones (Result Resolution, above), and the Gate MAY then be
 evaluated again; the earlier Gate Result stays in the record.
 
@@ -738,6 +740,13 @@ insufficient basis rather than as a threshold failure. The two are different fin
 failed threshold says the system fell short, and an insufficient basis says there is not
 yet enough evidence to say either way. Where a Gate declares no minimum, it is evaluated
 on its threshold alone, and its Aggregate Basis is still reported.
+
+A Quality Gate MAY require that the Judges whose Results it reads have been admitted
+(`require_admitted_judges`, Appendix A §A.10; Volume VI, Admission). Where it does, a
+Result from a Judge configuration without an admission is treated as blocking, counted
+in the Aggregate Basis as not actionable, and recorded as such (`judge_not_admitted`),
+not as a threshold failure: the Gate cannot tell whether the system passed, because it
+cannot tell whether the instrument works.
 
 A Project typically runs several Quality Gates, each reading a different aggregate:
 

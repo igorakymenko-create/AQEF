@@ -148,10 +148,12 @@ Control tests the Oracle.
 
 ## Seeded Controls
 
-A Seeded Control is a Scenario carrying a deliberately planted, known defect whose
-correct detection is known in advance. Its purpose is not to test the system. Its
-purpose is to prove that an Oracle can still detect that class of defect in the current
-run. This is fault seeding from classical testing, applied to the instrument rather than
+A Seeded Control is a Scenario whose correct outcome is known in advance. A **defect
+control** carries a deliberately planted, known defect; a **clean control** carries none
+(below). Its purpose is not to test the system. Its purpose is to prove that an Oracle
+can still detect that class of defect in the current run, and does not report it where
+it is absent. This is fault seeding from classical testing, applied to the instrument
+rather than
 the product: before a run's Results are trusted, the run demonstrates that the Oracle
 producing them is not blind to the thing it is supposed to catch.
 
@@ -173,13 +175,30 @@ Result of that run counts as `actionable` for any Quality Gate (Chapter 6), what
 defect class. Seeded Control Results themselves
 MUST be excluded from Aggregation.
 
-**Coverage and order.** A Project SHOULD maintain at least one Seeded Control for each
-Oracle whose Results feed a Quality Gate, and SHOULD run Seeded Controls before that
-Oracle's other assessments in the same run, so that a miss is known before the work it
-would invalidate is done. Seeded Controls apply to Validators as well as Judges: a
-misconfigured pattern or an outdated schema blinds a Validator just as silently. They
-are most valuable for Judges, though, because a blind Judge still returns confident,
-plausible Results.
+**Clean controls.** A defect control shows that an Oracle is not blind. It cannot show
+that the Oracle does not see defects that are not there: an Oracle that reports a defect
+in everything catches every planted one. A **clean control** (`kind: clean`, Appendix A
+§A.4) answers that second question. It is a Seeded Control whose Evidence is known to be
+free of its defect class, and the Oracle is expected to pass it. Its outcome is `passed`
+or `false_alarm`, where a defect control's is `caught` or `missed`. A false alarm is a
+miss in every rule of this specification that speaks of a missed Seeded Control —
+invalidation, failing fast, a panel's quorum, requalification, Result Resolution — and is
+reported as a false alarm (`seeded_control_false_alarm`, Appendix A §A.12), so that a
+reader can tell an Oracle that went blind from one that raises alarms. Both end at a
+Gate that does not pass, and the difference still matters: a false alarm read as a
+product defect sends a team to fix what was never wrong, or to override a Gate it has
+stopped trusting. Where a rule does not name a kind, "Seeded Control" means either kind;
+a control that declares no `kind` is a defect control.
+
+**Coverage and order.** A Project SHOULD maintain at least one defect control for each
+Oracle whose Results feed a Quality Gate, and at least one clean control for each such
+Judge; a clean control MAY be maintained for a Validator too. It SHOULD run Seeded
+Controls before that Oracle's other assessments in the same run, so that a miss is known
+before the work it would invalidate is done. Seeded Controls apply to Validators as well
+as Judges: a misconfigured pattern or an outdated schema blinds a Validator just as
+silently. They are most valuable for Judges, though, because a blind Judge still returns
+confident, plausible Results, and a Judge that over-calls returns confident, plausible
+failures that no defect control will notice.
 
 **Which Results share a defect class.** A Constraint or Expectation MAY declare the
 defect classes it checks for (`defect_classes`, Appendix A §A.5). A miss affects the
@@ -209,7 +228,7 @@ authorship SHOULD stay separate from tuning, through Governance's Role/Permissio
 mechanism (Volume XII). An Oracle tuned to catch a defect class better in general is not
 tuned around its controls: that is the improvement Seeded Controls exist to verify.
 
-**Confirmed presence.** A Seeded Control MUST record the defect it plants
+**Confirmed presence.** A defect control MUST record the defect it plants
 (`planted_defect`, Appendix A §A.4): a defect nobody can state is not a known defect. Its
 outcome means something only if the defect actually reached the Evidence the Oracle
 received, and in both directions. If the defect never arrived, an Oracle that reports
@@ -235,6 +254,19 @@ declares (`confirmed_by`):
   The subject is not invoked; the Oracle receives that Evidence directly (Volume III), so
   the defect is present by construction and needs no further check.
 
+A clean control is confirmed by the same methods, for the opposite fact: that the
+Evidence the Oracle received is free of the defect class. Its `confirmation` passes when
+the defect is absent; a Human Reviewer confirms the absence; or the control carries fixed
+Evidence known to be clean. Without confirmation, a clean control is `invalid` too: an
+Oracle that flags Evidence nobody has shown to be clean has not been shown to raise a
+false alarm.
+
+**Blind confirmation.** A Human Reviewer who confirms a control, or helps establish a
+difficulty prior, SHOULD NOT know which items are controls, or of which kind, where this
+can be arranged, for example by reviewing them among ordinary Evidence. Reviewers who
+know an item is a trap tend to see more in it than is there, and a confirmation inflated
+that way lets a control count that proves less than it seems to.
+
 A control that runs through the subject (the first two methods) can lose its defect on
 the way: a defect planted in the input may not survive into the response. A generator
 SHOULD place a defect where the Scenario necessarily exercises it, so that `invalid`
@@ -246,7 +278,8 @@ of its own: Evidence written for a control can look unlike anything the subject 
 and an Oracle can learn to recognize controls by how they look rather than by the defect.
 Fixed Evidence SHOULD therefore be derived from Evidence the subject actually produced,
 recently and in the same Environment, with the defect planted into it, and SHOULD name
-the Execution it was derived from (`source_execution`). The rules on generation and
+the Execution it was derived from (`source_execution`). A clean control's fixed Evidence
+is derived the same way, without a plant, and confirmed free of the defect class. The rules on generation and
 exposure above apply to it unchanged. Fixed Evidence is permitted only on a Seeded
 Control: a Scenario that tests the subject has to invoke it.
 
@@ -265,12 +298,14 @@ instances it was established on, and a class or control with no such history MUS
 represented as "not yet established", not as zero (Appendix A §A.4). A control that no
 reference Oracle catches is more likely broken than hard, and SHOULD NOT gate an Oracle
 until a Human Reviewer has confirmed it. Beyond that case, Human Reviewers are not
-required: the prior is a reference for reading a miss, not a measurement of people.
+required: the prior is a reference for reading a miss, not a measurement of people. A
+difficulty prior belongs to defect controls; a clean control carries none.
 
 **Requalification.** An Oracle that missed a Seeded Control is not used again for the
 missed defect class until it is requalified. The cause is diagnosed (a changed model,
 prompt, criteria, or configuration; or Judge Drift, Volume VI), the Oracle is corrected,
-and the corrected Oracle catches fresh controls of that class. Never the control it
+and the corrected Oracle catches fresh defect controls of that class, or, after a false
+alarm, passes fresh clean controls of it; after both, it does both. Never the control it
 missed: the diagnosis exposed it. Requalification is recorded (Appendix C §C.3,
 Requalification): which Oracle configuration, for which defect class, on which fresh
 controls' Results. Without that record, the Oracle is not requalified. A requalified Oracle MAY then re-assess the stored

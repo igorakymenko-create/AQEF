@@ -63,6 +63,7 @@ subject's output varies (Volume I, Chapter 3).
 | Release Decision | `/projects/{project}/releases` | I, Ch. 6; XII | Go/no-go records. |
 | Release Policy | `/projects/{project}/release-policies` | XII | Standing authorizations for Release Decisions recorded by a Service Account. |
 | Requalification | `/projects/{project}/requalifications` | VIII | Records that an Oracle configuration is requalified for a defect class. |
+| Admission | `/projects/{project}/admissions` | VI | Records a Judge configuration's agreement with a Reference Set, and whether it is admitted. |
 
 **Governance Resources**
 
@@ -155,7 +156,8 @@ MUST be rejected where it does not allow the resolution requested.
 - `reassess`: the body names the `oracle` configuration to use. It MUST be rejected for
   the same Oracle configuration unless the Result is `oracle_unavailable`, and for an
   Oracle without a Requalification record (below) for every defect class in the
-  Result's `invalidated_by` (Volume VIII).
+  Result's `invalidated_by`, resting on controls of the kind that failed: caught defect
+  controls after a miss, passed clean controls after a false alarm (Volume VIII).
 
 **Triggering:** `POST /executions` accepts a body specifying `suite`, `environment`,
 and optional `gates` to check after completion. The response returns a batch
@@ -170,9 +172,10 @@ array, one entry per Seeded Control Scenario in that run:
 |---|---|---|
 | `scenario` | String | The Seeded Control Scenario. |
 | `defect_class` | String | From Appendix A §A.4's `SeededControlConfig`. |
-| `outcome` | String | `caught`, `missed`, or `invalid` (presence of the planted defect not confirmed: confirmation failed, or not yet recorded, Volume VIII). |
+| `kind` | String | `defect` or `clean` (Appendix A §A.4). |
+| `outcome` | String | `caught` or `missed` for a defect control, `passed` or `false_alarm` for a clean control, or `invalid` (what the control declares about its Evidence, the planted defect present or the class absent, not confirmed: confirmation failed, or not yet recorded, Volume VIII). |
 | `confirmed_by` | String | The control's declared method: `validator`, `human_reviewer`, or `construction` (Appendix A §A.4). |
-| `invalidation_scope` | String | `none` (when `outcome` is `caught` or `invalid`), `defect_class`, or `full_run`. |
+| `invalidation_scope` | String | `none` (when `outcome` is `caught`, `passed`, or `invalid`), `defect_class`, or `full_run`. |
 | `reason` | String or `null` | MUST be present and non-empty when `invalidation_scope` is `full_run` (Volume VIII); `null` otherwise. |
 
 This is deliberately how a missed Seeded Control is surfaced, rather than as a change to
@@ -192,7 +195,7 @@ VIII).
 | Method | Path | Description | Permission |
 |---|---|---|---|
 | POST | `.../executions/{execution}/seeded-controls/{scenario}/invalidate` | Declare full-run invalidation for a Seeded Control missed in this Execution. Body MUST include a non-empty `reason`. | `seeded_control_invalidate` |
-| POST | `.../executions/{execution}/seeded-controls/{scenario}/confirm` | Record a Human Reviewer's confirmation that the planted defect is present in the Evidence the Oracle received, for a control with `confirmed_by: human_reviewer` (Volume VIII). The Principal MUST be a Person. Until it is recorded, the control is `invalid` for the run. | `review` |
+| POST | `.../executions/{execution}/seeded-controls/{scenario}/confirm` | Record a Human Reviewer's confirmation that the planted defect is present (or, for a clean control, that the defect class is absent) in the Evidence the Oracle received, for a control with `confirmed_by: human_reviewer` (Volume VIII). The Principal MUST be a Person. Until it is recorded, the control is `invalid` for the run. | `review` |
 
 `seeded_control_invalidate` is an ordinary checked Permission, not one of Governance's
 four Approval-Workflow-gated actions (Volume XII) — full-run invalidation is a per-miss
@@ -204,7 +207,7 @@ Governance-controlled action through `GET /projects/{project}/audit`.
 
 | Method | Path | Description | Permission |
 |---|---|---|---|
-| POST | `/projects/{project}/requalifications` | Record that an Oracle configuration is requalified for a defect class (Volume VIII — Requalification). Body names the `oracle`, the `defect_class`, and the Seeded Control Results it rests on. MUST be rejected unless each named control is of that class, was `caught` by that Oracle configuration, and is not a control any Oracle missed in a run whose Results the requalification will be used to re-assess. | `execute` |
+| POST | `/projects/{project}/requalifications` | Record that an Oracle configuration is requalified for a defect class (Volume VIII — Requalification). Body names the `oracle`, the `defect_class`, and the Seeded Control Results it rests on. MUST be rejected unless each named control is of that class, was `caught` (a defect control) or `passed` (a clean control) by that Oracle configuration, and is not a control any Oracle missed or raised a false alarm on in a run whose Results the requalification will be used to re-assess. | `execute` |
 | GET | `/projects/{project}/requalifications` | List Requalification records. | `read` |
 
 | Field | Type | Description |
@@ -218,6 +221,35 @@ Governance-controlled action through `GET /projects/{project}/audit`.
 
 A Requalification record is never modified. An Oracle is requalified for a class only
 where such a record exists; `reassess` (above) relies on it.
+
+**Admission**
+
+| Method | Path | Description | Permission |
+|---|---|---|---|
+| POST | `/projects/{project}/admissions` | Record a Judge configuration's agreement with a Reference Set (Volume VI, Admission). The Principal MUST be a Person. MUST be rejected if `admitted` is `true` while `chance_corrected_agreement` is below `threshold`, or `false` while it meets it. | `review` |
+| GET | `/projects/{project}/admissions` | List Admission records. | `read` |
+
+| Field | Type | Description |
+|---|---|---|
+| `id` | String | Identifier of the record. |
+| `oracle` | String | The Judge configuration, as in a Result's `oracle` (§C.7). |
+| `reference_set` | String | The Reference Set, as `name@version`. |
+| `items` | Integer | Items scored, leaving out those used to align the reviewers. |
+| `verdict_distribution` | Map of String → Integer | How many of the scored items have each correct verdict. |
+| `raw_agreement` | Float | Share of scored items on which the Judge's verdict matched the correct one. |
+| `measure` | String | The chance-corrected agreement measure used, by name (for example, Cohen's kappa). |
+| `chance_corrected_agreement` | Float | Its value. |
+| `threshold` | Float | The Project's minimum for that measure. |
+| `admitted` | Boolean | Whether the value meets the threshold. |
+| `labelled_by` | List of String | The Human Reviewers who established the correct verdicts. |
+| `arbitrations` | List of String | References to the records of how disagreements between them were settled. |
+| `recorded_at` | DateTime | When the record was made. |
+| `recorded_by` | String | The Person who made it. |
+
+An Admission record is never modified. A Judge configuration is admitted only where a
+record with `admitted: true` exists for it; a Quality Gate with
+`require_admitted_judges` (Appendix A §A.10) relies on it. A Multi Judge panel is
+admitted when every Judge configuration in it is.
 
 **Snapshot**
 
@@ -255,7 +287,7 @@ aggregate that Gate read (Volume I, Chapter 6):
 | Field | Type | Description |
 |---|---|---|
 | `results` | Integer | Effective Results whose effective state is `actionable` that the aggregate was computed from. |
-| `not_actionable` | Integer | Effective Results in the same scope whose effective state is not `actionable` (§C.7), invalidated ones included, and stale ones (Volume I, Chapter 6). |
+| `not_actionable` | Integer | Effective Results in the same scope whose effective state is not `actionable` (§C.7), invalidated ones included, stale ones (Volume I, Chapter 6), and, for a Gate with `require_admitted_judges`, those from a Judge configuration without an admission. |
 | `scenarios` | Integer | Distinct Scenarios those Results came from. |
 | `executions` | Integer | Distinct Executions those Results came from. |
 | `min_basis_met` | Boolean or `"not_declared"` | Whether the Gate's `min_basis` (Appendix A §A.10) was met. `"not_declared"` when the Gate sets none. Never bare `null`. |
@@ -422,7 +454,8 @@ previously named as a field:
   (Volume VI — Human Review); `oracle_unavailable` is what remains when every attempt
   failed.
 - **`not_assessed`** — the Oracle was deliberately not invoked: it had missed a Seeded
-  Control of the clause's defect class earlier in the same run (Volume VIII), or a Multi
+  Control of the clause's defect class, or raised a false alarm on one, earlier in the
+  same run (Volume VIII), or a Multi
   Judge panel fell below its quorum (Volume VI). `verdict` is `null`. The Evidence is
   kept, and a requalified Oracle MAY assess it later as a new Result, which resolves this
   one; this Result is not modified.
@@ -496,3 +529,4 @@ generated: no field changes afterwards.
 | `multi_judge` | Per clause assessed by a Multi Judge panel, its `purpose` (`independence` or `stability`). |
 | `unenforced_boundaries` | Every Environment in scope whose Action Boundary declares `enforced: false`. |
 | `boundary_attempts` | Every recorded attempt to cross an Action Boundary and every Tripwire touch: Execution, target, whether blocked, whether a Tripwire. |
+| `unadmitted_judges` | Every Judge configuration whose Results are in scope and that has no Admission record with `admitted: true` (Volume VI). |

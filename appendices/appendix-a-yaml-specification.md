@@ -136,8 +136,8 @@ optionally a Dataset.
 | `prompt` | PromptDef | MUST (unless `dataset` is a `production_replay` Dataset, or the Scenario carries `evidence`) | The stimulus sent to the subject (Volume II — Prompt). For a multi-turn Scenario, the opening turn. |
 | `dataset` | String (reference) | MAY | The Dataset (§A.8) that supplies this Scenario's Variables, written `name@version`. The version MUST be given: a reference without one does not pin the rows an Execution draws from (Volume IV — Versioning). |
 | `variables` | Map of String → Any | MAY | Fixed Variables when no Dataset is used. |
-| `seeded_control` | SeededControlConfig | MAY | Marks this Scenario as a Seeded Control (Volume VIII) — a deliberately planted, known defect used to prove that an Oracle can still detect that defect class in the current run. |
-| `evidence` | FixedEvidence | MAY | Only on a Seeded Control with `confirmed_by: construction`, and then REQUIRED. Recorded Evidence with the defect already in it; the subject is not invoked (Volume III). Excludes `prompt`, `dataset`, and `variables`. |
+| `seeded_control` | SeededControlConfig | MAY | Marks this Scenario as a Seeded Control (Volume VIII): a Scenario whose correct outcome is known in advance, a planted, known defect (a defect control) or its known absence (a clean control), used to prove that an Oracle can still detect that defect class in the current run and does not report it where it is absent. |
+| `evidence` | FixedEvidence | MAY | Only on a Seeded Control with `confirmed_by: construction`, and then REQUIRED. Recorded Evidence with the defect already in it, or, for a clean control, known to be free of it; the subject is not invoked (Volume III). Excludes `prompt`, `dataset`, and `variables`. |
 
 A Scenario MUST specify either `dataset` or `variables` (or neither, for Scenarios that
 need no input beyond the Prompt template). It MUST NOT specify both — a Dataset
@@ -157,11 +157,12 @@ Volume IV) supplies its own Prompts, so a Scenario using one needs no `prompt`.
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `defect_class` | String | MUST | Identifies the class of defect this control plants. Scopes invalidation (Volume VIII) to Results the same Oracle produced in the same run that share this class, rather than every Result the Oracle produced. Project-defined; AQEF does not prescribe a taxonomy. |
-| `difficulty_prior` | Float (0.0–1.0) or `"not_established"` | MAY | Per-control override of the defect class's prior, for a control that is reused (Volume VIII). Same provenance rules as `DefectClassConfig.difficulty_prior` (§A.1). MUST NOT default to `0.0`. |
-| `planted_defect` | Any | MUST | What defect was planted and where: a description for a hand-authored control, or the generator's structured record of the change it made. |
-| `confirmed_by` | String | MUST | How the presence of the planted defect in the Evidence the Oracle receives is confirmed (Volume VIII): `validator` (by `confirmation`), `human_reviewer` (a Human Reviewer confirms it per run, Appendix C §C.3), or `construction` (the Scenario carries `evidence` with the defect already in it). Without confirmation, the control is `invalid` for that run (Appendix C §C.3). |
-| `confirmation` | Constraint | MUST (if `confirmed_by` is `validator`) | A Validator-bound check that the planted defect is present in the Evidence the Oracle receives. Where it fails, the control is `invalid` for that run. MUST NOT appear for the other methods. |
+| `kind` | String | MAY | `defect` (a planted defect the Oracle must detect) or `clean` (Evidence free of the defect class, which the Oracle must pass) (Volume VIII). Default: `defect`. |
+| `defect_class` | String | MUST | Identifies the class of defect this control plants, or, for a clean control, the class its Evidence is free of. Scopes invalidation (Volume VIII) to Results the same Oracle produced in the same run that share this class, rather than every Result the Oracle produced. Project-defined; AQEF does not prescribe a taxonomy. |
+| `difficulty_prior` | Float (0.0–1.0) or `"not_established"` | MAY | Per-control override of the defect class's prior, for a control that is reused (Volume VIII). Same provenance rules as `DefectClassConfig.difficulty_prior` (§A.1). MUST NOT default to `0.0`. MUST NOT appear on a clean control. |
+| `planted_defect` | Any | MUST (if `kind` is `defect`) | What defect was planted and where: a description for a hand-authored control, or the generator's structured record of the change it made. MUST NOT appear on a clean control. |
+| `confirmed_by` | String | MUST | How the presence of the planted defect in the Evidence the Oracle receives, or for a clean control the absence of the defect class, is confirmed (Volume VIII): `validator` (by `confirmation`), `human_reviewer` (a Human Reviewer confirms it per run, Appendix C §C.3), or `construction` (the Scenario carries `evidence` with the defect already in it, or known to be free of it). Without confirmation, the control is `invalid` for that run (Appendix C §C.3). |
+| `confirmation` | Constraint | MUST (if `confirmed_by` is `validator`) | A Validator-bound check that the Evidence the Oracle receives is as the control declares: the planted defect present, or, for a clean control, absent. Where it fails, the control is `invalid` for that run. MUST NOT appear for the other methods. |
 | `generator` | String | MAY | Identifier and version of the generator that produced this control. Absent for a hand-authored control. |
 
 The Oracle(s) a Seeded Control guards are not a separate reference field: they are
@@ -176,7 +177,7 @@ Recorded Evidence carried by a Seeded Control confirmed by construction (Volume 
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `conversation` | Conversation | MUST | The recorded Conversation, in the form the implementation stores Conversations produced by Executions, with the planted defect in it. |
+| `conversation` | Conversation | MUST | The recorded Conversation, in the form the implementation stores Conversations produced by Executions, with the planted defect in it, or, for a clean control, free of the defect class. |
 | `artifacts` | Map of String → Any | MAY | Recorded Artifacts the Contract's clauses read (for example a retrieval record). |
 | `source_execution` | String | MAY | The Execution of the subject this Evidence was derived from. SHOULD be present: fixed Evidence SHOULD be derived from Evidence the subject actually produced, recently and in the same Environment (Volume VIII). |
 
@@ -377,7 +378,7 @@ the Suite level field by field (§A.1, §A.3; Volume III).
 | `retry` | RetryConfig | MAY | Infrastructure-level retry policy. |
 | `scheduling` | String | MAY | Ordering strategy: `sequential`, `parallel`, or implementation-defined. |
 | `parallelization` | Integer | MAY | Maximum concurrent Executions. Concurrent Executions MUST NOT share mutable state (Volume III). |
-| `on_seeded_control_miss` | String | MAY | `skip_class` or `halt_run`. Default: `skip_class` — the Oracle that missed is not invoked for the affected clauses, which become `not_assessed`, and the run continues. `halt_run` stops the run and records a full-run invalidation with this policy as the reason (Volume VIII). |
+| `on_seeded_control_miss` | String | MAY | `skip_class` or `halt_run`. Default: `skip_class` — the Oracle that missed (or raised a false alarm on a clean control) is not invoked for the affected clauses, which become `not_assessed`, and the run continues. `halt_run` stops the run and records a full-run invalidation with this policy as the reason (Volume VIII). |
 
 **RetryConfig**
 
@@ -402,6 +403,7 @@ Gate is governed by Approval Workflow under `contract_define` (Volume XII).
 | `min_basis` | MinBasis | MAY | Minimum Aggregate Basis (Volume I, Chapter 6) the aggregate must rest on for this Gate to pass. Where declared and not met, the Gate does not pass, with insufficient basis as the recorded reason. |
 | `on_failure` | String | MUST | `block_release` (a blocking Gate: MUST pass for a Release Decision to authorize shipping) or `warn` (an advisory Gate: evaluated and recorded in every Report and Release Decision in scope, but its failure does not by itself prevent shipping) (Volume I, Chapter 6). Changing this value is governed like any other change to a Gate (Volume XII). |
 | `override_requires` | String | MAY | Permission name required to override this Gate (Volume XII). MAY be a project-defined Permission (e.g. `safety_override`) distinct from the four canonical governed actions (`contract_define`, `baseline_approve`, `gate_override`, `release_decide`) — a Project MAY require a stricter, Gate-specific Permission in addition to `gate_override`. |
+| `require_admitted_judges` | Boolean | MAY | Where `true`, a Result from a Judge configuration without an admission (Volume VI, Admission; Appendix C §C.3) is treated as blocking by this Gate, with `judge_not_admitted` as the recorded reason. Default: `false`. |
 
 **MinBasis**
 
@@ -474,7 +476,7 @@ The outcome of evaluating one Quality Gate once (Volume I, Chapter 6).
 | `id` | String | MUST | Unique identifier of this GateResult. An override names the GateResult it applies to by this `id` (Appendix C §C.3). |
 | `status` | String | MUST | `pass` or `fail`: the Gate's state only. What a failure does is `blocking`. |
 | `blocking` | Boolean | MUST | `true` for a Gate with `on_failure: block_release`, `false` for `warn`. |
-| `reasons` | List of String | MUST (if `status` is `fail`) | Every reason that applies, none omitted: `threshold` (the value fell short), `insufficient_basis` (its `min_basis` was not met), `non_actionable_results` (the aggregate included effective Results that are not `actionable` for a reason other than a Seeded Control — `inconclusive`, `awaiting_review`, `oracle_unavailable`, or `not_assessed` below a panel's quorum), `seeded_control_miss` (it included Results invalidated, or left `not_assessed`, by a missed Seeded Control, Volume VIII), `stale_results` (it included Results produced under an Environment, or for a clause, other than the one its Snapshot captures, Volume I, Chapter 6). Absent when `status` is `pass`. |
+| `reasons` | List of String | MUST (if `status` is `fail`) | Every reason that applies, none omitted: `threshold` (the value fell short), `insufficient_basis` (its `min_basis` was not met), `non_actionable_results` (the aggregate included effective Results that are not `actionable` for a reason other than a Seeded Control — `inconclusive`, `awaiting_review`, `oracle_unavailable`, or `not_assessed` below a panel's quorum), `seeded_control_miss` (it included Results invalidated, or left `not_assessed`, by a defect control its Oracle missed, Volume VIII), `seeded_control_false_alarm` (the same, by a false alarm on a clean control), `judge_not_admitted` (it requires admitted Judges and included Results from a Judge configuration without an admission, Volume VI), `stale_results` (it included Results produced under an Environment, or for a clause, other than the one its Snapshot captures, Volume I, Chapter 6). Absent when `status` is `pass`. |
 | `value` | Float, Map of String → Float, or `"not_computed"` | MUST | The aggregate the Gate read; a Map for a Gate with a ThresholdMap. `"not_computed"` when no aggregate could be computed, for example a run halted by a missed Seeded Control. Never bare `null`. |
 | `threshold` | Float or ThresholdMap | MUST | The threshold the Gate was evaluated against, copied at evaluation time, so the record stays checkable if the Gate definition changes later. |
 | `basis` | Basis | MUST | The Aggregate Basis the aggregate rested on (Appendix C §C.3). |

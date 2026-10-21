@@ -25,6 +25,13 @@ marked `stub`, `sandbox`, or `real`. Everything outside it is denied by default 
 harness controls access; where it cannot, the boundary is declared unenforced and
 surfaced in Reports. Every attempt to cross it is recorded, blocked or not.
 
+**Admission** — Showing, before a Judge configuration is relied on, that its verdicts
+agree with human judgment (Volume VI): its agreement with a Reference Set, raw and
+corrected for chance, meets a threshold the Project set. Recorded as an Admission record
+(Appendix C §C.3); a changed Judge needs its own. A Quality Gate MAY require it
+(`require_admitted_judges`). Distinct from Calibration (Confidence against accuracy, over
+time) and from Seeded Controls (each run).
+
 **Adversarial Dataset** — A Dataset (Volume IV) deliberately constructed to defeat the
 system under test's Safety or Functional boundaries, used to verify resilience under
 hostile input. SHOULD draw on an independent source.
@@ -113,10 +120,17 @@ weight a failure carries in the Aggregation Model.
 **Calibration** — The process (Volume VI) of evaluating whether a Judge's stated
 Confidence values accurately track its real performance against ground truth, typically
 established by Human Review. Distinct from Judge Drift, which measures change over
-time rather than current accuracy.
+time rather than current accuracy, and from Admission, which checks a Judge's verdicts
+against a Reference Set before it is used.
 
 **Chaos** — An Operational test type (Volume IX) testing the system under test's
 behavior when its own dependencies fail unexpectedly.
+
+**Clean Control** — A Seeded Control (Volume VIII; Appendix A §A.4, `kind: clean`)
+whose Evidence is known to be free of its Defect Class, and which the Oracle must pass.
+A false alarm on it counts as a miss (invalidation, failing fast, Requalification) and
+is reported as `false_alarm`. Shows that an Oracle does not report a defect where there
+is none, which a defect control cannot show.
 
 **CLI** — A thin command-line client (Volume XIV) over the REST API, used primarily by
 CI/CD integrations and scripting. MUST NOT introduce logic independent of the REST API.
@@ -356,7 +370,7 @@ intent. Distinct from Data Mutation (intent-preserving) and Edge Cases (targeted
 
 **Gate Result** — The outcome of evaluating one Quality Gate once (Appendix A §A.12):
 `pass` or `fail`, whether it blocks, every reason for a failure (threshold, insufficient
-basis, non-actionable Results, Seeded Control miss, stale Results), the value and threshold compared, and its Aggregate
+basis, non-actionable Results, Seeded Control miss or false alarm, Judge not admitted, stale Results), the value and threshold compared, and its Aggregate
 Basis. An override applies to exactly one Gate Result.
 
 **Generated Dataset** — A Dataset (Volume IV) expanded or created by an AI model.
@@ -405,7 +419,8 @@ Oracle must not use the same system, weights, or decision process as the AI syst
 evaluates, to avoid correlated blind spots. Extended as a SHOULD to Dataset generation
 sources.
 
-**Invalidated Result** — A Result whose Oracle missed a Seeded Control of a class its
+**Invalidated Result** — A Result whose Oracle missed, or raised a false alarm on, a
+Seeded Control of a class its
 clause covers, in the same run (Volume VIII; Volume I, Chapter 6). Its record is
 unchanged, but its effective state is `invalidated`, and no Quality Gate counts it as
 `actionable`, for as long as any of the misses that reached it is unresolved; more than
@@ -561,6 +576,10 @@ assessment.
 specific behavior — retrieval correctness, grounding faithfulness. Distinct from the
 RAG architectural pattern it targets.
 
+**Reference Set** — Items whose correct verdict Human Reviewers have established,
+used to admit a Judge (Volume VI, Admission). Labelled independently of whoever tunes
+the Judge, not updated from the Judge's performance, and versioned like a Dataset.
+
 **Regression** — A Test-Cycle type (Volume IX) whose Suite exists specifically to be
 compared against a Baseline to catch a Semantic Regression. Distinct from Semantic
 Regression itself, which names the detection mechanism.
@@ -591,8 +610,9 @@ evidence for a Release Decision. Distinct from a Dashboard, which updates contin
 formats while maintaining strict traceability back to underlying Results.
 
 **Requalification** — Returning an Oracle to use for a Defect Class after it missed a
-Seeded Control (Volume VIII): diagnose, correct, and catch fresh controls of that class,
-never the missed one. A requalified Oracle MAY re-assess stored Evidence as new Results;
+Seeded Control, or raised a false alarm on a Clean Control (Volume VIII): diagnose,
+correct, and catch fresh defect controls of that class, or pass fresh clean ones, never
+the control that failed. A requalified Oracle MAY re-assess stored Evidence as new Results;
 the original Results are not modified. Not a Retry. Recorded as a Requalification
 record (Appendix C §C.3).
 
@@ -671,10 +691,11 @@ tool-call argument against an expected structural format.
 JavaScript/TypeScript, Go — derived from the REST API. SDKs MUST be generated from or
 validated against the REST API specification, not hand-authored independently.
 
-**Seeded Control** — A Scenario carrying a deliberately planted, known defect (Volume
-VIII; Appendix A §A.4), used to prove that an Oracle can still detect that Defect Class in
-the current run. SHOULD be generated, with instances hidden from the Oracle's tuner; MUST
-record its planted defect and confirm it reached the Evidence the Oracle received — by a
+**Seeded Control** — A Scenario whose correct outcome is known in advance (Volume VIII;
+Appendix A §A.4): a defect control carries a deliberately planted, known defect, a Clean
+Control carries none. Used to prove that an Oracle can still detect that Defect Class in
+the current run, and does not report it where it is absent. SHOULD be generated, with
+instances hidden from the Oracle's tuner; a defect control MUST record its planted defect and confirm it reached the Evidence the Oracle received — by a
 Validator, a Human Reviewer, or by construction (Fixed Evidence) — otherwise the control
 is `invalid` for that run. If its Oracle misses it, the Oracle's Results for
 clauses of that class are invalidated for the run (their records unchanged), the Oracle SHOULD stop being invoked for

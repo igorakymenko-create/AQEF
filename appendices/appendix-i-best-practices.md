@@ -47,6 +47,13 @@ you find yourself wanting a "Constraint with a Confidence threshold" or an "Expe
 that always returns the same result," the clause is misclassified — reclassify it
 before it reaches production.
 
+**Do not let progress stand in for finishing.** Where an acting subject (AI Agent, Volume
+I, Chapter 7) works toward a task in many steps, credit for the steps it got right can
+add up to a passing aggregate while the task itself failed. Check the outcome the task
+was for on its own, with a Validator where the end state can be checked
+deterministically, and read it through a Gate that requires every such Result to pass
+rather than a share of them.
+
 ## I.2 — Validators and Judges
 
 **Run Validators before Judges — always.** This is the Validation before Evaluation
@@ -87,6 +94,35 @@ tracks reality. Calibration (Volume VI) periodically compares a Judge's verdicts
 against Human Reviewer ground truth to verify that stated Confidence values are
 numerically meaningful. A Judge whose Confidence says 0.95 but whose actual accuracy is
 0.70 is worse than useless — it produces confidently wrong evidence.
+
+**Admit a Judge against a Reference Set before trusting it.** A Judge's output looks the
+same whether its verdicts track reality or not; only a comparison with human judgment
+shows which (Volume VI, Admission). Gate on agreement corrected for chance, not on raw
+agreement: where most items share one verdict, a Judge that always gives it looks
+accurate. A Reference Set earns trust the way the Judge must:
+
+- draw items from more than one source, so that the Judge is tested from more than one
+  side;
+- align the reviewers on a few worked items first, and leave those out of the score;
+- decide before labelling what is being judged, not halfway through;
+- label blind, then settle every disagreement by an arbitration whose reasoning is
+  written down: the rulings are part of the reference;
+- expect reviewers to over-rate items they know were planted, and discount it.
+
+A Judge that fails its admission is a finding, not a setback: correct its criteria and
+admit it again, or use it only to sort Results for a Human Reviewer, who decides.
+
+**Pair defect controls with clean controls.** A Seeded Control with a planted defect
+catches a Judge that went blind. It cannot catch one that sees defects everywhere,
+because that Judge catches every plant. A clean control (Volume VIII), Evidence free of
+the defect class that the Judge must pass, catches the second. A Judge that over-calls
+fails safe at a Gate, but its false failures read as product defects, and a team that
+stops believing its Gates starts overriding them.
+
+**Use a Validator wherever the property can be stated as a rule.** A deterministic check
+of a stated property does not argue with itself. A Judge given more context so that it
+reads more carefully can also find more reasons to explain a defect away as intended.
+Keep Judges for what cannot be stated as a rule (Volume V).
 
 **Monitor Judge Drift.** Even a well-calibrated Judge can change over time (Volume VI —
 Judge Drift). If a model provider updates what a stable model identifier resolves to,

@@ -149,11 +149,13 @@ properties:
 **SeededControlConfig**
 ```
 properties:
+  kind:              { type: string, enum: [defect, clean],
+                       default: defect }                               # OPTIONAL
   defect_class:      { type: string, minLength: 1 }                    # REQUIRED
   difficulty_prior:  { oneOf: [ { type: number, minimum: 0.0,
                        maximum: 1.0 },
                        { type: string, const: not_established } ] }    # OPTIONAL
-  planted_defect:    { }                                               # REQUIRED
+  planted_defect:    { }                                               # CONDITIONAL
   confirmed_by:      { type: string, enum: [validator, human_reviewer,
                        construction] }                                 # REQUIRED
   confirmation:      { $ref: Constraint }                              # CONDITIONAL
@@ -163,7 +165,9 @@ properties:
 Note: an absent `difficulty_prior` is equivalent to `"not_established"`, not to `0.0`.
 A schema MUST NOT default this field to `0.0`.
 
-*Cross-field rules:* `confirmation` is REQUIRED when `confirmed_by` is `validator` and
+*Cross-field rules:* `planted_defect` is REQUIRED when `kind` is `defect` or absent, and
+MUST NOT appear when it is `clean`; `difficulty_prior` MUST NOT appear when `kind` is
+`clean`. `confirmation` is REQUIRED when `confirmed_by` is `validator` and
 MUST NOT appear otherwise. When `confirmed_by` is `construction`, the Scenario MUST carry
 `evidence` and MUST NOT carry `prompt`, `dataset`, or `variables`.
 
@@ -331,6 +335,7 @@ properties:
   min_basis:           { $ref: MinBasis }                            # OPTIONAL
   on_failure:          { type: string, enum: [block_release, warn] } # REQUIRED
   override_requires:   { type: string }                              # OPTIONAL
+  require_admitted_judges: { type: boolean, default: false }         # OPTIONAL
 ```
 
 **MinBasis**
@@ -383,6 +388,7 @@ properties:
   reasons:    { type: array, minItems: 1, uniqueItems: true,
                 items: { type: string, enum: [threshold, insufficient_basis,
                 non_actionable_results, seeded_control_miss,
+                seeded_control_false_alarm, judge_not_admitted,
                 stale_results] } }                                       # CONDITIONAL
   value:      { oneOf: [ { type: number },
                 { type: object, additionalProperties: { type: number } },
@@ -463,8 +469,9 @@ by a conformant implementation at configuration load time:
 | Multi-Judge purpose consistency | Volume VI | An independence-mode MultiJudge with judges from the same model family SHOULD produce a warning. |
 | Result disposition validity | Appendix C §C.7 | `verdict` MUST be `null` when `disposition` is `awaiting_review`, `oracle_unavailable`, or `not_assessed`, and MUST be `pass` or `fail` otherwise. `confidence` MUST NOT be bare `null` under any disposition. |
 | Seeded Control invalidation scope | Volume VIII; Appendix C §C.3 | A missed Seeded Control invalidates only the Results its Oracle produced in the same run sharing its `defect_class`, by default. Full-run invalidation requires a Project to declare it explicitly, with a recorded, non-empty reason. |
+| Clean control | Volume VIII | A false alarm on a clean control is a miss for every rule on missed Seeded Controls (invalidation, failing fast, quorum, requalification, Result Resolution), reported as `false_alarm`, with `seeded_control_false_alarm` on an affected GateResult. |
 | Difficulty prior provenance | Volume VIII | A `difficulty_prior` (on a DefectClassConfig or a SeededControlConfig) MUST be established from reference Oracles independent of the Oracle(s) the controls test, or from Human Reviewers, and MUST NOT be set or updated from the outcome of the Oracle(s) under test. |
-| Seeded Control confirmation | Volume VIII; Appendix C §C.3 | A control's outcome MUST be reported as `invalid` for that run, not as `caught` or `missed`, unless the presence of its planted defect in the Evidence the Oracle received was confirmed by its declared method: its `confirmation` passed (`validator`), a Human Reviewer's confirmation is recorded (`human_reviewer`), or it carries `evidence` (`construction`). |
+| Seeded Control confirmation | Volume VIII; Appendix C §C.3 | A control's outcome MUST be reported as `invalid` for that run, not as `caught`, `missed`, `passed`, or `false_alarm`, unless what it declares about the Evidence the Oracle received (its planted defect present, or, for a clean control, the defect class absent) was confirmed by its declared method: its `confirmation` passed (`validator`), a Human Reviewer's confirmation is recorded (`human_reviewer`), or it carries `evidence` (`construction`). |
 | Fixed Evidence scope | Volume III; Volume VIII | `evidence` MAY appear only on a Scenario whose `seeded_control.confirmed_by` is `construction`. An Execution of such a Scenario MUST NOT invoke the subject. |
 | Defect class reference | Volume VIII | Where a Project declares `defect_classes`, every `seeded_control.defect_class` and every clause-level `defect_classes` entry SHOULD name a declared class. |
 | Panel reporting | Volume VI; Appendix C §C.7 | A Result produced by a Multi Judge configuration MUST carry `panel`. Below `min_qualified` (or below the full panel when it is absent), the panel's Results for the affected clauses MUST be `not_assessed`. |
@@ -476,9 +483,10 @@ by a conformant implementation at configuration load time:
 | Result resolution | Volume I, Ch. 6; Appendix C §C.7 | `resolves` MUST reference the current effective Result for the same `execution` and `clause`, and that Result's effective state MUST NOT be `actionable`. A second Result resolving the same Result MUST be rejected. Resolvers: a Human Reviewer Result (for `inconclusive`, or a panel's unresolved Result); a requalified Oracle's Result (for invalidated or `not_assessed`); a Result from the same `oracle` (only for `oracle_unavailable`). |
 | Effective Result | Volume I, Ch. 6 | Aggregation and Quality Gates read only the effective Result per Execution and clause, by its effective state. A resolved Result MUST NOT be counted again, including in `basis.not_actionable`. |
 | Invalidation is derived | Volume I, Ch. 6; Volume VIII | A missed Seeded Control MUST NOT change any recorded Result. Its effect is derived from `seeded_control_results`: the affected effective Results have effective state `invalidated`, with one `invalidated_by` entry per missed control that reaches them. |
-| Requalification covers every invalidation | Volume I, Ch. 6; Volume VIII | A requalified Oracle's Result MAY resolve an invalidated Result only if that Oracle has been requalified for every `defect_class` in the Result's `invalidated_by`. |
+| Requalification covers every invalidation | Volume I, Ch. 6; Volume VIII | A requalified Oracle's Result MAY resolve an invalidated Result only if that Oracle has been requalified for every `defect_class` in the Result's `invalidated_by`, on controls of the kind that failed: caught defect controls after a miss, passed clean controls after a false alarm. |
 | Validator unavailable | Volume V; Appendix C §C.7 | A Validator that cannot complete its check MUST produce `oracle_unavailable`, never `fail`, and Validation for that Execution has not passed. |
-| Gate reasons | Volume I, Ch. 6; Appendix A §A.12 | A failed GateResult MUST list every applicable reason. A Gate whose aggregate includes an effective Result that is not `actionable` MUST fail, with `non_actionable_results` or `seeded_control_miss`. |
+| Gate reasons | Volume I, Ch. 6; Appendix A §A.12 | A failed GateResult MUST list every applicable reason. A Gate whose aggregate includes an effective Result that is not `actionable` MUST fail, with `non_actionable_results`, `seeded_control_miss`, or `seeded_control_false_alarm`. A Gate declaring `require_admitted_judges` whose aggregate includes a Result from a Judge configuration without an admission MUST fail, with `judge_not_admitted`. |
+| Admission record | Volume VI; Appendix C §C.3 | An Admission record MUST state its Reference Set and version, the items scored and the distribution of their correct verdicts, the raw agreement, and the chance-corrected measure by name and value, with the threshold; `admitted` MUST be `true` exactly when that value meets the threshold. A Multi Judge panel is admitted when every Judge configuration in it is. |
 | Gate Result override | Volume XII | An `override` MUST reference an approved `gate_override` record made for that GateResult, named by its `id`. One override record MUST NOT be referenced by more than one GateResult. |
 | Release Decision coverage | Volume I, Ch. 6 | `gates` MUST contain a GateResult for every Quality Gate, blocking or advisory, applicable to the decision's scope. |
 | Release Decision outcome | Volume I, Ch. 6; Volume XII | `decision: approved` requires every blocking GateResult to have `status: pass`; `decision: overridden` requires every blocking GateResult with `status: fail` to carry `override`. |

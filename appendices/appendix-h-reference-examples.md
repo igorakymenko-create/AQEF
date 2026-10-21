@@ -951,7 +951,8 @@ non-`actionable`, and the Gate would stay blocked.
 ## H.10 — Seeded Controls: Testing the Oracle Itself
 
 A Seeded Control (Volume VIII; Appendix A §A.4) is an ordinary Scenario with one
-addition — `seeded_control`, marking it as carrying a known, planted defect. It runs
+addition — `seeded_control`, marking it as carrying a known, planted defect, or, for a
+clean control, as known to carry none. It runs
 through the same Contract as any other Scenario; the Oracle(s) it "guards" are simply
 whichever ones that Contract binds to.
 
@@ -1076,6 +1077,44 @@ The subject is not invoked for this Scenario (Volume III): the Judge receives th
 recorded Conversation and retrieval Artifact directly. No `prompt` or `variables` is
 needed, and no `confirmation` either, because the changed figure is in the Evidence by
 construction. If the Judge passes this response, the control is `missed`.
+
+**A clean control** (Volume VIII; Appendix A §A.4)
+
+The same real Response, left as the subject gave it and confirmed against its source.
+The Judge is expected to pass it. If the Judge reports an unsupported claim here, it has
+raised a false alarm: its Results for `unsupported-claim` in this run are invalidated
+exactly as for a miss, reported with `outcome: false_alarm`, and a Gate that read them
+records `seeded_control_false_alarm`.
+
+```yaml
+scenarios:
+  - name: control-unsupported-claim-clean-3b1e
+    seeded_control:
+      kind: clean
+      defect_class: unsupported-claim
+      confirmed_by: construction     # the Evidence below matches its source
+    evidence:
+      source_execution: exec-2025-08-13-0412
+      conversation:
+        - role: user
+          content: "How long is the warranty on the X200?"
+        - role: assistant
+          content: "The X200 comes with a 12-month limited warranty covering parts and labour."
+      artifacts:
+        retrieval:
+          documents:
+            - id: KB-004211
+              text: "The X200 is covered by a 12-month limited warranty (parts and labour)."
+    contract:
+      expectations:
+        - criteria: >
+            Every factual claim in the response is supported by the retrieved documents.
+          defect_classes: [unsupported-claim]
+          judge:
+            model: gemini-2.5-pro
+            confidence_source: self_rating
+          confidence_threshold: 0.9
+```
 
 **If the Project instead declares full-run invalidation for this miss**
 

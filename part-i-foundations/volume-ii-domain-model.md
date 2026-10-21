@@ -104,8 +104,8 @@ underlying judges (Volume VI — Multi Judge, Consensus, Voting).
 The third concrete Oracle, alongside Validator and Judge: a human performing the
 assessment, used where automated Judges are not yet trusted for a given criterion,
 where policy requires human sign-off (safety-critical Scenarios, Quality Gates), or
-where a Result is needed as the ground-truth reference to calibrate or audit Judges
-(Volume VI — Calibration, Judge Drift). *Relationships:* referenced by one or more
+where a Result is needed as the ground-truth reference to admit, calibrate, or audit
+Judges (Volume VI — Admission, Calibration, Judge Drift). *Relationships:* referenced by one or more
 Contracts, typically alongside a Judge rather than in its place; consumes a Conversation
 and its Artifacts; produces a Result that MAY carry a Confidence value; MAY be
 designated as the reference against which a Judge's Confidence and Judge Drift are

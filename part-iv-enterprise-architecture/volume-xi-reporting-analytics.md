@@ -38,6 +38,8 @@ raw data a reader would have to reconstruct by hand:
   `enforced: false` (Volume III), and every recorded attempt to cross a boundary or
   touch a Tripwire, blocked or not: an unsealed Environment and a contained attempt are
   both things a reader must not have to discover from raw Artifacts.
+- every Judge configuration whose Results are in the Report's scope and that has not been
+  admitted (Volume VI), whether or not a Gate required it.
 A Report that omits these is not wrong, but it is incomplete in a way a reader has no way
 to notice from the Report alone — precisely the failure mode surfacing them by name is
 meant to prevent.
