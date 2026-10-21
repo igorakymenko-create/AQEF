@@ -1,0 +1,53 @@
+{
+  "version": "s2.0",
+  "source": {
+    "cts": "conformance-tests/10-configuration.md",
+    "harness": "conformance-tests/harness/harness-contract.md"
+  },
+  "surface": "equivalent",
+  "fields": {
+    "sut.outcome": "data.sut.outcome",
+    "sut.status": "data.sut.status",
+    "sut.body_ref": "data.sut.body_ref",
+    "sut.body_sha256": "data.sut.body_sha256",
+    "sut.surface": "data.sut.surface",
+    "identity.correlation_id": "correlation_id",
+    "identity.evidence_refs": "evidence_refs",
+    "stored.configuration": "config",
+    "error.field": "field"
+  },
+  "predicates": {
+    "CT-CFG-001": {
+      "kind": "accepted_and_preserved",
+      "fixture": "F-BASE",
+      "required_capability": "core"
+    },
+    "CT-CFG-025.01": {
+      "kind": "rejected_with_diagnostic",
+      "fixture": "F-BASE",
+      "missing_field": "project.name",
+      "required_capability": "core"
+    },
+    "CT-CFG-025.05": {
+      "kind": "rejected_with_diagnostic",
+      "fixture": "F-BASE",
+      "missing_field": "environments[0].tool_configuration",
+      "required_capability": "core"
+    },
+    "CT-CFG-025.25": {
+      "kind": "rejected_with_diagnostic",
+      "fixture": "F-SEED",
+      "missing_field": "defect_classes[0].name",
+      "required_capability": "seeded_controls"
+    }
+  },
+  "outcomes": {
+    "precedence": [
+      "FAIL",
+      "NOT_RUN",
+      "PASS",
+      "NOT_APPLICABLE"
+    ],
+    "source": "CTS 1.2"
+  }
+}
