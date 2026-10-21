@@ -1,0 +1,59 @@
+name: CTS Stage C S3.0 Decision Foundation
+on:
+  push:
+    paths:
+      - 'conformance-tests/s3_decision/**'
+      - '.github/workflows/cts-s30-foundation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout immutable commit
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Dependencies
+        run: python -m pip install 'jsonschema==4.23.0' 'referencing>=0.30'
+      - name: Published contract validator
+        run: python conformance-tests/harness/tools/validate.py
+      - name: S3.0 foundation tests
+        run: |
+          cd conformance-tests/s3_decision
+          python -m unittest discover -p 'test_*.py' -v
+      - name: S2.3 adversarial regression
+        run: |
+          cd conformance-tests/s2_mutation
+          python -m unittest discover -p 'test_*.py' -v
+      - name: S2.2 regression
+        run: |
+          cd conformance-tests/s2_assessment
+          python -m unittest discover -p 'test_*.py' -v
+      - name: S2.1 regression
+        run: |
+          cd conformance-tests/s2_execution
+          python -m unittest discover -p 'test_*.py' -v
+      - name: S1 and S2.0 regression
+        run: |
+          cd conformance-tests/s1_configuration
+          python -m unittest discover -p 'test_*.py' -v
+      - name: Decision foundation trace (not SUT conformance)
+        run: |
+          cd conformance-tests/s3_decision
+          python - <<'PY'
+          import json, os
+          from foundation import catalog,validate_catalog
+          c=catalog()
+          print(json.dumps({'cts_commit':os.environ['GITHUB_SHA'],
+            'scope':c['scope'],'catalog_valid':validate_catalog(),
+            'cts_cases':list(c['cases']),
+            'dec012_variants':list(c['cases']['CT-DEC-012']['variants']),
+            'fixture_checks':{k:len(v['checks']) for k,v in c['fixtures'].items()},
+            'expected_checks':{k:len(v['checks']) for k,v in c['cases'].items()}},indent=2))
+          PY
