@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.3/harness-event.schema.json",
-  "title": "Harness event 0.3",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.4/harness-event.schema.json",
+  "title": "Harness event 0.4",
   "description": "One append-only observation. Sequence numbers are per session and strictly increasing.",
   "type": "object",
   "additionalProperties": false,

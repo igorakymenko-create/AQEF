@@ -18,10 +18,18 @@ implementation. The version and the CTS draft it serves are stated at the top of
 | `schemas/` | JSON Schema 2020-12 for every envelope and record |
 | `examples/` | Valid examples; `examples/invalid/` must be rejected |
 | `fixtures/` | Recipes for the postcondition fixtures of CTS 2.7 |
-| `tools/validate.py` | Checks the package and its agreement with the CTS |
+| `tools/validate.py` | Checks the package and its agreement with the CTS; verifies a run's report with its evidence |
+| `tools/test_validate.py` | Unit tests of every check |
 
-To check the package: `pip install jsonschema`, then
-`python3 conformance-tests/harness/tools/validate.py`.
+To check the package: `pip install jsonschema`, then, from the repository root:
+
+```
+python3 conformance-tests/harness/tools/validate.py
+python3 conformance-tests/harness/tools/test_validate.py
+```
+
+To verify a run: `validate.py --report REPORT --manifest MANIFEST --evidence-root DIR`.
+The workflow `.github/workflows/cts-harness.yml` runs both checks on every change.
 
 ## License
 

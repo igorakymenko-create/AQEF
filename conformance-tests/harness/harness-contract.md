@@ -1,6 +1,6 @@
 # AQEF CTS Harness Contract
 
-**Version:** 0.3. **For:** AQEF Conformance Test Specification Working Draft 7; AQEF
+**Version:** 0.4. **For:** AQEF Conformance Test Specification Working Draft 7; AQEF
 Working Draft 0.38 and 0.39.
 
 **Status:** Draft, ready for Stage C contract testing. Not yet tested against any
@@ -28,7 +28,7 @@ test checks:
   offer (a fault hook, a clock), the hook is optional. Its absence is never a failure of
   the implementation; at most, it leaves a requirement unverified (CTS 1.7).
 
-The audit records behind version 0.3 are in `decisions.md`; open questions and the
+The audit records behind this version are in `decisions.md`; open questions and the
 criteria for Stage C are in `stage-c-readiness.md`.
 
 ## 1. Scope
@@ -104,9 +104,10 @@ CTS runner ─► fixture builder ─► adapter ─► SUT (the AQEF implementa
 | `schemas/fixture-recipe.schema.json` | Machine form of a CTS fixture (§10). |
 | `schemas/manual-review.schema.json` | One reviewer's decision (§13). |
 | `schemas/cts-report.schema.json` | The run report (§15). |
-| `examples/` | Valid examples; `examples/invalid/` holds examples that must be rejected. |
+| `examples/` | Valid examples; `examples/invalid/` holds envelopes that must be rejected; `examples/evidence/` holds the evidence objects of the example report. |
 | `fixtures/` | Recipes for the postcondition fixtures of CTS 2.7. |
-| `tools/validate.py` | Checks schemas, examples, recipes, and their agreement with the CTS. |
+| `tools/validate.py` | Checks the package, and verifies a run's report against the CTS and its evidence (§18). |
+| `tools/test_validate.py` | Unit tests of every check of `validate.py`, on valid cases and on cases built to break it. |
 
 - **Schemas** use JSON Schema 2020-12. Their `$id`s are identifiers, not download
   locations, and carry the contract version.
@@ -444,7 +445,7 @@ Validator fail, CT-ASM-014 is `NOT_RUN` and its requirement is reported unverifi
   (`fixture-recipe.schema.json`): a base fixture and its changes, behaviors, steps in
   dependency order, setup checks, and cleanup. The recipe is a machine form of CTS 2.7;
   where they differ, CTS 2.7 is right, and `tools/validate.py` reports the difference.
-  In 0.3, setup checks are stated in words; their machine form is a Stage C item
+  Setup checks are stated in words; their machine form is a Stage C item
   (`stage-c-readiness.md`, Q-03).
 - **Setup.** A recipe runs in the case's own Project, in phase `setup`. A failed step or
   check makes the case `NOT_RUN` (§7, row 5); the behavior that failed is reported by
@@ -491,12 +492,29 @@ A case passes through these states:
   the pair is kept together.
 - **Manifest.** Every evidence object of a run is listed once in the evidence manifest
   (`evidence-manifest.schema.json`), with both digests, size, case, collection time,
-  and redaction policy. `manifest_sha256` is SHA-256 over the RFC 8785 (JCS)
-  serialization of the manifest without that field. The report carries the manifest's
-  reference and digest.
-- **Verification.** A verifier recomputes every raw and redacted digest it can access,
-  and the manifest digest. A mismatch or a missing object invalidates every outcome that
+  and redaction policy. `manifest_sha256` is SHA-256 over the UTF-8 bytes of the
+  RFC 8785 (JCS) serialization of the manifest without that field. The report carries
+  the manifest's reference and digest.
+- **Canonicalization** is RFC 8785 as published: object keys sorted by their UTF-16
+  code units, numbers written as ECMAScript writes them, strings escaped only where
+  RFC 8785 requires. An implementation MUST pass the examples of RFC 8785 §3.2.2 and
+  §3.2.3; `validate.py` carries them, with further edge cases, and checks itself
+  against them on every run. A document holding an integer beyond ±2^53, NaN, or an
+  infinity cannot be canonicalized and is refused.
+- **Verification** fails closed. A verifier, with access to the evidence store:
+  1. checks the manifest against its schema, its entries for duplicates, and
+     `manifest_sha256`;
+  2. resolves every `raw_ref` and `redacted_ref`, reads the object, and compares its
+     SHA-256 and, for raw objects, its size with the manifest;
+  3. checks that every evidence reference in the report (each case's `evidence_refs`,
+     every review's checklist, the Conformance Statement used) is listed in the
+     manifest, and that the report names the manifest's digest and run.
+
+  A missing object, a mismatch, or an unlisted reference invalidates every outcome that
   rests on it (§7, row 13); a manifest that does not verify invalidates the report.
+  `validate.py --report R --manifest M --evidence-root D` does all of this for a
+  directory store, where `evidence://name` is the file `D/name` and nothing outside
+  `D` resolves. Another store needs a resolver that makes the same checks.
 - **Redaction** removes secrets and personal data from published copies; it never
   removes a field an assertion depends on. Where such a field is sensitive, the
   assertion is verified against the raw copy by a reviewer with access, and the report
@@ -552,7 +570,7 @@ The report lists every row of CTS Section 90 whose status is Tested or Restates.
 - A Tested row is traced to the tests and cases Section 90 names (to cases, where it
   names cases).
 - A Restates row takes the state and trace of the row it restates (`derived_from`).
-- Rows that are Not testable are not listed.
+- Rows that are Not testable are not listed, nor are Restates rows that restate one.
 
 The state of a requirement, over the cases it is traced to, leaving out those
 `NOT_APPLICABLE`, and counting a traced case that the run did not include as
@@ -592,6 +610,8 @@ change an outcome.
 
 The run report (`cts-report.schema.json`) holds:
 
+- **plan:** what the run set out to do: `scope: full` (every CTS test) or
+  `scope: partial` (the tests listed, with the reason);
 - **provenance:** AQEF version, CTS revision and commit, contract version, harness and
   adapter versions, SUT name and version, the Conformance Statement used, the
   capabilities it claims, and the drain time;
@@ -603,6 +623,14 @@ The run report (`cts-report.schema.json`) holds:
 - **harness_findings:** failures of the harness, adapter, or network, apart from any
   outcome of the SUT;
 - the evidence manifest's reference and digest.
+
+**Completeness.** A report is complete when it holds every case of every planned test
+exactly once, each test of the plan exactly once with the case IDs the CTS gives it,
+and every requirement of §14.3 exactly once, with the trace Section 90 gives it. A
+report that is internally consistent but omits a planned case, or reports one twice, is
+invalid: `validate.py` compares the report with the CTS it names, not only with itself.
+A partial run is valid, and says so: requirements traced to unplanned tests stay
+unverified.
 
 A human-readable report SHOULD be produced from the JSON and show the same figures,
 every `NOT_RUN` with its reason, every unverified requirement, and harness findings
@@ -650,12 +678,19 @@ contract test (`stage-c-readiness.md`).
 | I-05 | Resets are per session; parallel cases share no counter, behavior, or log. | Stage C |
 | I-06 | A deliberately failing stand-in is a stimulus, not a harness failure. | Stage C |
 | I-07 | An absent SUT operation is decided from a probe, never from the manifest alone. | Stage C |
-| I-08 | Changing one byte of raw evidence, or removing it, is detected by verification. | Stage C |
+| I-08 | Changing one byte of raw or redacted evidence, misstating its size, removing it, or referring outside the store is detected by verification. | static (unit tests on the example evidence); Stage C on a real store |
 | I-09 | A test with cases `PASS` and `NOT_RUN` is `NOT_RUN`; `FAIL` dominates. | static |
 | I-10 | A requirement is `verified` only when every applicable traced case passed. | static |
 | I-11 | An unclaimed capability gives `NOT_APPLICABLE`, never `FAIL`. | Stage C |
 | I-12 | A manual review with an undecided item, or an unresolved dispute, never yields `PASS`. | static |
 | I-13 | Every recipe in `fixtures/` matches CTS 2.7, and every behavior code is defined in the CTS or §8.4. | static |
+| I-14 | A report is complete and its identifiers unique: planned cases, tests, and requirements each exactly once, with the CTS's case lists and Section 90's traces. | static |
+| I-15 | A case's capability is the CTS's; `CAPABILITY_NOT_CLAIMED` only where the Conformance Statement used does not claim it, and an unclaimed capability is always `NOT_APPLICABLE`. | static |
+| I-16 | Canonicalization matches RFC 8785, including its published examples and UTF-16 key order. | static |
+| I-17 | Every evidence reference of a report is in its manifest, and the report names the manifest's digest and run. | static |
+
+`tools/test_validate.py` exercises every static check, each on a valid case and on
+cases built to break it.
 
 ## 19. Version history
 
@@ -664,3 +699,4 @@ contract test (`stage-c-readiness.md`).
 | 0.1 | 2026-10-18 | external audit, Stage B | First draft: adapter boundary, outcomes, evidence, manual review, fault and clock profiles, security, slices. |
 | 0.2 | 2026-10-18 | external audit, Stage B | Envelope schemas, error origin and phase, observation lifecycle, digests, aggregation algebra, invariants. |
 | 0.3 | 2026-10-19 | integrated into the AQEF repository | v0.1 and v0.2 merged and checked against AQEF 0.39 and CTS WD7: the decisions are in `decisions.md`. |
+| 0.4 | 2026-10-20 | after the Contract Verification Audit | Run plan and report completeness; RFC 8785 canonicalization as published; evidence verified byte by byte; unit tests of every check; CI (decisions, part F). |

@@ -1,10 +1,12 @@
 # Harness Contract — audit decisions
 
-How version 0.3 of the Harness Contract answers the independent audit of the CTS:
-Stage A (Feasibility Audit of CTS Working Draft 6, findings FEA-001 to FEA-008), Stage B
-(Harness Contract v0.1, its Technical Review with findings HB-R01 to HB-R08 and
-engineering decisions HB-01 to HB-08, Harness Contract v0.2, and the v0.2 JSON Schema
-package), and the Consolidated Decision Register of 18 October 2026.
+How the Harness Contract answers the independent audit of the CTS. Parts A to E are
+the decisions of version 0.3, on Stage A (Feasibility Audit of CTS Working Draft 6,
+findings FEA-001 to FEA-008), Stage B (Harness Contract v0.1, its Technical Review with
+findings HB-R01 to HB-R08 and engineering decisions HB-01 to HB-08, Harness Contract
+v0.2, and the v0.2 JSON Schema package), and the Consolidated Decision Register of 18
+October 2026. Part F holds the decisions of version 0.4, on the Contract Verification
+Audit of version 0.3 (findings CV-01 to CV-06).
 
 Every decision was checked against AQEF Working Draft 0.39 and the CTS. None of them
 changes AQEF: the audit found no defect in it, and nothing here was changed in AQEF for
@@ -90,3 +92,25 @@ To the CTS only (Working Draft 7):
 - 0.5, 0.6, README: the `harness/` folder.
 
 To AQEF: none.
+
+## F. Contract Verification Audit of version 0.3
+
+The audit was a static reading of the repository on 19 October 2026; it did not run the
+validator. Each finding was checked against the code and confirmed.
+
+| Finding | Decision | Reason | Where |
+|---|---|---|---|
+| CV-01 · P1 · Report completeness and uniqueness not verified | Accepted | Confirmed: results were keyed by case ID, so a duplicate overwrote silently, and a consistent subset of a run validated. The report now carries its `plan` (full or partial); the validator compares the report with the CTS it names: every planned case and test exactly once, each test with the CTS's case list, every requirement with Section 90's trace, case-to-test bindings, the CTS revision. The example report is now complete: 29 cases, 5 tests, 395 requirements. Missing and duplicate entries are among the unit tests. | §15 Completeness; I-14; `cts-report.schema.json` `plan`; `tools/validate.py` `check_report` |
+| CV-02 · P1 · RFC 8785 claimed, not implemented | Accepted | Confirmed: keys were sorted by code point, not by UTF-16 code units, and numbers were not formatted as ECMAScript does. The validator now implements RFC 8785 as published, refuses what it cannot canonicalize (integers beyond ±2^53, NaN, infinities), and checks itself on every run against the examples of RFC 8785 §3.2.2 and §3.2.3 and edge cases, including the audit's U+E000 against U+1F600. Restricting the identifier to a custom form was not chosen: an independent verifier should be able to use any RFC 8785 implementation. | §12 Canonicalization; I-16; `jcs`, `JCS_VECTORS` |
+| CV-03 · P1 · Evidence bytes not checked | Accepted | Confirmed: only the manifest's own digest was recomputed. The validator now resolves every raw and redacted object, compares digests and size, checks that every evidence reference of the report is in the manifest, refuses references outside the store, and fails closed on a missing object. `--report` cannot be run without the evidence. The example report has real evidence objects; unit tests change a byte, truncate, remove, and misstate. Whether a real store's resolver does the same is a Stage C exit criterion. | §12 Verification; I-08, I-17; `check_manifest`; `examples/evidence/` |
+| CV-04 · P2 · Setup checks not machine-verifiable | Accepted, deferred | Already open as Q-03. The machine form needs the field paths of Q-02, which do not exist before an adapter; writing them now would fix guesses. The audit's closure criterion is taken into Q-03, before any postcondition fixture is automated. | `stage-c-readiness.md` Q-03 |
+| CV-05 · P2 · 32 operations untyped | Accepted, deferred | Declared scope of 0.3, as the audit notes. The closure criterion is taken into Q-01: a profile, examples, and a contract test before the first test that uses each operation. | `stage-c-readiness.md` Q-01 |
+| CV-06 · P2 · No negative cases for critical report shapes | Accepted | `tools/test_validate.py`: 49 unit tests, every static check on a valid case and on cases built to break it: duplicates, omissions, wrong traces and states, capability against the Conformance Statement, revision, evidence closure, tampering, canonicalization, recipes. A CI workflow runs the validator and the tests on every change to `conformance-tests/`. The two report examples in `examples/invalid/` were replaced by these tests, which build each broken report from the complete valid one. | `tools/test_validate.py`; `.github/workflows/cts-harness.yml`; I-14 to I-17 |
+
+The audit's next steps 1, 2, and 5 are now entry and exit criteria in
+`stage-c-readiness.md`: CI on the published commit with its SHA and output recorded,
+evidence verified on a real store, and every report run from an immutable checkout
+whose commit it records.
+
+To AQEF and to the CTS: no change.
+

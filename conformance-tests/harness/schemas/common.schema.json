@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.3/common.schema.json",
-  "title": "AQEF CTS Harness Contract 0.3 — shared definitions",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.4/common.schema.json",
+  "title": "AQEF CTS Harness Contract 0.4 — shared definitions",
   "$defs": {
     "contract_version": {
-      "const": "0.3"
+      "const": "0.4"
     },
     "id": {
       "type": "string",

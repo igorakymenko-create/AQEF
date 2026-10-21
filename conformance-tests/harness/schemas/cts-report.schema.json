@@ -1,13 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.3/cts-report.schema.json",
-  "title": "CTS run report 0.3",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.4/cts-report.schema.json",
+  "title": "CTS run report 0.4",
   "type": "object",
   "additionalProperties": false,
   "required": [
     "schema_version",
     "run_id",
     "provenance",
+    "plan",
     "started_at",
     "ended_at",
     "summary",
@@ -296,6 +297,50 @@
     },
     "evidence_manifest_sha256": {
       "$ref": "common.schema.json#/$defs/sha256"
+    },
+    "plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope",
+        "test_ids"
+      ],
+      "description": "What the run set out to do. full: every CTS test. partial: the tests listed, and the report says so. Every case of every planned test is reported exactly once.",
+      "properties": {
+        "scope": {
+          "enum": [
+            "full",
+            "partial"
+          ]
+        },
+        "test_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "common.schema.json#/$defs/test_id"
+          }
+        },
+        "reason": {
+          "type": "string",
+          "description": "Why a partial run left tests out."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "scope": {
+                "const": "partial"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "reason"
+            ]
+          }
+        }
+      ]
     }
   },
   "$defs": {

@@ -8,19 +8,20 @@ one. It tests the harness, not AQEF conformance.
 
 | ID | Question | Needed before | Proposed |
 |---|---|---|---|
-| Q-01 | Arguments and normalized results of the 32 operations not typed in 0.3. | Slices S4, S5 | Type each when its first test is automated; derive result shapes from Appendix B's schema types (Result, GateResult, Basis, Release Decision, Snapshot). |
+| Q-01 | Arguments and normalized results of the 32 operations not yet typed (CV-05). | The first S4 or S5 test using each | A profile per operation: arguments and normalized result as schemas, derived from Appendix B's types (Result, GateResult, Basis, Release Decision, Snapshot), with valid and invalid examples and a contract test. |
 | Q-02 | How the runner reads values out of SUT responses for **Expected** (for example `basis.results`). | S1 | A field-path map per surface, kept with the adapter, from Appendix B and C names to the surface's fields. |
-| Q-03 | Machine form of setup checks in `fixtures/`. | S3 | Each check as an operation, a JSON pointer, and an expected value, beside its words. |
+| Q-03 | Machine form of setup checks in `fixtures/` (CV-04). | Automating any postcondition fixture, in S3 | Each check as an operation, a field path (Q-02), a comparator, and an expected value, the words kept as explanation; negative tests that catch a tautological or wrong predicate. |
 | Q-04 | Signature mechanism for review records. | Manual suite | A detached signature over the JCS form of the record, or a record in an authenticated system. |
 | Q-05 | Default drain time and grace periods. | S2 | Measured during the S0 self-test; the defaults of §9.2 and §11 until then. |
-| Q-06 | Base of the schemas' `$id`: under the AQEF repository (0.3) or a vendor domain (v0.2). | Publication | Repository-based, as in 0.3. For the author to decide. |
+| Q-06 | Base of the schemas' `$id`: under the AQEF repository (0.3 onward) or a vendor domain (v0.2). | Publication | Repository-based. For the author to decide. |
 | Q-07 | Where harness and adapter code live. | S0 | Outside the specification repository; this folder holds only the contract, schemas, examples, recipes, and the validator. For the author to decide. |
 | Q-08 | Machine form of each test's **Expected**. | S1 to S3 | For the tests of the slices only, as predicates over the field paths of Q-02, kept with the runner and reviewed against the CTS text. |
 
 ## 2. Entry criteria
 
-1. Harness Contract 0.3 and CTS Working Draft 7 published together.
-2. `tools/validate.py` passes on the published package.
+1. Harness Contract 0.4 and CTS Working Draft 7 published together.
+2. `tools/validate.py` and `tools/test_validate.py` pass in CI on the published commit;
+   the commit SHA and both outputs are recorded with the Stage C plan.
 3. Q-06 and Q-07 decided.
 4. A run profile template exists: budgets and grace periods, drain time, allowlisted
    instance, credential references, retention.
@@ -45,11 +46,16 @@ one. It tests the harness, not AQEF conformance.
    case `NOT_RUN` gives the test `NOT_RUN` (I-09).
 4. For a negative harness assertion: a closed log gives `PASS`, an unclosed one
    `NOT_RUN`, a mock that calls late `FAIL` (I-04).
-5. Changing or removing one raw evidence object is detected (I-08).
+5. On a real evidence store, through its resolver: changing, truncating, or removing
+   one raw or redacted object is detected, and the cases resting on it become
+   `NOT_RUN` (I-08). (The unit tests show this on the example evidence only.)
 6. At least five contract tests of the adapter itself pass, including rejected
    envelopes (I-01) and a wrong contract version.
 7. The report validates, and `tools/validate.py` recomputes its test and requirement
    states without difference.
-8. If an implementation is available, one end-to-end run through the Appendix C REST
+8. Every report records the commit of the CTS and of this package it was run from
+   (`cts_commit`), from an immutable checkout, and `validate.py --report` verifies it
+   with its evidence.
+9. If an implementation is available, one end-to-end run through the Appendix C REST
    adapter, reported apart from the mock runs. No mock run is presented as a
    conformance result.
