@@ -89,6 +89,17 @@ def service(mutation=None):
     try:yield mock,server
     finally:server.shutdown();server.server_close();thread.join(timeout=2)
 
+# Adapter Contract 0.4 requires a *normative* CTS case ID, not a custom S3.5 profile name.
+# Profile remains separate in the execution fixture and diagnostic output.
+CASE_IDS={
+    'retry':'CT-EXE-003',
+    'healthy':'CT-EXE-008',
+    'validation_fail':'CT-ASM-001',
+    'validator_crash':'CT-ASM-014',
+    'inconclusive':'CT-DEC-006',
+    'judge_fail':'CT-REL-006',
+}
+
 PROFILES={
     'retry':('SR-503-THEN-OK','J-PASS-90','schema'),
     'healthy':('SR-OK','J-PASS-90','schema'),
@@ -147,6 +158,14 @@ def evaluate_independently(profile,config,records,events,validator_calls,observa
             'judge_calls':len(judges),'execution_id':ex['id'],'result_count':len(results),
             'gate_status':gate['status']}
 
+def build_request(profile,sid=None):
+    if profile not in PROFILES:raise ValueError('unknown profile')
+    return {'contract_version':'0.4','operation':'execute','run_id':'run-'+uuid.uuid4().hex,
+            'case_id':CASE_IDS[profile],'session_id':sid or 's350-'+uuid.uuid4().hex,
+            'correlation_id':'corr-'+uuid.uuid4().hex,'timeout_ms':10000,
+            'arguments':{'project_id':'s350-'+uuid.uuid4().hex,
+                         'suite':'cts-suite','environment':'cts-env'}}
+
 def run_case(profile,mutation=None,*,damage=False,terminal_observed=True):
     if profile not in PROFILES:raise ValueError('unknown profile')
     subject,judge,mode=PROFILES[profile]
@@ -154,10 +173,7 @@ def run_case(profile,mutation=None,*,damage=False,terminal_observed=True):
         cfg=fixture_base()
         if profile=='retry':cfg['project']['execution']={'retry':{'max_attempts':2,'on':'infrastructure_failure'}}
         sid='s350-'+uuid.uuid4().hex;mock.prepare_pipeline(sid,cfg,subject,judge,mode)
-        req={'contract_version':'0.4','operation':'execute','run_id':'run-'+uuid.uuid4().hex,
-             'case_id':'S3.5.0-'+profile,'session_id':sid,'correlation_id':'corr-'+uuid.uuid4().hex,
-             'timeout_ms':10000,'arguments':{'project_id':'s350-'+uuid.uuid4().hex,
-                                            'suite':'cts-suite','environment':'cts-env'}}
+        req=build_request(profile,sid)
         if validator.schema_errors('adapter-operation.schema.json',req):return {'outcome':'NOT_RUN','reason':'REQUEST_INVALID'}
         try:status,rsp=http('POST',server.url+'/api/v0.4/operations',req)
         except (OSError,ValueError):return {'outcome':'NOT_RUN','reason':'TRANSPORT_FAILED'}

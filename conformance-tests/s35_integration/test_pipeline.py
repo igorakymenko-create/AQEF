@@ -1,8 +1,20 @@
 import unittest
-from pipeline import run_case,PROFILES,service,evaluate_independently
+from pipeline import run_case,PROFILES,CASE_IDS,build_request,service,evaluate_independently,validator
 from mock import fixture_base
 
 class UnifiedPipelineCTS(unittest.TestCase):
+    def test_adapter_requests_are_schema_valid(self):
+        for profile in PROFILES:
+            with self.subTest(profile=profile):
+                request=build_request(profile)
+                self.assertEqual(validator.schema_errors('adapter-operation.schema.json',request),[],request)
+    def test_case_ids_are_normative(self):
+        import re
+        self.assertEqual(set(CASE_IDS),set(PROFILES))
+        self.assertEqual(len(set(CASE_IDS.values())),len(PROFILES))
+        for case_id in CASE_IDS.values():
+            self.assertRegex(case_id,r'^CT-[A-Z]{3}-[0-9]{3}$')
+
     def test_six_profiles(self):
         for profile in PROFILES:
             with self.subTest(profile=profile):
