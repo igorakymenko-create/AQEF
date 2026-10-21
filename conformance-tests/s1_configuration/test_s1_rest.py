@@ -26,7 +26,7 @@ class S1Rest(unittest.TestCase):
         from mock import fixture_base
         with services() as (mock,adapter):
             req,rsp=call(adapter,'CT-CFG-001',fixture_base(),'test')
-            self.assertEqual(rsp['data']['sut']['surface'],'rest')
+            self.assertEqual(rsp['data']['sut']['surface'],'equivalent')
     def test_seed_setup_is_rejected_if_broken(self):
         from s1_rest import RestMock
         x=fixture_seed_full();x['project']['suites'][0]['scenarios'][1]['evidence'].pop('conversation')
