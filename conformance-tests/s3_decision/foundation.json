@@ -1,0 +1,85 @@
+{
+  "version": "s3.0",
+  "scope": "DECISION_FOUNDATION_ONLY",
+  "normative_sources": {
+    "CT-DEC-006": "conformance-tests/13-decision.md",
+    "CT-DEC-012": "conformance-tests/13-decision.md",
+    "CT-REL-006": "conformance-tests/14-release-governance.md",
+    "F-REVIEWED": "conformance-tests/02-fixtures.md",
+    "harness": "conformance-tests/harness/harness-contract.md"
+  },
+  "capabilities": {
+    "CT-DEC-006": "core",
+    "CT-DEC-012": "human_review",
+    "CT-REL-006": "core"
+  },
+  "field_map": {
+    "gate_status": "gate.status",
+    "gate_reasons": "gate.reasons",
+    "gate_basis_results": "gate.basis.results",
+    "gate_basis_not_actionable": "gate.basis.not_actionable",
+    "gate_value": "gate.value",
+    "gate_override": "gate.override",
+    "result_id": "result.id",
+    "result_resolves": "result.resolves",
+    "effective_result_id": "effective_result.id",
+    "review_attempt_accepted": "review_attempt.accepted",
+    "release_attempt_accepted": "release_attempt.accepted",
+    "override_approved_by": "gate.override.approved_by",
+    "override_justification": "gate.override.justification"
+  },
+  "fixtures": {
+    "F-REVIEWED": {
+      "steps": ["load F-BASE + semantic-gate", "configure J-PASS-60", "execute cts-suite", "evaluate Gates", "as P-REVIEWER record pass Human Reviewer Result resolving Judge Result"],
+      "checks": [
+        {"id":"review-result-present","path":"review_result.oracle_type","op":"eq","value":"human_reviewer"},
+        {"id":"review-result-verdict","path":"review_result.verdict","op":"eq","value":"pass"},
+        {"id":"review-resolves-current","path":"review_result.resolves","op":"equals_path","value":"judge_result.id"},
+        {"id":"review-is-effective","path":"effective_result.id","op":"equals_path","value":"review_result.id"}
+      ]
+    }
+  },
+  "cases": {
+    "CT-DEC-006": {
+      "fixture": "F-BASE + semantic-gate; J-PASS-60",
+      "steps": ["load", "execute", "evaluate_gates", "retrieve_gate"],
+      "checks": [
+        {"id":"gate-blocks","path":"gate.status","op":"eq","value":"fail"},
+        {"id":"reason","path":"gate.reasons","op":"contains","value":"non_actionable_results"},
+        {"id":"actionable-zero","path":"gate.basis.results","op":"eq","value":0},
+        {"id":"nonactionable-one","path":"gate.basis.not_actionable","op":"eq","value":1},
+        {"id":"value-number-or-sentinel","path":"gate.value","op":"number_or_not_computed"}
+      ]
+    },
+    "CT-DEC-012": {
+      "capability": "human_review",
+      "variants": {
+        "a": {"fixture":"F-REVIEWED", "attempt":"review same Judge Result again as P-REVIEWER"},
+        "b": {"fixture":"F-REVIEWED", "attempt":"review Human Reviewer Result as P-REVIEWER"},
+        "c": {"fixture":"F-BASE + semantic-gate; J-PASS-90", "attempt":"review actionable Judge Result as P-REVIEWER"},
+        "d": {"fixture":"F-BASE + semantic-gate; J-PASS-60", "attempt":"review inconclusive Judge Result as P-NOPERM"}
+      },
+      "steps": ["prepare isolated variant", "read results+effective result", "evaluate gates and snapshot", "attempt invalid review", "read results+effective result again", "evaluate gates and snapshot again"],
+      "checks": [
+        {"id":"attempt-rejected","path":"after.review_attempt.accepted","op":"eq","value":false},
+        {"id":"results-immutable","path":"after.results","op":"equals_path","value":"before.results"},
+        {"id":"effective-unchanged","path":"after.effective_result.id","op":"equals_path","value":"before.effective_result.id"},
+        {"id":"gate-status-unchanged","path":"after.gates","op":"gate_status_reasons_equal","value":"before.gates"}
+      ]
+    },
+    "CT-REL-006": {
+      "fixture":"F-BASE + semantic-gate; J-FAIL-90",
+      "steps": ["load", "execute", "evaluate gates", "record overridden release attempt before override", "approve override of same GateResult as P-APPROVER with justification", "retrieve GateResult without re-evaluating gates", "record overridden release attempt again"],
+      "checks": [
+        {"id":"first-rejected","path":"before.release_attempt.accepted","op":"eq","value":false},
+        {"id":"second-accepted","path":"after.release_attempt.accepted","op":"eq","value":true},
+        {"id":"gate-remains-failed","path":"after.gate.status","op":"eq","value":"fail"},
+        {"id":"override-reference-present","path":"after.gate.override.record_id","op":"nonempty_string"},
+        {"id":"override-names-approver","path":"after.gate.override.approved_by","op":"eq","value":"P-APPROVER"},
+        {"id":"override-justification","path":"after.gate.override.justification","op":"nonempty_string"},
+        {"id":"same-gate-result","path":"after.gate.id","op":"equals_path","value":"before.gate.id"},
+        {"id":"no-new-gate-evaluation","path":"after.gate.evaluation_id","op":"equals_path","value":"before.gate.evaluation_id"}
+      ]
+    }
+  }
+}
