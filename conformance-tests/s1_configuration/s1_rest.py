@@ -89,7 +89,7 @@ class QuietHandler(BaseHTTPRequestHandler):
             with self.server.lock:self.server.evidence[ref]=(obj['run_id'],obj['case_id'],raw)
             response={'contract_version':'0.4','operation':'load_config','correlation_id':obj['correlation_id'],'success':True,
                 'data':{'sut':{'outcome':'accepted' if status in (200,201,202) else 'rejected','status':status,
-                 'body_ref':ref,'body_sha256':hashlib.sha256(raw).hexdigest(),'surface':'rest'}},'evidence_refs':[ref]}
+                 'body_ref':ref,'body_sha256':hashlib.sha256(raw).hexdigest(),'surface':'equivalent'}},'evidence_refs':[ref]}
             errs=v.schema_errors('adapter-response.schema.json',response)
             if errs:return self.reply(500,{'error':'ADAPTER_RESPONSE_SCHEMA','details':errs})
             return self.reply(200,response)
