@@ -1,16 +1,19 @@
 name: CTS Harness S0.2 Self-Test
+
 on:
   workflow_dispatch:
   push:
     paths:
-      - 'conformance-tests/harness/s02/**'
+      - 'conformance-tests/harness/s02_harness/**'
       - '.github/workflows/cts-harness-s02.yml'
   pull_request:
     paths:
-      - 'conformance-tests/harness/s02/**'
+      - 'conformance-tests/harness/s02_harness/**'
       - '.github/workflows/cts-harness-s02.yml'
+
 permissions:
   contents: read
+
 jobs:
   self-test:
     runs-on: ubuntu-latest
@@ -20,7 +23,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
       - name: Existing contract package validation
-        run: python3 -m pip install jsonschema==4.23.0 && python3 conformance-tests/harness/tools/validate.py
+        run: |
+          python3 -m pip install jsonschema==4.23.0
+          python3 conformance-tests/harness/tools/validate.py
+
       - name: S0.2 prototype tests
-        run: python3 -m unittest discover -s conformance-tests/harness/s02 -p 'test_*.py' -v
+        run: |
+          python3 -m unittest discover \
+            -s conformance-tests/harness/s02_harness \
+            -p 'test_*.py' -v
