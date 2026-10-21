@@ -66,7 +66,7 @@ class Integration(unittest.TestCase):
         self.assertFalse(out['success']);self.assertEqual(out['error']['code'],'SCHEMA_INVALID')
     def test_unsupported_operation_fails_closed(self):
         sid,run,case=self.begun()
-        out=self.operate('execute',{'x':1},sid,run,case)
+        out=self.operate('execute',{'project_id':'cts-test-project','suite':'cts-suite','environment':'cts-env'},sid,run,case)
         self.assertFalse(out['success']);self.assertEqual(out['error']['code'],'ADAPTER_SURFACE_UNSUPPORTED')
     def test_scripted_subject_and_log_correlation(self):
         sid,run,case=self.begun()
