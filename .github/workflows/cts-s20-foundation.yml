@@ -1,0 +1,43 @@
+name: CTS Stage C S2.0 Foundation Hardening
+on:
+  push:
+    paths:
+      - 'conformance-tests/s1_configuration/**'
+      - '.github/workflows/cts-s20-foundation.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout immutable triggering commit
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install contract validator
+        run: python -m pip install 'jsonschema==4.23.0' 'referencing>=0.30'
+      - name: Validate published package
+        run: python conformance-tests/harness/tools/validate.py
+      - name: Run S1 and S2.0 foundation regression
+        run: |
+          cd conformance-tests/s1_configuration
+          python -m unittest discover -p 'test_*.py' -v
+      - name: Print traceable foundation outcomes
+        run: |
+          cd conformance-tests/s1_configuration
+          python - <<'PY'
+          import json, os
+          from s20_foundation import canonical_http_suite, make_time_profile, validate_contract
+          print(json.dumps({'cts_commit':os.environ['GITHUB_SHA'],
+                            'scope':'S1_HTTP_MOCK_ONLY',
+                            'catalog_valid':validate_contract(),
+                            'run_profile':make_time_profile(),
+                            'correct_mock':canonical_http_suite(),
+                            'broken_mock':canonical_http_suite('accept_missing_tool_configuration')},
+                            indent=2))
+          PY
