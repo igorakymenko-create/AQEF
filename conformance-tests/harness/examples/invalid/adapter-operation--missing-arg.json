@@ -1,5 +1,5 @@
 {
-  "contract_version": "0.3",
+  "contract_version": "0.4",
   "operation": "evaluate_gates",
   "run_id": "r",
   "case_id": "CT-DEC-006",

@@ -1,5 +1,5 @@
 {
-  "contract_version": "0.3",
+  "contract_version": "0.4",
   "operation": "load_config",
   "run_id": "run-1",
   "case_id": "CT-CFG-025.05",

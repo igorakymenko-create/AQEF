@@ -1,15 +1,15 @@
 {
-  "schema_version": "0.3",
+  "schema_version": "0.4",
   "run_id": "run-1",
   "provenance": {
     "aqef_version": "0.39",
     "cts_revision": "WD7",
-    "cts_commit": "0000000",
-    "harness_contract_version": "0.3",
-    "harness_version": "0.3.0",
+    "cts_commit": "<commit of the CTS used>",
+    "harness_contract_version": "0.4",
+    "harness_version": "0.4.0",
     "adapter_id": "example-rest-adapter",
-    "adapter_version": "0.3.0",
-    "sut_name": "Example Engine",
+    "adapter_version": "0.4.0",
+    "sut_name": "Example Engine (mock)",
     "sut_version": "1.2",
     "conformance_statement_ref": "evidence://statement-example-engine-1.2.json",
     "capabilities_claimed": [
@@ -17,26 +17,37 @@
     ],
     "drain_ms": 5000
   },
-  "started_at": "2026-10-19T18:00:00Z",
-  "ended_at": "2026-10-19T19:10:00Z",
+  "plan": {
+    "scope": "partial",
+    "test_ids": [
+      "CT-CFG-025",
+      "CT-ASM-001",
+      "CT-SDK-001",
+      "CT-SDK-002",
+      "CT-REL-023"
+    ],
+    "reason": "Example: five tests chosen to show the aggregation rules."
+  },
+  "started_at": "2026-10-20T18:00:00Z",
+  "ended_at": "2026-10-20T19:10:00Z",
   "summary": {
     "cases": {
-      "PASS": 3,
       "FAIL": 1,
       "NOT_RUN": 1,
+      "PASS": 25,
       "NOT_APPLICABLE": 2
     },
     "tests": {
-      "PASS": 2,
       "FAIL": 1,
       "NOT_RUN": 1,
+      "PASS": 2,
       "NOT_APPLICABLE": 1
     },
     "requirements": {
-      "verified": 2,
-      "violated": 3,
-      "unverified": 2,
-      "not_applicable": 1
+      "verified": 24,
+      "violated": 4,
+      "unverified": 364,
+      "not_applicable": 3
     }
   },
   "cases": [
@@ -47,7 +58,247 @@
       "outcome": "PASS",
       "reason_code": "EXPECTED_MET",
       "evidence_refs": [
-        "evidence://CT-CFG-025.01"
+        "evidence://CT-CFG-025.01.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.02",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.02.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.03",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.03.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.04",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.04.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.05",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.05.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.06",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.06.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.07",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.07.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.08",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.08.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.09",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.09.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.10",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.10.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.11",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.11.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.12",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.12.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.13",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.13.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.14",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.14.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.15",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.15.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.16",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.16.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.17",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.17.json"
       ],
       "evidence_grades": [
         "observed"
@@ -61,15 +312,105 @@
       "capability": "core",
       "outcome": "NOT_RUN",
       "reason_code": "SETUP_FAILED",
+      "reason": "Starting configuration F-RETRY was rejected by the SUT.",
       "evidence_refs": [
-        "evidence://CT-CFG-025.18"
+        "evidence://CT-CFG-025.18.setup.json"
       ],
       "evidence_grades": [
         "observed"
       ],
       "setup_status": "failed",
-      "cleanup_status": "complete",
-      "reason": "Starting configuration F-RETRY was rejected by the SUT."
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.19",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.19.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.20",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.20.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.21",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.21.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.22",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.22.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.23",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.23.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
+    },
+    {
+      "case_id": "CT-CFG-025.24",
+      "test_id": "CT-CFG-025",
+      "capability": "core",
+      "outcome": "PASS",
+      "reason_code": "EXPECTED_MET",
+      "evidence_refs": [
+        "evidence://CT-CFG-025.24.json"
+      ],
+      "evidence_grades": [
+        "observed"
+      ],
+      "setup_status": "ready",
+      "cleanup_status": "complete"
     },
     {
       "case_id": "CT-CFG-025.25",
@@ -77,6 +418,7 @@
       "capability": "seeded_controls",
       "outcome": "NOT_APPLICABLE",
       "reason_code": "CAPABILITY_NOT_CLAIMED",
+      "reason": "seeded_controls is not claimed in the Conformance Statement.",
       "evidence_refs": [],
       "evidence_grades": [],
       "setup_status": "not_needed",
@@ -89,7 +431,7 @@
       "outcome": "PASS",
       "reason_code": "EXPECTED_MET",
       "evidence_refs": [
-        "evidence://CT-ASM-001"
+        "evidence://CT-ASM-001.json"
       ],
       "evidence_grades": [
         "observed"
@@ -104,7 +446,7 @@
       "outcome": "FAIL",
       "reason_code": "EXPECTED_VIOLATED",
       "evidence_refs": [
-        "evidence://CT-SDK-001"
+        "evidence://CT-SDK-001.json"
       ],
       "evidence_grades": [
         "observed"
@@ -118,6 +460,7 @@
       "capability": "sdk:<language>",
       "outcome": "NOT_APPLICABLE",
       "reason_code": "CAPABILITY_NOT_CLAIMED",
+      "reason": "sdk:<language> is not claimed in the Conformance Statement.",
       "evidence_refs": [],
       "evidence_grades": [],
       "setup_status": "not_needed",
@@ -130,7 +473,7 @@
       "outcome": "PASS",
       "reason_code": "EXPECTED_MET",
       "evidence_refs": [
-        "evidence://CT-REL-023"
+        "evidence://CT-REL-023.json"
       ],
       "evidence_grades": [
         "inspected"
@@ -148,7 +491,29 @@
       "outcome": "NOT_RUN",
       "case_ids": [
         "CT-CFG-025.01",
+        "CT-CFG-025.02",
+        "CT-CFG-025.03",
+        "CT-CFG-025.04",
+        "CT-CFG-025.05",
+        "CT-CFG-025.06",
+        "CT-CFG-025.07",
+        "CT-CFG-025.08",
+        "CT-CFG-025.09",
+        "CT-CFG-025.10",
+        "CT-CFG-025.11",
+        "CT-CFG-025.12",
+        "CT-CFG-025.13",
+        "CT-CFG-025.14",
+        "CT-CFG-025.15",
+        "CT-CFG-025.16",
+        "CT-CFG-025.17",
         "CT-CFG-025.18",
+        "CT-CFG-025.19",
+        "CT-CFG-025.20",
+        "CT-CFG-025.21",
+        "CT-CFG-025.22",
+        "CT-CFG-025.23",
+        "CT-CFG-025.24",
         "CT-CFG-025.25"
       ]
     },
@@ -183,37 +548,70 @@
   ],
   "requirements": [
     {
-      "requirement_id": "R-0129",
-      "state": "verified",
-      "traced_to": [
-        "CT-CFG-025.01"
-      ],
-      "evidence_grades": [
-        "observed"
-      ]
-    },
-    {
-      "requirement_id": "R-0213",
+      "requirement_id": "R-0002",
       "state": "unverified",
       "traced_to": [
-        "CT-CFG-025.18"
-      ]
-    },
-    {
-      "requirement_id": "R-0132",
-      "state": "not_applicable",
-      "traced_to": [
-        "CT-CFG-025.25"
-      ]
-    },
-    {
-      "requirement_id": "R-0067",
-      "state": "verified",
-      "traced_to": [
-        "CT-ASM-001"
+        "CT-SCT-005"
       ],
-      "evidence_grades": [
-        "observed"
+      "derived_from": "R-0092"
+    },
+    {
+      "requirement_id": "R-0003",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-003",
+        "CT-SCT-004"
+      ],
+      "derived_from": "R-0090"
+    },
+    {
+      "requirement_id": "R-0005",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-012"
+      ]
+    },
+    {
+      "requirement_id": "R-0006",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-003",
+        "CT-ASM-009"
+      ]
+    },
+    {
+      "requirement_id": "R-0007",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0015",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-024"
+      ]
+    },
+    {
+      "requirement_id": "R-0016",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-027"
+      ]
+    },
+    {
+      "requirement_id": "R-0017",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-026"
+      ]
+    },
+    {
+      "requirement_id": "R-0018",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-026"
       ]
     },
     {
@@ -225,12 +623,2464 @@
       ]
     },
     {
+      "requirement_id": "R-0022",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0023",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-007",
+        "CT-EXE-008"
+      ]
+    },
+    {
+      "requirement_id": "R-0024",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0025",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0026",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0027",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0029",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0030",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0031",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0032",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-005",
+        "CT-HRV-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0034",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-020"
+      ]
+    },
+    {
+      "requirement_id": "R-0035",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-019"
+      ]
+    },
+    {
+      "requirement_id": "R-0036",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0037",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0038",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-021"
+      ]
+    },
+    {
+      "requirement_id": "R-0039",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001",
+        "CT-REL-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0040",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-015",
+        "CT-DEC-017"
+      ]
+    },
+    {
+      "requirement_id": "R-0041",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0042",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001",
+        "CT-REL-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0043",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-002",
+        "CT-REL-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0044",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0045",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-006",
+        "CT-DEC-007",
+        "CT-DEC-011"
+      ]
+    },
+    {
+      "requirement_id": "R-0046",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-010"
+      ]
+    },
+    {
+      "requirement_id": "R-0047",
+      "state": "unverified",
+      "traced_to": [
+        "CT-TTP-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0048",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0049",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0050",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-001",
+        "CT-ABD-005"
+      ]
+    },
+    {
+      "requirement_id": "R-0051",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0052",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0053",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-009"
+      ]
+    },
+    {
+      "requirement_id": "R-0054",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0055",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0056",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-004",
+        "CT-EXE-005"
+      ]
+    },
+    {
+      "requirement_id": "R-0057",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0058",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-011"
+      ]
+    },
+    {
+      "requirement_id": "R-0059",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-012"
+      ]
+    },
+    {
+      "requirement_id": "R-0060",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-003",
+        "CT-ABD-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0063",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-017",
+        "CT-EXE-010",
+        "CT-DSR-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0064",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-009"
+      ]
+    },
+    {
+      "requirement_id": "R-0065",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-010"
+      ]
+    },
+    {
+      "requirement_id": "R-0066",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0067",
+      "state": "verified",
+      "traced_to": [
+        "CT-ASM-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0068",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-016"
+      ]
+    },
+    {
+      "requirement_id": "R-0069",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-017"
+      ]
+    },
+    {
+      "requirement_id": "R-0070",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-016"
+      ]
+    },
+    {
+      "requirement_id": "R-0071",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-018"
+      ]
+    },
+    {
+      "requirement_id": "R-0072",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0073",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-011"
+      ]
+    },
+    {
+      "requirement_id": "R-0074",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-019"
+      ]
+    },
+    {
+      "requirement_id": "R-0075",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0076",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-013",
+        "CT-MJG-005",
+        "CT-MJG-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0077",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0078",
+      "state": "unverified",
+      "traced_to": [
+        "CT-HRV-003",
+        "CT-HRV-005"
+      ]
+    },
+    {
+      "requirement_id": "R-0079",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-008",
+        "CT-ASM-015",
+        "CT-DEC-013"
+      ]
+    },
+    {
+      "requirement_id": "R-0082",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-019"
+      ]
+    },
+    {
+      "requirement_id": "R-0083",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-011"
+      ]
+    },
+    {
+      "requirement_id": "R-0084",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0087",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0088",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-016"
+      ]
+    },
+    {
+      "requirement_id": "R-0089",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0090",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-003",
+        "CT-SCT-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0091",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0092",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-005"
+      ]
+    },
+    {
+      "requirement_id": "R-0094",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-021"
+      ]
+    },
+    {
+      "requirement_id": "R-0095",
+      "state": "unverified",
+      "traced_to": [
+        "CT-TTP-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0096",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-017",
+        "CT-EXE-010",
+        "CT-DSR-003"
+      ],
+      "derived_from": "R-0063"
+    },
+    {
+      "requirement_id": "R-0097",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-035"
+      ]
+    },
+    {
+      "requirement_id": "R-0098",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-003",
+        "CT-REL-029"
+      ]
+    },
+    {
+      "requirement_id": "R-0099",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-029"
+      ]
+    },
+    {
+      "requirement_id": "R-0100",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-029"
+      ]
+    },
+    {
+      "requirement_id": "R-0101",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-036"
+      ]
+    },
+    {
+      "requirement_id": "R-0102",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-032"
+      ]
+    },
+    {
+      "requirement_id": "R-0103",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-019"
+      ]
+    },
+    {
+      "requirement_id": "R-0104",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-033"
+      ]
+    },
+    {
+      "requirement_id": "R-0105",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-017"
+      ]
+    },
+    {
+      "requirement_id": "R-0106",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-020"
+      ]
+    },
+    {
+      "requirement_id": "R-0107",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-018"
+      ]
+    },
+    {
+      "requirement_id": "R-0108",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-022"
+      ]
+    },
+    {
+      "requirement_id": "R-0111",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0112",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-037"
+      ]
+    },
+    {
+      "requirement_id": "R-0113",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-024"
+      ]
+    },
+    {
+      "requirement_id": "R-0114",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-025"
+      ]
+    },
+    {
+      "requirement_id": "R-0115",
+      "state": "violated",
+      "traced_to": [
+        "CT-SDK-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0116",
+      "state": "unverified",
+      "traced_to": [
+        "CT-RUI-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0117",
+      "state": "unverified",
+      "traced_to": [
+        "CT-RUI-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0118",
+      "state": "unverified",
+      "traced_to": [
+        "CT-RUI-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0119",
+      "state": "unverified",
+      "traced_to": [
+        "CT-RUI-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0120",
+      "state": "unverified",
+      "traced_to": [
+        "CT-RUI-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0121",
+      "state": "unverified",
+      "traced_to": [
+        "CT-PLG-005"
+      ]
+    },
+    {
+      "requirement_id": "R-0122",
+      "state": "unverified",
+      "traced_to": [
+        "CT-PLG-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0123",
+      "state": "unverified",
+      "traced_to": [
+        "CT-PLG-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0124",
+      "state": "unverified",
+      "traced_to": [
+        "CT-PLG-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0125",
+      "state": "unverified",
+      "traced_to": [
+        "CT-PLG-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0126",
+      "state": "unverified",
+      "traced_to": [
+        "CT-PLG-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0127",
+      "state": "unverified",
+      "traced_to": [
+        "CT-PLG-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0128",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0129",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.01"
+      ]
+    },
+    {
+      "requirement_id": "R-0130",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-020"
+      ]
+    },
+    {
+      "requirement_id": "R-0131",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-020"
+      ],
+      "derived_from": "R-0130"
+    },
+    {
+      "requirement_id": "R-0132",
+      "state": "not_applicable",
+      "traced_to": [
+        "CT-CFG-025.25"
+      ]
+    },
+    {
+      "requirement_id": "R-0133",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-005"
+      ]
+    },
+    {
+      "requirement_id": "R-0134",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-005"
+      ]
+    },
+    {
+      "requirement_id": "R-0135",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-005"
+      ]
+    },
+    {
+      "requirement_id": "R-0136",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0137",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.02"
+      ]
+    },
+    {
+      "requirement_id": "R-0138",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.03"
+      ]
+    },
+    {
+      "requirement_id": "R-0139",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.04"
+      ]
+    },
+    {
+      "requirement_id": "R-0140",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.05"
+      ]
+    },
+    {
+      "requirement_id": "R-0141",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0142",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.06"
+      ]
+    },
+    {
+      "requirement_id": "R-0143",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0144",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0145",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0146",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0147",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0148",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0149",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0150",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0151",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.07"
+      ]
+    },
+    {
+      "requirement_id": "R-0152",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-021"
+      ]
+    },
+    {
+      "requirement_id": "R-0153",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-021"
+      ],
+      "derived_from": "R-0152"
+    },
+    {
+      "requirement_id": "R-0154",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-009"
+      ]
+    },
+    {
+      "requirement_id": "R-0155",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.08"
+      ]
+    },
+    {
+      "requirement_id": "R-0156",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0157",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0158",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-022",
+        "CT-DSR-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0160",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-011"
+      ]
+    },
+    {
+      "requirement_id": "R-0161",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-022"
+      ]
+    },
+    {
+      "requirement_id": "R-0162",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0163",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-008"
+      ]
+    },
+    {
+      "requirement_id": "R-0164",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0165",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-005"
+      ]
+    },
+    {
+      "requirement_id": "R-0166",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0167",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0168",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0169",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0170",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0172",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-023"
+      ]
+    },
+    {
+      "requirement_id": "R-0173",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0174",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-019"
+      ]
+    },
+    {
+      "requirement_id": "R-0175",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.09"
+      ]
+    },
+    {
+      "requirement_id": "R-0176",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.10"
+      ]
+    },
+    {
+      "requirement_id": "R-0177",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.11"
+      ]
+    },
+    {
+      "requirement_id": "R-0178",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0179",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0180",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0181",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-005"
+      ]
+    },
+    {
+      "requirement_id": "R-0182",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0183",
+      "state": "unverified",
+      "traced_to": [
+        "CT-HRV-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0184",
+      "state": "unverified",
+      "traced_to": [
+        "CT-HRV-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0185",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.12"
+      ]
+    },
+    {
+      "requirement_id": "R-0186",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0187",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.13"
+      ]
+    },
+    {
+      "requirement_id": "R-0188",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0189",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0190",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0191",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-002",
+        "CT-MJG-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0192",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-002",
+        "CT-MJG-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0193",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0194",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0195",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.19"
+      ]
+    },
+    {
+      "requirement_id": "R-0196",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-017"
+      ]
+    },
+    {
+      "requirement_id": "R-0197",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-017",
+        "CT-EXE-010",
+        "CT-DSR-003"
+      ],
+      "derived_from": "R-0063"
+    },
+    {
+      "requirement_id": "R-0198",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.20"
+      ]
+    },
+    {
+      "requirement_id": "R-0199",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.21"
+      ]
+    },
+    {
+      "requirement_id": "R-0200",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DSR-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0201",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DSR-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0202",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.22"
+      ]
+    },
+    {
+      "requirement_id": "R-0203",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.23"
+      ]
+    },
+    {
+      "requirement_id": "R-0204",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DSR-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0205",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DSR-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0206",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DSR-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0207",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DSR-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0208",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DSR-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0209",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DSR-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0210",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DSR-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0211",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.24"
+      ]
+    },
+    {
+      "requirement_id": "R-0212",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0213",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-025.18"
+      ]
+    },
+    {
+      "requirement_id": "R-0214",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-010"
+      ]
+    },
+    {
+      "requirement_id": "R-0215",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-010"
+      ]
+    },
+    {
+      "requirement_id": "R-0216",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.14"
+      ]
+    },
+    {
+      "requirement_id": "R-0217",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.15"
+      ]
+    },
+    {
+      "requirement_id": "R-0218",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.16"
+      ]
+    },
+    {
+      "requirement_id": "R-0219",
+      "state": "verified",
+      "traced_to": [
+        "CT-CFG-025.17"
+      ]
+    },
+    {
+      "requirement_id": "R-0220",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-002",
+        "CT-REL-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0221",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-024"
+      ]
+    },
+    {
+      "requirement_id": "R-0222",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-021"
+      ]
+    },
+    {
+      "requirement_id": "R-0223",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-021"
+      ]
+    },
+    {
+      "requirement_id": "R-0224",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-021"
+      ]
+    },
+    {
+      "requirement_id": "R-0225",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-021"
+      ]
+    },
+    {
+      "requirement_id": "R-0226",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-017",
+        "CT-REL-021"
+      ]
+    },
+    {
+      "requirement_id": "R-0227",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-021"
+      ]
+    },
+    {
+      "requirement_id": "R-0228",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-021"
+      ]
+    },
+    {
+      "requirement_id": "R-0229",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-021"
+      ]
+    },
+    {
+      "requirement_id": "R-0230",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0231",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0232",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0233",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0234",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0235",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0236",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0237",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001",
+        "CT-REL-018"
+      ]
+    },
+    {
+      "requirement_id": "R-0238",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0239",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0240",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0241",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0242",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-010"
+      ]
+    },
+    {
+      "requirement_id": "R-0243",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0244",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0245",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0246",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-001",
+        "CT-DEC-017"
+      ]
+    },
+    {
+      "requirement_id": "R-0247",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-001",
+        "CT-REL-014"
+      ]
+    },
+    {
+      "requirement_id": "R-0248",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0249",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-001",
+        "CT-REL-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0250",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-013"
+      ]
+    },
+    {
+      "requirement_id": "R-0251",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-013"
+      ]
+    },
+    {
+      "requirement_id": "R-0252",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-013"
+      ]
+    },
+    {
+      "requirement_id": "R-0253",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-013"
+      ]
+    },
+    {
+      "requirement_id": "R-0254",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-013"
+      ]
+    },
+    {
+      "requirement_id": "R-0255",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-013"
+      ]
+    },
+    {
+      "requirement_id": "R-0256",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-013"
+      ]
+    },
+    {
+      "requirement_id": "R-0257",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-013"
+      ]
+    },
+    {
+      "requirement_id": "R-0262",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-005"
+      ]
+    },
+    {
+      "requirement_id": "R-0263",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-005"
+      ]
+    },
+    {
+      "requirement_id": "R-0264",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0265",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0266",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0267",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0268",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0269",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0270",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0271",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-010"
+      ]
+    },
+    {
+      "requirement_id": "R-0272",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-024"
+      ],
+      "derived_from": "R-0221"
+    },
+    {
+      "requirement_id": "R-0273",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-005",
+        "CT-DEC-008"
+      ]
+    },
+    {
+      "requirement_id": "R-0275",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0276",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0277",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-007",
+        "CT-CFG-012",
+        "CT-CFG-013"
+      ]
+    },
+    {
+      "requirement_id": "R-0278",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-009"
+      ]
+    },
+    {
+      "requirement_id": "R-0279",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-022",
+        "CT-DSR-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0280",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-008"
+      ]
+    },
+    {
+      "requirement_id": "R-0281",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-004",
+        "CT-CFG-005"
+      ]
+    },
+    {
+      "requirement_id": "R-0282",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-018",
+        "CT-DSR-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0283",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-010",
+        "CT-EXE-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0284",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-034"
+      ]
+    },
+    {
+      "requirement_id": "R-0285",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0286",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-006",
+        "CT-ASM-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0287",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0288",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0289",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-003",
+        "CT-SCT-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0290",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-015"
+      ]
+    },
+    {
+      "requirement_id": "R-0291",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-013",
+        "CT-MJG-008"
+      ]
+    },
+    {
+      "requirement_id": "R-0292",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-008"
+      ]
+    },
+    {
+      "requirement_id": "R-0293",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0294",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0295",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0296",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-003",
+        "CT-ABD-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0297",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0298",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-022"
+      ]
+    },
+    {
+      "requirement_id": "R-0299",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-012",
+        "CT-DEC-014",
+        "CT-DEC-018",
+        "CT-SCT-008"
+      ]
+    },
+    {
+      "requirement_id": "R-0300",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-012"
+      ]
+    },
+    {
+      "requirement_id": "R-0301",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-010"
+      ]
+    },
+    {
+      "requirement_id": "R-0302",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-015"
+      ]
+    },
+    {
+      "requirement_id": "R-0303",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-014"
+      ]
+    },
+    {
+      "requirement_id": "R-0304",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-005",
+        "CT-DEC-008"
+      ]
+    },
+    {
+      "requirement_id": "R-0305",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-006",
+        "CT-DEC-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0306",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-006",
+        "CT-REL-008"
+      ]
+    },
+    {
+      "requirement_id": "R-0307",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0308",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0309",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-010",
+        "CT-REL-011",
+        "CT-REL-012"
+      ]
+    },
+    {
+      "requirement_id": "R-0310",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-005"
+      ]
+    },
+    {
+      "requirement_id": "R-0311",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001",
+        "CT-REL-016",
+        "CT-REL-021"
+      ]
+    },
+    {
+      "requirement_id": "R-0312",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-017"
+      ]
+    },
+    {
+      "requirement_id": "R-0313",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-020"
+      ]
+    },
+    {
+      "requirement_id": "R-0314",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-018"
+      ]
+    },
+    {
+      "requirement_id": "R-0315",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-013"
+      ]
+    },
+    {
       "requirement_id": "R-0316",
       "state": "violated",
       "traced_to": [
         "CT-SDK-001",
         "CT-SDK-002"
       ]
+    },
+    {
+      "requirement_id": "R-0317",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0318",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-017"
+      ]
+    },
+    {
+      "requirement_id": "R-0319",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-015"
+      ]
+    },
+    {
+      "requirement_id": "R-0320",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-017"
+      ]
+    },
+    {
+      "requirement_id": "R-0321",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0322",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0323",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-008"
+      ]
+    },
+    {
+      "requirement_id": "R-0324",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-001",
+        "CT-DEC-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0325",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0326",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-005",
+        "CT-REL-010"
+      ]
+    },
+    {
+      "requirement_id": "R-0327",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-028"
+      ]
+    },
+    {
+      "requirement_id": "R-0328",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-019",
+        "CT-REL-028"
+      ]
+    },
+    {
+      "requirement_id": "R-0329",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-008",
+        "CT-REL-009",
+        "CT-REL-015",
+        "CT-REL-016",
+        "CT-REL-030"
+      ]
+    },
+    {
+      "requirement_id": "R-0330",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-008",
+        "CT-REL-009",
+        "CT-REL-015",
+        "CT-REL-016",
+        "CT-REL-030"
+      ]
+    },
+    {
+      "requirement_id": "R-0331",
+      "state": "unverified",
+      "traced_to": [
+        "CT-API-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0332",
+      "state": "unverified",
+      "traced_to": [
+        "CT-API-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0333",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0334",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0335",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0336",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0337",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-006",
+        "CT-ASM-012"
+      ]
+    },
+    {
+      "requirement_id": "R-0338",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0339",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0340",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0341",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0342",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-013"
+      ]
+    },
+    {
+      "requirement_id": "R-0343",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-008",
+        "CT-DEC-007"
+      ]
+    },
+    {
+      "requirement_id": "R-0344",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-006",
+        "CT-DEC-007",
+        "CT-DEC-009"
+      ]
+    },
+    {
+      "requirement_id": "R-0345",
+      "state": "unverified",
+      "traced_to": [
+        "CT-PLG-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0346",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-022"
+      ]
+    },
+    {
+      "requirement_id": "R-0347",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-022"
+      ]
+    },
+    {
+      "requirement_id": "R-0348",
+      "state": "unverified",
+      "traced_to": [
+        "CT-API-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0349",
+      "state": "unverified",
+      "traced_to": [
+        "CT-API-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0350",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-002"
+      ],
+      "derived_from": "R-0036"
+    },
+    {
+      "requirement_id": "R-0351",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001",
+        "CT-REL-002"
+      ],
+      "derived_from": "R-0042"
+    },
+    {
+      "requirement_id": "R-0352",
+      "state": "not_applicable",
+      "traced_to": [
+        "CT-SDK-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0353",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-027"
+      ],
+      "derived_from": "R-0016"
+    },
+    {
+      "requirement_id": "R-0354",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-007"
+      ],
+      "derived_from": "R-0084"
+    },
+    {
+      "requirement_id": "R-0356",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-004"
+      ],
+      "derived_from": "R-0007"
+    },
+    {
+      "requirement_id": "R-0357",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-001"
+      ],
+      "derived_from": "R-0075"
+    },
+    {
+      "requirement_id": "R-0359",
+      "state": "not_applicable",
+      "traced_to": [
+        "CT-SDK-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0360",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-004"
+      ],
+      "derived_from": "R-0007"
+    },
+    {
+      "requirement_id": "R-0361",
+      "state": "violated",
+      "traced_to": [
+        "CT-SDK-001",
+        "CT-SDK-002"
+      ],
+      "derived_from": "R-0316"
+    },
+    {
+      "requirement_id": "R-0362",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-003",
+        "CT-SCT-004"
+      ],
+      "derived_from": "R-0090"
+    },
+    {
+      "requirement_id": "R-0363",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-003",
+        "CT-ASM-009"
+      ],
+      "derived_from": "R-0006"
+    },
+    {
+      "requirement_id": "R-0364",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-007"
+      ],
+      "derived_from": "R-0084"
+    },
+    {
+      "requirement_id": "R-0365",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-001"
+      ],
+      "derived_from": "R-0189"
+    },
+    {
+      "requirement_id": "R-0366",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-001"
+      ],
+      "derived_from": "R-0189"
+    },
+    {
+      "requirement_id": "R-0367",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-006",
+        "CT-DEC-007",
+        "CT-DEC-011"
+      ],
+      "derived_from": "R-0045"
+    },
+    {
+      "requirement_id": "R-0369",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-011"
+      ],
+      "derived_from": "R-0083"
+    },
+    {
+      "requirement_id": "R-0370",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-007"
+      ],
+      "derived_from": "R-0084"
+    },
+    {
+      "requirement_id": "R-0371",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-006"
+      ],
+      "derived_from": "R-0022"
+    },
+    {
+      "requirement_id": "R-0372",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-001"
+      ],
+      "derived_from": "R-0075"
+    },
+    {
+      "requirement_id": "R-0373",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-017",
+        "CT-EXE-010",
+        "CT-DSR-003"
+      ],
+      "derived_from": "R-0063"
+    },
+    {
+      "requirement_id": "R-0376",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-007",
+        "CT-EXE-008"
+      ],
+      "derived_from": "R-0023"
+    },
+    {
+      "requirement_id": "R-0377",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-006"
+      ],
+      "derived_from": "R-0054"
+    },
+    {
+      "requirement_id": "R-0378",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-004",
+        "CT-EXE-005"
+      ],
+      "derived_from": "R-0056"
+    },
+    {
+      "requirement_id": "R-0379",
+      "state": "unverified",
+      "traced_to": [
+        "CT-TTP-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0382",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-024"
+      ],
+      "derived_from": "R-0113"
     },
     {
       "requirement_id": "R-0383",
@@ -241,13 +3091,361 @@
       ]
     },
     {
-      "requirement_id": "R-0361",
-      "state": "violated",
+      "requirement_id": "R-0384",
+      "state": "unverified",
       "traced_to": [
-        "CT-SDK-001",
-        "CT-SDK-002"
+        "CT-PLG-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0385",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-018",
+        "CT-DSR-003"
       ],
-      "derived_from": "R-0316"
+      "derived_from": "R-0282"
+    },
+    {
+      "requirement_id": "R-0386",
+      "state": "unverified",
+      "traced_to": [
+        "CT-EXE-004",
+        "CT-EXE-005"
+      ],
+      "derived_from": "R-0056"
+    },
+    {
+      "requirement_id": "R-0387",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-009"
+      ],
+      "derived_from": "R-0064"
+    },
+    {
+      "requirement_id": "R-0388",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-006"
+      ],
+      "derived_from": "R-0022"
+    },
+    {
+      "requirement_id": "R-0389",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-002",
+        "CT-REL-006"
+      ],
+      "derived_from": "R-0043"
+    },
+    {
+      "requirement_id": "R-0390",
+      "state": "unverified",
+      "traced_to": [
+        "CT-MJG-001"
+      ],
+      "derived_from": "R-0189"
+    },
+    {
+      "requirement_id": "R-0391",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-006"
+      ],
+      "derived_from": "R-0022"
+    },
+    {
+      "requirement_id": "R-0392",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-014"
+      ]
+    },
+    {
+      "requirement_id": "R-0393",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-016"
+      ]
+    },
+    {
+      "requirement_id": "R-0394",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0395",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-018"
+      ]
+    },
+    {
+      "requirement_id": "R-0396",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0397",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-031"
+      ]
+    },
+    {
+      "requirement_id": "R-0398",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-031"
+      ]
+    },
+    {
+      "requirement_id": "R-0399",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-031"
+      ]
+    },
+    {
+      "requirement_id": "R-0400",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-031"
+      ]
+    },
+    {
+      "requirement_id": "R-0401",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-031"
+      ]
+    },
+    {
+      "requirement_id": "R-0402",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-031"
+      ]
+    },
+    {
+      "requirement_id": "R-0403",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-031"
+      ]
+    },
+    {
+      "requirement_id": "R-0404",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-031"
+      ]
+    },
+    {
+      "requirement_id": "R-0405",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-031"
+      ]
+    },
+    {
+      "requirement_id": "R-0406",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-031"
+      ]
+    },
+    {
+      "requirement_id": "R-0407",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-018"
+      ]
+    },
+    {
+      "requirement_id": "R-0408",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-015"
+      ]
+    },
+    {
+      "requirement_id": "R-0409",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-011",
+        "CT-CFG-014"
+      ]
+    },
+    {
+      "requirement_id": "R-0410",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-016"
+      ]
+    },
+    {
+      "requirement_id": "R-0411",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-022",
+        "CT-DEC-023"
+      ]
+    },
+    {
+      "requirement_id": "R-0412",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-018"
+      ]
+    },
+    {
+      "requirement_id": "R-0413",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-012",
+        "CT-DEC-013",
+        "CT-DEC-018"
+      ]
+    },
+    {
+      "requirement_id": "R-0414",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-012",
+        "CT-HRV-002",
+        "CT-HRV-005"
+      ]
+    },
+    {
+      "requirement_id": "R-0415",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-013",
+        "CT-DEC-018",
+        "CT-SCT-008"
+      ]
+    },
+    {
+      "requirement_id": "R-0416",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-031"
+      ]
+    },
+    {
+      "requirement_id": "R-0417",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-031"
+      ]
+    },
+    {
+      "requirement_id": "R-0418",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0419",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-022",
+        "CT-DEC-023",
+        "CT-REL-012"
+      ]
+    },
+    {
+      "requirement_id": "R-0420",
+      "state": "unverified",
+      "traced_to": [
+        "CT-HRV-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0421",
+      "state": "unverified",
+      "traced_to": [
+        "CT-HRV-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0422",
+      "state": "unverified",
+      "traced_to": [
+        "CT-HRV-006"
+      ]
+    },
+    {
+      "requirement_id": "R-0423",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0424",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-008"
+      ]
+    },
+    {
+      "requirement_id": "R-0425",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-019"
+      ]
+    },
+    {
+      "requirement_id": "R-0426",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-029"
+      ]
+    },
+    {
+      "requirement_id": "R-0427",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-029"
+      ]
+    },
+    {
+      "requirement_id": "R-0428",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-029"
+      ]
+    },
+    {
+      "requirement_id": "R-0429",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-029"
+      ]
+    },
+    {
+      "requirement_id": "R-0430",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-029"
+      ]
+    },
+    {
+      "requirement_id": "R-0431",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-029",
+        "CT-REL-035"
+      ]
     }
   ],
   "manual_reviews": [
@@ -285,5 +3483,5 @@
   ],
   "harness_findings": [],
   "evidence_manifest_ref": "evidence://manifest-run-1.json",
-  "evidence_manifest_sha256": "6df57a21d6df3ac74d4c498600b57373fb08f7367a6eb7be401b2c4b3c992c51"
+  "evidence_manifest_sha256": "74d0187f1ce64246983f3c306af41fdaefbbad09295cae7ccaa462c655dab668"
 }

@@ -1,5 +1,5 @@
 {
-  "contract_version": "0.3",
+  "contract_version": "0.4",
   "operation": "load_config",
   "correlation_id": "corr-0101",
   "success": true,
