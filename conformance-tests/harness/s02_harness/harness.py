@@ -48,14 +48,14 @@ class Harness:
             'observed_at':utc(),'attributes':attrs}
         s.events.append(ev)
         return ev
-    def configure(self,sid,kind,behavior,applies='next_call'):
+    def configure(self,sid,kind,behavior,applies='next_call',endpoint_id=None):
         if kind not in ('subject','judge'):raise ValueError('unknown kind')
         self._validate(kind,behavior)
         if applies not in ('now','next_call'):raise ValueError('unknown applies')
         s=self.session(sid)
         with s.lock:
             if s.phase!='running':raise ValueError('session closed')
-            s.behaviors[kind]=behavior
+            s.behaviors[(kind, endpoint_id or ENDPOINTS[kind])]=behavior
             self._emit(s,'behavior_configured',kind=kind,behavior=behavior,applies=applies)
     def _validate(self,kind,behavior):
         subj={'SR-OK','SR-EMPTY','SR-ECHO','SR-503-THEN-OK','SR-SLOW-200','SR-BYE','H-REL-035-SUBJECT'}
@@ -63,20 +63,20 @@ class Harness:
         if kind=='subject' and (behavior in subj or re.fullmatch(r'SR-CALL\(https://cts-(?:stub|trip|outside)\.example/[^)]*\)',behavior)):return
         if kind=='judge' and (behavior in judge or re.fullmatch(r'J-MAP\((J-(?:PASS-90|PASS-60|FAIL-90)), (J-(?:PASS-90|PASS-60|FAIL-90)), (J-(?:PASS-90|PASS-60|FAIL-90))\)',behavior)):return
         raise ValueError('unsupported behavior')
-    def invoke(self,sid,kind,payload,endpoint_id=None,phase='action'):
+    def invoke(self,sid,kind,payload,endpoint_id=None,phase='action',correlation_id=None):
         s=self.session(sid)
         if kind not in ('subject','judge'):raise ValueError('unknown kind')
         endpoint_id=endpoint_id or ENDPOINTS[kind]
         with s.lock:
             if s.phase not in ('running','closed'):raise ValueError('unknown session phase')
             if s.phase=='closed':
-                self._emit(s,'late_call',kind=kind,endpoint_id=endpoint_id,phase=phase)
+                self._emit(s,'late_call',kind=kind,endpoint_id=endpoint_id,phase=phase,correlation_id=correlation_id)
                 raise RuntimeError('late call after observation closure')
-            code=s.behaviors.get(kind,SUBJECT_DEFAULT if kind=='subject' else JUDGE_DEFAULT)
+            code=s.behaviors.get((kind,endpoint_id),SUBJECT_DEFAULT if kind=='subject' else JUDGE_DEFAULT)
             self._validate(kind,code)
             key=(kind,endpoint_id)
             n=s.counters.get(key,0)+1;s.counters[key]=n
-            corr=uuid.uuid4().hex
+            corr=correlation_id or uuid.uuid4().hex
             self._emit(s,'call_received',kind=kind,endpoint_id=endpoint_id,behavior=code,call_no=n,phase=phase,correlation_id=corr,payload_sha256=digest(payload))
         t0=time.monotonic_ns()
         try:
