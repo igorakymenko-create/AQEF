@@ -142,10 +142,11 @@ def run_case(case,mutation=None,*,fixture_available=True,tamper_evidence=False,t
             return {'outcome':'NOT_RUN','reason':'EVIDENCE_INTEGRITY_FAILED'}
         if not terminal_observed:
             return {'outcome':'NOT_RUN','reason':'OBSERVATION_INCOMPLETE'}
-        # drain=0 is a deliberately FAST MOCK-SPECIFIC unit setting, NOT Q-05 closure readiness.
-        # Negative assertions still require a closed observation with a watermark.
-        mock.h.close_observation(sid,drain_ms=0,terminal_observed=True)
-        no_judge=mock.h.negative_assertion(sid,'judge',expected_count=0)
+        # Q-05: shared calibrated closure, not a zero-drain unit shortcut.
+        sys.path.insert(0,str(ROOT/'s355_closure'))
+        from observation import observe_closed
+        no_judge=observe_closed(mock.h,sid,'judge',expected_count=0)
+        if no_judge['outcome']=='NOT_RUN':return no_judge
         events=mock.h.read_log(sid)
         executions=mock.saved.get(sid,{}).get('executions',[])
         if len(executions)!=1:

@@ -113,12 +113,16 @@ def override_probe(mutation=None, tamper=None):
 
 
 def negative_observation(late=False, closed=True):
-    """Zero-drain *unit* check only; not proof of Q-05 timing compliance."""
+    """Q-05 measured close; late events still evaluated after closure."""
     h = Harness()
     sid = h.begin('s32-' + uuid.uuid4().hex)
     if not closed:
         return h.negative_assertion(sid, 'judge', 0)
-    h.close_observation(sid, drain_ms=0, terminal_observed=True)
+    sys.path.insert(0, str(ROOT / 's355_closure'))
+    from observation import observe_closed
+    observed = observe_closed(h, sid, 'judge', expected_count=0)
+    if observed['outcome'] == 'NOT_RUN':
+        return observed
     if late:
         try:
             h.invoke(sid, 'judge', {'response': 'Hello'}, correlation_id='late')

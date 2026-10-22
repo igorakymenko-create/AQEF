@@ -192,8 +192,10 @@ def run_case(profile,mutation=None,*,damage=False,terminal_observed=True):
                 return {'outcome':'FAIL','reason':'EXECUTION_REFERENCE_MISMATCH'}
         except (KeyError,ValueError,TypeError):return {'outcome':'NOT_RUN','reason':'EVIDENCE_INTEGRITY_FAILED'}
         if not terminal_observed:return {'outcome':'NOT_RUN','reason':'OBSERVATION_INCOMPLETE'}
-        # Deliberately fast unit observation. Q-05 measured timing remains OPEN.
-        mock.h.close_observation(sid,drain_ms=0,terminal_observed=True)
-        obs=mock.h.negative_assertion(sid,'subject',expected_count=2 if profile=='retry' else 1)
+        # Q-05: observed terminal state with measured, positive drain.
+        sys.path.insert(0,str(ROOT/'s355_closure'))
+        from observation import observe_closed
+        obs=observe_closed(mock.h,sid,'subject',expected_count=2 if profile=='retry' else 1)
+        if obs['outcome']=='NOT_RUN':return obs
         return evaluate_independently(profile,cfg,mock.saved[sid]['executions'],mock.h.read_log(sid),
                                       mock.saved[sid]['validator_calls'],obs)
