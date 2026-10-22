@@ -1,0 +1,60 @@
+name: CTS Stage C S3.5.1 Resolution and Approval
+on:
+  push:
+    paths:
+      - 'conformance-tests/s35_resolution/**'
+      - '.github/workflows/cts-s351-governance.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  governance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout immutable commit
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Dependencies
+        run: python -m pip install 'jsonschema==4.23.0' 'referencing>=0.30'
+      - name: Validate published schemas
+        run: python conformance-tests/harness/tools/validate.py
+      - name: S3.5.1 governance tests
+        run: cd conformance-tests/s35_resolution && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S3.5.0
+        run: cd conformance-tests/s35_integration && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S3.2
+        run: cd conformance-tests/s3_mutation && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S3.0 and S3.1
+        run: cd conformance-tests/s3_decision && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S2.3
+        run: cd conformance-tests/s2_mutation && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S2.2
+        run: cd conformance-tests/s2_assessment && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S2.1
+        run: cd conformance-tests/s2_execution && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S1 and S2.0
+        run: cd conformance-tests/s1_configuration && python -m unittest discover -p 'test_*.py' -v
+      - name: Traceable S3.5.1 verification
+        run: |
+          cd conformance-tests/s35_resolution
+          python - <<'PY'
+          import json, os
+          from test_governance import prepared, judge_result
+          from governance import inspect_override
+          m,e=prepared('J-FAIL-90')
+          original=dict(e['gate'])
+          first=m.record_release('P-RELEASE',e['id'])
+          approved=m.approve_override('P-APPROVER',e['id'],original['id'],'approved exception')
+          second=m.record_release('P-RELEASE',e['id'],approval_id=approved['approval']['record_id'])
+          verdict=inspect_override(m,e['id'],original,first,approved,second)
+          assert verdict['outcome']=='PASS',verdict
+          print(json.dumps({'cts_commit':os.environ['GITHUB_SHA'],
+              'scope':'S3.5.1_UNIFIED_MOCK_ONLY','override_verification':verdict,
+              'execution_id':e['id'],'gate_id':original['id'],
+              'approval_id':approved['approval']['record_id']},indent=2))
+          PY
