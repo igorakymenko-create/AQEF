@@ -1,0 +1,74 @@
+name: CTS C.2.4.5 Trusted Signing
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  trusted-signing:
+    if: github.event_name == 'workflow_dispatch' && github.repository == 'igorakymenko-create/AQEF'
+    runs-on: ubuntu-latest
+    environment: aqef-attestation
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned crypto dependency
+        run: python -m pip install 'cryptography==46.0.3'
+      - name: Confirm independently provisioned credentials exist
+        env:
+          KEY: ${{ secrets.AQEF_SIGNING_KEY_PEM }}
+          TRUST: ${{ secrets.AQEF_TRUST_STORE_JSON }}
+          KEY_ID: ${{ vars.AQEF_SIGNING_KEY_ID }}
+          SIGNER: ${{ vars.AQEF_SIGNER_IDENTITY }}
+        run: |
+          test -n "$KEY" && test -n "$TRUST" && test -n "$KEY_ID" && test -n "$SIGNER" || { echo "Missing external signing credentials / trust-store"; exit 1; }
+      - name: Create mock-only bounded evidence and manifest
+        env:
+          CI_SHA: ${{ github.sha }}
+          CI_RUN: ${{ github.run_id }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/c245"
+          python - <<'PY'
+          import hashlib,json,os,pathlib
+          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"c245"
+          content=json.dumps({"scope":"MOCK_ONLY","claim":"NO_SUT_CONFORMANCE","commit":os.environ["CI_SHA"],"run":os.environ["CI_RUN"]},sort_keys=True).encode()
+          (p/"ci-statement.json").write_bytes(content)
+          m={"cts_commit":os.environ["CI_SHA"],"files":{"ci-statement.json":hashlib.sha256(content).hexdigest()}}
+          (p/"closure_manifest.json").write_text(json.dumps(m))
+          PY
+      - name: Sign using externally provisioned secret
+        env:
+          AQEF_SIGNING_KEY_PEM: ${{ secrets.AQEF_SIGNING_KEY_PEM }}
+          KEY_ID: ${{ vars.AQEF_SIGNING_KEY_ID }}
+          SIGNER: ${{ vars.AQEF_SIGNER_IDENTITY }}
+          CI_SHA: ${{ github.sha }}
+          CI_RUN: ${{ github.run_id }}
+        run: |
+          ISSUED=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          EXPIRES=$(date -u -d '+1 day' +%Y-%m-%dT%H:%M:%SZ)
+          echo "$ISSUED" > "$RUNNER_TEMP/c245/issued_at.txt"
+          python conformance-tests/stage_c2/operational_signing.py sign \
+            --root "$RUNNER_TEMP/c245" --sha "$CI_SHA" --run "$CI_RUN" \
+            --now "$ISSUED" --expires "$EXPIRES" --key-id "$KEY_ID" --identity "$SIGNER"
+      - name: Independently verify against externally provisioned trust anchor
+        env:
+          TRUST: ${{ secrets.AQEF_TRUST_STORE_JSON }}
+          CI_SHA: ${{ github.sha }}
+          CI_RUN: ${{ github.run_id }}
+        run: |
+          printf '%s' "$TRUST" > "$RUNNER_TEMP/trust-store.json"
+          NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          python conformance-tests/stage_c2/operational_signing.py verify \
+            --root "$RUNNER_TEMP/c245" --sha "$CI_SHA" --run "$CI_RUN" \
+            --now "$NOW" --trust-store "$RUNNER_TEMP/trust-store.json"
+      - name: Upload verified signed evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: aqef-c245-signed-mock-${{ github.sha }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/c245/
+          retention-days: 90
+          if-no-files-found: error
