@@ -1,0 +1,26 @@
+name: CTS Stage C.2.1 Traceability
+on:
+  push:
+    paths:
+      - 'conformance-tests/stage_c2/**'
+      - '.github/workflows/cts-stage-c21-traceability.yml'
+  pull_request:
+    paths:
+      - 'conformance-tests/stage_c2/**'
+      - '.github/workflows/cts-stage-c21-traceability.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  traceability:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: C.2.1 traceability positive and negative tests
+        run: python -m unittest discover -s conformance-tests/stage_c2 -p 'test_*.py' -v
