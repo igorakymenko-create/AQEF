@@ -18,3 +18,7 @@ C.2 extends the conditionally accepted C.1. **Neither mock tests nor successful 
 A verified C2-1 ledger proves that **supplied local files match the claimed evidence hashes**, not that the observation actually came from a real SUT. The origin must be established by a trusted executor / attestation at a later slice. Not-run cases must never be counted as passed.
 
 Run: `python -m unittest discover -s conformance-tests/stage_c2 -p 'test_*.py' -v`
+
+## C.2.R1 — historical evidence recovery (in progress)
+
+Run `python conformance-tests/stage_c2/r1_recovery.py` to produce `r1_recovery_matrix.json`. It retains the 14 historical C.1 findings and immutable source runs but intentionally marks all as `NOT_ESTABLISHED` until finding-specific execution evidence is independently evaluated. Historical logs are available from GitHub Actions; availability of logs is not finding-level closure. The original C.1 `reconcile()` is preserved and must not be treated as verified finding disposition.
