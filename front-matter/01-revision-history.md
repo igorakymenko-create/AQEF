@@ -1,6 +1,6 @@
 # 1. Revision History
 
-**Status:** current through v0.39.
+**Status:** current through v0.40.
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
