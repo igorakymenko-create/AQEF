@@ -33,3 +33,14 @@ jobs:
             --regression "$RUNNER_TEMP/c25/regression.json" \
             --logs "$RUNNER_TEMP/c25/logs" \
             --output "$RUNNER_TEMP/c25/accounting.json"
+      - name: C.2.R1.3 fail-closed historical reconciliation
+        run: |
+          python conformance-tests/stage_c2/r13_reconciliation.py \
+            --sha "$GITHUB_SHA" --out "$RUNNER_TEMP/r13/c2_finding_register.json"
+      - name: Preserve C.2.R1.3 finding register
+        uses: actions/upload-artifact@v4
+        with:
+          name: c2-r13-finding-register-${{ github.sha }}
+          path: ${{ runner.temp }}/r13/c2_finding_register.json
+          retention-days: 90
+          if-no-files-found: error
