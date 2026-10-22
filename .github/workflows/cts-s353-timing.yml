@@ -1,0 +1,64 @@
+name: CTS Stage C S3.5.3 Measured Observation Timing
+on:
+  push:
+    paths:
+      - 'conformance-tests/s35_timing/**'
+      - '.github/workflows/cts-s353-timing.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  timing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout immutable commit
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Dependencies
+        run: python -m pip install 'jsonschema==4.23.0' 'referencing>=0.30'
+      - name: Published contract validation
+        run: python conformance-tests/harness/tools/validate.py
+      - name: S3.5.3 measured timing verification
+        run: cd conformance-tests/s35_timing && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S3.5.2 evidence
+        run: cd conformance-tests/s35_evidence && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S3.5.1 governance
+        run: cd conformance-tests/s35_resolution && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S3.5.0 integration
+        run: cd conformance-tests/s35_integration && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S3.2 mutation
+        run: cd conformance-tests/s3_mutation && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S3.0 and S3.1
+        run: cd conformance-tests/s3_decision && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S2.3
+        run: cd conformance-tests/s2_mutation && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S2.2
+        run: cd conformance-tests/s2_assessment && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S2.1
+        run: cd conformance-tests/s2_execution && python -m unittest discover -p 'test_*.py' -v
+      - name: Regression S1 and S2.0
+        run: cd conformance-tests/s1_configuration && python -m unittest discover -p 'test_*.py' -v
+      - name: Traceable measured timing outcomes
+        run: |
+          cd conformance-tests/s35_timing
+          python - <<'PY'
+          import json,os
+          from timing import measured_matrix
+          result=measured_matrix()
+          expected={'correct':'PASS','during_drain':'FAIL','after_closure':'FAIL',
+                    'insufficient_budget':'NOT_RUN','missing_terminal':'NOT_RUN'}
+          assert all(result[k]['outcome']==v for k,v in expected.items()),result
+          # Avoid logging raw session trace or payload: only audited summary.
+          summary={'cts_commit':os.environ['GITHUB_SHA'],'scope':result['scope'],
+                   'profile':result['profile'],
+                   'outcomes':{k:{m:result[k][m] for m in ('outcome','reason')}
+                               for k in expected},
+                   'observed_elapsed_ms':result['correct']['elapsed_ms'],
+                   'configured_drain_ms':result['correct']['configured_drain_ms']}
+          print(json.dumps(summary,indent=2))
+          PY
