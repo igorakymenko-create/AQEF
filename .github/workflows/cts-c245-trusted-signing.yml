@@ -26,20 +26,28 @@ jobs:
           SIGNER: ${{ vars.AQEF_SIGNER_IDENTITY }}
         run: |
           test -n "$KEY" && test -n "$TRUST" && test -n "$KEY_ID" && test -n "$SIGNER" || { echo "Missing external signing credentials / trust-store"; exit 1; }
-      - name: Create mock-only bounded evidence and manifest
+      - name: Install C.2 validator dependencies
+        run: python -m pip install 'jsonschema==4.23.0' 'referencing>=0.30'
+      - name: Generate C.2 historic register and verified 423-test accounting
+        env:
+          CI_SHA: ${{ github.sha }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/c2-source"
+          python conformance-tests/stage_c2/r13_reconciliation.py --sha "$CI_SHA" --out "$RUNNER_TEMP/c2-source/register.json"
+          python conformance-tests/stage_c_closure/run_regression.py --out "$RUNNER_TEMP/c2-source/regression" --sha "$CI_SHA"
+          python conformance-tests/stage_c2/regression_accounting.py \
+            --regression "$RUNNER_TEMP/c2-source/regression/regression.json" \
+            --logs "$RUNNER_TEMP/c2-source/regression/logs" \
+            --output "$RUNNER_TEMP/c2-source/accounting.json"
+      - name: Build signable evidence package
         env:
           CI_SHA: ${{ github.sha }}
           CI_RUN: ${{ github.run_id }}
         run: |
-          mkdir -p "$RUNNER_TEMP/c245"
-          python - <<'PY'
-          import hashlib,json,os,pathlib
-          p=pathlib.Path(os.environ["RUNNER_TEMP"])/"c245"
-          content=json.dumps({"scope":"MOCK_ONLY","claim":"NO_SUT_CONFORMANCE","commit":os.environ["CI_SHA"],"run":os.environ["CI_RUN"]},sort_keys=True).encode()
-          (p/"ci-statement.json").write_bytes(content)
-          m={"cts_commit":os.environ["CI_SHA"],"files":{"ci-statement.json":hashlib.sha256(content).hexdigest()}}
-          (p/"closure_manifest.json").write_text(json.dumps(m))
-          PY
+          python conformance-tests/stage_c2/r2_bundle.py \
+            --out "$RUNNER_TEMP/c245" --sha "$CI_SHA" --run "$CI_RUN" \
+            --register "$RUNNER_TEMP/c2-source/register.json" \
+            --accounting "$RUNNER_TEMP/c2-source/accounting.json"
       - name: Sign using externally provisioned secret
         env:
           AQEF_SIGNING_KEY_PEM: ${{ secrets.AQEF_SIGNING_KEY_PEM }}
