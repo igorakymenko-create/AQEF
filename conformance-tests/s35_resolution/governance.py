@@ -57,7 +57,12 @@ class GovernedPipeline(UnifiedMock):
         authorized='review' in PERMISSIONS.get(principal,set())
         current=target==effective['id']
         inconclusive=effective['disposition']!='actionable'
-        if self.mutation=='allow_stale_resolution':current=True
+        if self.mutation=='allow_stale_resolution':
+            # Deliberately broken SUT: accepts a stale reference even when the
+            # current effective Result is already actionable. Both guardrails
+            # must be bypassed to make this mutation non-equivalent.
+            current=True
+            inconclusive=True
         if self.mutation=='allow_actionable_resolution':inconclusive=True
         if self.mutation=='allow_unprivileged_resolution':authorized=True
         if not (authorized and current and inconclusive):
