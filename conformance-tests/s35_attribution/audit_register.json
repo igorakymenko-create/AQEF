@@ -1,0 +1,11 @@
+[
+ {"id":"S2-F01","status":"PARTIAL","reason":"S3.5.3 measured positive drain, but legacy S2 / S3.5.0 negative assertions still use drain_ms=0. Q-05 defaults for target environments uncalibrated.","owner":"S2/S3 exit re-audit"},
+ {"id":"S2-F02","status":"MOCK_CLOSED_PENDING_CI","reason":"Single unified Execution->Assessment->Decision mock; not a real SUT.","owner":"S3.5.0"},
+ {"id":"S2-F03","status":"MOCK_CLOSED_PENDING_CI","reason":"Filesystem raw/redacted resolver with independently anchored receipts in unit harness. Manifest signing and production custody outside scope.","owner":"S3.5.2"},
+ {"id":"S2-F04","status":"MOCK_CLOSED_PENDING_CI","reason":"Validator throws an actual injected exception in unified mock.","owner":"S3.5.0"},
+ {"id":"S3-F01","status":"MOCK_CLOSED_PENDING_CI","reason":"Resolution chain scoped by execution+clause with negative mutations.","owner":"S3.5.1"},
+ {"id":"S3-F02","status":"PARTIAL","reason":"Approval permissions are name-based mock roles; no cryptographically authenticated Principal or externally authenticated record.","owner":"S3.5.1 / real adapter"},
+ {"id":"Q-02","status":"PARTIAL","reason":"Explicit field-path mapping for seven mock readback operations; not all Appendix C surfaces.","owner":"S3.5.4"},
+ {"id":"Q-08","status":"PARTIAL","reason":"Machine-readable predicates for selected S2/S3 cases; coverage not all CTS assertions.","owner":"S3.5.4"},
+ {"id":"S3.5.4-REST","status":"PARTIAL","reason":"HTTP v0.4 mock operation facade with equivalent surface; not a real Appendix C SUT integration.","owner":"S3.5.4"}
+]
