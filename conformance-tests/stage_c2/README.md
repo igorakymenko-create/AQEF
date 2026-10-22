@@ -22,3 +22,7 @@ Run: `python -m unittest discover -s conformance-tests/stage_c2 -p 'test_*.py' -
 ## C.2.R1 — historical evidence recovery (in progress)
 
 Run `python conformance-tests/stage_c2/r1_recovery.py` to produce `r1_recovery_matrix.json`. It retains the 14 historical C.1 findings and immutable source runs but intentionally marks all as `NOT_ESTABLISHED` until finding-specific execution evidence is independently evaluated. Historical logs are available from GitHub Actions; availability of logs is not finding-level closure. The original C.1 `reconcile()` is preserved and must not be treated as verified finding disposition.
+
+## C.2.R1.3 — evidence-backed reconciliation
+
+`r13_reconciliation.py` consumes the R1.2 historical qualification matrix and invokes `reconcile_strict()`. It preserves C.1 historical claimed statuses as historical claims, but emits an independent C.2 disposition with **13 PARTIAL, 1 DEFERRED_REAL_SUT, 0 EVIDENCE_VERIFIED and 0 CLOSED** until independently verified finding-specific evidence is available. Its CI step generates and uploads `c2_finding_register.json` on the same immutable commit. The reported historical unit test outcomes are candidate references, not independently authenticated source-run evidence; the generated register is an honest unresolved finding ledger, not proof of historical remediation.
