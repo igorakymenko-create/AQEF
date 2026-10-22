@@ -22,5 +22,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: C.2.1 traceability positive and negative tests
+      - name: Install normative validator dependencies
+        run: python -m pip install 'jsonschema==4.23.0' 'referencing>=0.30'
+      - name: C.2.1 and C.2.2 positive and negative tests
         run: python -m unittest discover -s conformance-tests/stage_c2 -p 'test_*.py' -v
