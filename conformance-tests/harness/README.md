@@ -1,36 +1,56 @@
 # AQEF CTS Harness Contract
 
-The interfaces of the test infrastructure that runs the AQEF Conformance Test
-Specification: the runner, the adapter to the implementation under test, the scripted
-subject and Judge, evidence, manual review, and the run report.
+This directory contains the non-normative harness contract that accompanies the
+[AQEF Conformance Test Specification](../README.md). It describes the interfaces
+between a CTS runner, an adapter to an AQEF implementation under test, scripted
+subject and Judge fixtures, evidence collection, manual review, and run reporting.
 
-This is a separate, non-normative document, versioned on its own. It adds no
-requirement to AQEF and no test to the CTS: where it disagrees with either, they are
-right. Its normative words bind a harness, an adapter, or a runner, never an AQEF
-implementation. The version and the CTS draft it serves are stated at the top of
-`harness-contract.md`.
+The Harness Contract is versioned separately from AQEF and the CTS. It does not
+introduce requirements for an AQEF implementation or new CTS tests. In case of a
+disagreement, the AQEF specification takes precedence for implementation requirements,
+and the CTS takes precedence for test expectations. See
+[harness-contract.md](harness-contract.md) for the contract version and supported
+CTS/AQEF drafts.
 
-| Path | Content |
+## Contents
+
+| Path | Purpose |
 |---|---|
-| `harness-contract.md` | The contract |
-| `decisions.md` | How each audit finding was decided |
-| `stage-c-readiness.md` | Open questions; criteria for Stage C |
-| `schemas/` | JSON Schema 2020-12 for every envelope and record |
-| `examples/` | Valid examples; `examples/invalid/` must be rejected |
-| `fixtures/` | Recipes for the postcondition fixtures of CTS 2.7 |
-| `tools/validate.py` | Checks the package and its agreement with the CTS; verifies a run's report with its evidence |
-| `tools/test_validate.py` | Unit tests of every check |
+| [`harness-contract.md`](harness-contract.md) | Harness interfaces, reporting rules, and evidence requirements |
+| [`schemas/`](schemas/) | JSON Schema 2020-12 definitions for harness and report records |
+| [`examples/`](examples/) | Example records and evidence, including invalid examples for negative validation |
+| [`fixtures/`](fixtures/) | Machine-readable recipes for CTS §2.7 postcondition fixtures |
+| [`tools/validate.py`](tools/validate.py) | Validates the contract package or a CTS report with its evidence |
+| [`tools/test_validate.py`](tools/test_validate.py) | Unit tests for the validator |
 
-To check the package: `pip install jsonschema`, then, from the repository root:
+## Local validation
 
+Requires Python 3 and `jsonschema` (with its dependencies):
+
+```sh
+python -m pip install jsonschema
+python conformance-tests/harness/tools/validate.py
+python conformance-tests/harness/tools/test_validate.py
 ```
-python3 conformance-tests/harness/tools/validate.py
-python3 conformance-tests/harness/tools/test_validate.py
+
+Run these commands from the repository root. To validate a generated CTS run:
+
+```sh
+python conformance-tests/harness/tools/validate.py \
+  --report REPORT.json \
+  --manifest MANIFEST.json \
+  --evidence-root EVIDENCE_DIRECTORY
 ```
 
-To verify a run: `validate.py --report REPORT --manifest MANIFEST --evidence-root DIR`.
-The workflow `.github/workflows/cts-harness.yml` runs both checks on every change.
+These tools validate document structures, declared case outcomes, and evidence
+consistency within their supported scope. A successful local validation does **not**
+establish that any CTS case was executed against an independent AQEF implementation
+or that an AI system conforms to AQEF.
+
+This repository does not currently provide an automated GitHub Actions workflow for
+these checks.
 
 ## License
 
-CC BY 4.0, as the specification.
+The repository currently declares CC BY 4.0. Licensing terms specific to reusable
+software tools have not yet been separately established.
