@@ -48,7 +48,7 @@ def check_binding(ledger, report, manifest, evidence_root, commit, *, inventory=
         assertions = entry.get("assertions", [])
         if isinstance(assertions, list):
             ids = [a.get("predicate_id") for a in assertions if isinstance(a, dict)]
-            if len(ids) != len(assertions) or not ids or any(not isinstance(a, str) or not a for a in ids) and entry.get("outcome") in ("PASS","FAIL"):
+            if entry.get("outcome") in ("PASS", "FAIL") and (len(ids) != len(assertions) or not ids or any(not isinstance(a, str) or not a for a in ids)):
                 errors.append("missing predicate identity: " + cid)
             if len(set(ids)) != len(ids):
                 errors.append("duplicate predicate identity: " + cid)
