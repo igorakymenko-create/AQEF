@@ -698,5 +698,4 @@ cases built to break it.
 |---|---|---|---|
 | 0.1 | 2026-10-18 | external audit, Stage B | First draft: adapter boundary, outcomes, evidence, manual review, fault and clock profiles, security, slices. |
 | 0.2 | 2026-10-18 | external audit, Stage B | Envelope schemas, error origin and phase, observation lifecycle, digests, aggregation algebra, invariants. |
-| 0.3 | 2026-10-19 | integrated into the AQEF repository | v0.1 and v0.2 merged and checked against AQEF 0.39 and CTS WD7: the decisions are in `decisions.md`. |
-| 0.4 | 2026-10-20 | after the Contract Verification Audit | Run plan and report completeness; RFC 8785 canonicalization as published; evidence verified byte by byte; unit tests of every check; CI (decisions, part F). |
+| 0.3 | 2026-10-20 | after the Contract Verification Audit | Run plan and report completeness; RFC 8785 canonicalization as published; evidence verified byte by byte; unit tests of every check; CI (decisions, part F). |
