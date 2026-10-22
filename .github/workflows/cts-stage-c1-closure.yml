@@ -1,0 +1,56 @@
+name: CTS Stage C.1 Formal Evidence Closure
+on:
+  push:
+    paths:
+      - 'conformance-tests/stage_c_closure/**'
+      - '.github/workflows/cts-stage-c1-closure.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  formal-closure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact immutable SHA
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          ref: ${{ github.sha }}
+      - name: Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Dependencies
+        run: python -m pip install 'jsonschema==4.23.0' 'referencing>=0.30'
+      - name: Published contract and normative schema
+        run: python conformance-tests/harness/tools/validate.py
+      - name: Existing harness package and validator unit tests
+        run: python conformance-tests/harness/tools/test_validate.py
+      - name: C.1 package self tests
+        run: python -m unittest discover -s conformance-tests/stage_c_closure -p 'test_*.py' -v
+      - name: Unified immutable-commit regression (423 tests)
+        run: |
+          python conformance-tests/stage_c_closure/run_regression.py \
+            --out "$RUNNER_TEMP/aqef-c1" --sha "$GITHUB_SHA"
+      - name: S5 honest CTS Report and native independent verifier
+        run: |
+          python conformance-tests/s5_reporting/reporting.py \
+            --out "$RUNNER_TEMP/aqef-c1" --commit "$GITHUB_SHA" \
+            --claims 'cli,plugins:validator,human_review'
+          python conformance-tests/harness/tools/validate.py \
+            --report "$RUNNER_TEMP/aqef-c1/report.json" \
+            --manifest "$RUNNER_TEMP/aqef-c1/manifest.json" \
+            --evidence-root "$RUNNER_TEMP/aqef-c1/evidence"
+      - name: Reconciled audit and verifiable evidence ledger
+        run: |
+          python conformance-tests/stage_c_closure/closure.py \
+            --root "$RUNNER_TEMP/aqef-c1" --sha "$GITHUB_SHA" \
+            --legacy conformance-tests/s35_attribution/audit_register.json
+      - name: Upload closure bundle
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aqef-stage-c1-formal-closure-${{ github.sha }}
+          path: ${{ runner.temp }}/aqef-c1/
+          retention-days: 90
+          if-no-files-found: error
