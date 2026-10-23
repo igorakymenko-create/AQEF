@@ -238,7 +238,7 @@ where such a record exists; `reassess` (above) relies on it.
 | `verdict_distribution` | Map of String → Integer | How many of the scored items have each correct verdict. |
 | `raw_agreement` | Float | Share of scored items on which the Judge's verdict matched the correct one. |
 | `measure` | String | The chance-corrected agreement measure used, by name (for example, Cohen's kappa). |
-| `chance_corrected_agreement` | Float | Its value. |
+| `chance_corrected_agreement` | Float or `"not_computed"` | Its value; `"not_computed"` where the measure is undefined for the items scored. Never bare `null`. |
 | `threshold` | Float | The Project's minimum for that measure. |
 | `admitted` | Boolean | Whether the value meets the threshold. |
 | `labelled_by` | List of String | The Human Reviewers who established the correct verdicts. |
@@ -246,8 +246,16 @@ where such a record exists; `reassess` (above) relies on it.
 | `recorded_at` | DateTime | When the record was made. |
 | `recorded_by` | String | The Person who made it. |
 
-An Admission record is never modified. A Judge configuration is admitted only where a
-record with `admitted: true` exists for it; a Quality Gate with
+Every field is required except `arbitrations`. An absent `arbitrations` means that none
+were recorded; an empty one, that there was no disagreement to settle. `labelled_by` names
+at least one reviewer. `items` is at least 1, the counts in `verdict_distribution` add up
+to `items`, and `raw_agreement` lies between 0 and 1. Where `chance_corrected_agreement`
+is `"not_computed"`, `admitted` is `false`. A value meets `threshold` when it is equal to
+it or above it. A request that breaks any of these MUST be rejected.
+
+An Admission record is never modified. A Judge configuration is admitted when the most
+recent Admission record for it has `admitted: true`; a later record with
+`admitted: false` withdraws an earlier admission. A Quality Gate with
 `require_admitted_judges` (Appendix A §A.10) relies on it. A Multi Judge panel is
 admitted when every Judge configuration in it is.
 
@@ -287,7 +295,7 @@ aggregate that Gate read (Volume I, Chapter 6):
 | Field | Type | Description |
 |---|---|---|
 | `results` | Integer | Effective Results whose effective state is `actionable` that the aggregate was computed from. |
-| `not_actionable` | Integer | Effective Results in the same scope whose effective state is not `actionable` (§C.7), invalidated ones included, stale ones (Volume I, Chapter 6), and, for a Gate with `require_admitted_judges`, those from a Judge configuration without an admission. |
+| `not_actionable` | Integer | Effective Results in the same scope whose effective state is not `actionable` (§C.7), invalidated ones included, stale ones (Volume I, Chapter 6), and, for a Gate with `require_admitted_judges`, those from a Judge configuration that is not admitted. |
 | `scenarios` | Integer | Distinct Scenarios those Results came from. |
 | `executions` | Integer | Distinct Executions those Results came from. |
 | `min_basis_met` | Boolean or `"not_declared"` | Whether the Gate's `min_basis` (Appendix A §A.10) was met. `"not_declared"` when the Gate sets none. Never bare `null`. |
@@ -529,4 +537,4 @@ generated: no field changes afterwards.
 | `multi_judge` | Per clause assessed by a Multi Judge panel, its `purpose` (`independence` or `stability`). |
 | `unenforced_boundaries` | Every Environment in scope whose Action Boundary declares `enforced: false`. |
 | `boundary_attempts` | Every recorded attempt to cross an Action Boundary and every Tripwire touch: Execution, target, whether blocked, whether a Tripwire. |
-| `unadmitted_judges` | Every Judge configuration whose Results are in scope and that has no Admission record with `admitted: true` (Volume VI). |
+| `unadmitted_judges` | Every Judge configuration whose Results are in scope and that is not admitted: it has no Admission record, or its most recent one has `admitted: false` (Volume VI). |

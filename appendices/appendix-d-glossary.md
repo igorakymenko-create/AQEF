@@ -28,7 +28,7 @@ surfaced in Reports. Every attempt to cross it is recorded, blocked or not.
 **Admission** — Showing, before a Judge configuration is relied on, that its verdicts
 agree with human judgment (Volume VI): its agreement with a Reference Set, raw and
 corrected for chance, meets a threshold the Project set. Recorded as an Admission record
-(Appendix C §C.3); a changed Judge needs its own. A Quality Gate MAY require it
+(Appendix C §C.3); the most recent record decides, and a changed Judge needs its own. A Quality Gate MAY require it
 (`require_admitted_judges`). Distinct from Calibration (Confidence against accuracy, over
 time) and from Seeded Controls (each run).
 

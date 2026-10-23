@@ -155,7 +155,7 @@ looks diligent until its verdicts are compared with someone else's. Admission ma
 comparison before the Judge's Results are relied on, against a **Reference Set**: items
 whose correct verdict Human Reviewers have established, which the Judge then assesses.
 
-A Judge configuration is **admitted** when a record of its agreement with a Reference Set
+A Judge configuration is **admitted** when the most recent record of its agreement with a Reference Set
 shows that the agreement meets a threshold the Project set (Appendix C §C.3, Admission).
 The record MUST state the Reference Set and its version, how many items were scored and
 how their correct verdicts were distributed, the raw agreement, and an agreement measure
@@ -164,14 +164,15 @@ carry one verdict, a Judge that always gives it agrees with most of them and has
 nothing. Which measure to use and what threshold is enough are a Project's decisions, as
 the size of an Aggregate Basis is (Volume I, Chapter 6); this specification requires only
 that they are stated. The record is never modified, and a Judge that does not reach the
-threshold is recorded as not admitted.
+threshold is recorded as not admitted, which withdraws any earlier admission of that
+configuration.
 
 Admission belongs to one Judge configuration, as "the same Oracle" is decided on a
 Result's `oracle` (Appendix C §C.7): a changed model, prompt, or criteria is a different
 Judge and needs its own admission. A Multi Judge panel is admitted when every Judge
 configuration in it is. A Project MAY require admission before a Judge's Results count:
 a Quality Gate that declares `require_admitted_judges` (Appendix A §A.10) treats a Result
-from a Judge configuration without an admission as blocking, and records why
+from a Judge configuration that is not admitted as blocking, and records why
 (`judge_not_admitted`, Appendix A §A.12). Whether or not any Gate requires it, every
 Report shows the Judges in its scope that have not been admitted (Volume XI).
 

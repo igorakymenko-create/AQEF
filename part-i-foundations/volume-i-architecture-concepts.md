@@ -743,7 +743,7 @@ on its threshold alone, and its Aggregate Basis is still reported.
 
 A Quality Gate MAY require that the Judges whose Results it reads have been admitted
 (`require_admitted_judges`, Appendix A §A.10; Volume VI, Admission). Where it does, a
-Result from a Judge configuration without an admission is treated as blocking, counted
+Result from a Judge configuration that is not admitted is treated as blocking, counted
 in the Aggregate Basis as not actionable, and recorded as such (`judge_not_admitted`),
 not as a threshold failure: the Gate cannot tell whether the system passed, because it
 cannot tell whether the instrument works.
