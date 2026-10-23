@@ -28,9 +28,6 @@ test checks:
   offer (a fault hook, a clock), the hook is optional. Its absence is never a failure of
   the implementation; at most, it leaves a requirement unverified (CTS 1.7).
 
-The audit records behind this version are in `decisions.md`; open questions and the
-criteria for Stage C are in `stage-c-readiness.md`.
-
 ## 1. Scope
 
 In scope: orchestration of CTS tests, the adapter interface, the scripted subject and
@@ -92,8 +89,6 @@ CTS runner ─► fixture builder ─► adapter ─► SUT (the AQEF implementa
 | File | Content |
 |---|---|
 | `harness-contract.md` | This document. |
-| `decisions.md` | Audit findings and how each was decided. |
-| `stage-c-readiness.md` | Open questions; Stage C entry and exit criteria. |
 | `schemas/common.schema.json` | Shared definitions: IDs, outcomes, operations, reason codes. |
 | `schemas/adapter-operation.schema.json` | Request envelope (§5.1), with typed arguments (§5.5). |
 | `schemas/adapter-response.schema.json` | Response envelope (§5.2), with the SUT exchange (§5.3). |
@@ -186,8 +181,7 @@ origin and phase.
 
 Every operation the CTS needs, with the SUT operation it maps to on the Appendix C
 surface. "Typed" operations have their arguments fixed in
-`adapter-operation.schema.json` (`$defs/args`); the others take an object whose fields
-the Stage C operation profile fixes (`stage-c-readiness.md`, Q-01).
+`adapter-operation.schema.json` (`$defs/args`).
 
 | Operation | SUT operation (Appendix C) | Used by | Typed |
 |---|---|---|---|
@@ -445,8 +439,7 @@ Validator fail, CT-ASM-014 is `NOT_RUN` and its requirement is reported unverifi
   (`fixture-recipe.schema.json`): a base fixture and its changes, behaviors, steps in
   dependency order, setup checks, and cleanup. The recipe is a machine form of CTS 2.7;
   where they differ, CTS 2.7 is right, and `tools/validate.py` reports the difference.
-  Setup checks are stated in words; their machine form is a Stage C item
-  (`stage-c-readiness.md`, Q-03).
+  Setup checks are stated in words.
 - **Setup.** A recipe runs in the case's own Project, in phase `setup`. A failed step or
   check makes the case `NOT_RUN` (§7, row 5); the behavior that failed is reported by
   the test that checks it, not by this one (CTS 1.6).
@@ -666,8 +659,7 @@ the test is an Inspection, they follow §13.
 
 ## 18. Contract invariants
 
-Each invariant is checked statically by `tools/validate.py` or dynamically by a Stage C
-contract test (`stage-c-readiness.md`).
+Each invariant is checked statically by `tools/validate.py`.
 
 | ID | Invariant | Checked |
 |---|---|---|
