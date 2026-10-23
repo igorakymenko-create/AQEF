@@ -1,7 +1,7 @@
 {
   "fixture_id": "F-SA-DECISIONS",
   "recipe_version": "0.3.0",
-  "cts_ref": "CTS WD7 §2.7",
+  "cts_ref": "CTS WD8 §2.7",
   "base": "F-BASE",
   "base_changes": [
     "add semantic-gate (CTS 13.1) to the Project's quality_gates"

@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.4/common.schema.json",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.5/common.schema.json",
   "title": "AQEF CTS Harness Contract 0.4 — shared definitions",
   "$defs": {
     "contract_version": {
-      "const": "0.4"
+      "const": "0.5"
     },
     "id": {
       "type": "string",
@@ -86,6 +86,8 @@
         "invalidate_control",
         "requalify_oracle",
         "list_requalifications",
+        "record_admission",
+        "list_admissions",
         "evaluate_gates",
         "get_gate_results",
         "override_gate",
@@ -143,6 +145,8 @@
         "invalidate_control",
         "requalify_oracle",
         "list_requalifications",
+        "record_admission",
+        "list_admissions",
         "evaluate_gates",
         "get_gate_results",
         "override_gate",

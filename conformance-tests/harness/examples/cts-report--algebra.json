@@ -1,12 +1,12 @@
 {
-  "schema_version": "0.4",
+  "schema_version": "0.5",
   "run_id": "run-1",
   "provenance": {
-    "aqef_version": "0.39",
-    "cts_revision": "WD7",
+    "aqef_version": "0.41.1",
+    "cts_revision": "WD8",
     "cts_commit": "<commit of the CTS used>",
-    "harness_contract_version": "0.4",
-    "harness_version": "0.4.0",
+    "harness_contract_version": "0.5",
+    "harness_version": "0.5.0",
     "adapter_id": "example-rest-adapter",
     "adapter_version": "0.4.0",
     "sut_name": "Example Engine (mock)",
@@ -46,7 +46,7 @@
     "requirements": {
       "verified": 24,
       "violated": 4,
-      "unverified": 364,
+      "unverified": 374,
       "not_applicable": 3
     }
   },
@@ -742,7 +742,9 @@
       "state": "unverified",
       "traced_to": [
         "CT-DEC-015",
-        "CT-DEC-017"
+        "CT-DEC-017",
+        "CT-SCT-011",
+        "CT-SCT-015"
       ]
     },
     {
@@ -1050,7 +1052,8 @@
       "requirement_id": "R-0088",
       "state": "unverified",
       "traced_to": [
-        "CT-DEC-016"
+        "CT-DEC-016",
+        "CT-SCT-010"
       ]
     },
     {
@@ -1576,7 +1579,8 @@
       "requirement_id": "R-0166",
       "state": "unverified",
       "traced_to": [
-        "CT-SCT-001"
+        "CT-SCT-001",
+        "CT-SCT-009"
       ]
     },
     {
@@ -2416,7 +2420,9 @@
       "state": "unverified",
       "traced_to": [
         "CT-SCT-003",
-        "CT-SCT-004"
+        "CT-SCT-004",
+        "CT-SCT-012",
+        "CT-SCT-013"
       ]
     },
     {
@@ -2438,7 +2444,8 @@
       "requirement_id": "R-0292",
       "state": "unverified",
       "traced_to": [
-        "CT-MJG-008"
+        "CT-MJG-008",
+        "CT-MJG-009"
       ]
     },
     {
@@ -2491,7 +2498,8 @@
         "CT-DEC-012",
         "CT-DEC-014",
         "CT-DEC-018",
-        "CT-SCT-008"
+        "CT-SCT-008",
+        "CT-SCT-014"
       ]
     },
     {
@@ -2512,7 +2520,8 @@
       "requirement_id": "R-0302",
       "state": "unverified",
       "traced_to": [
-        "CT-DEC-015"
+        "CT-DEC-015",
+        "CT-SCT-011"
       ]
     },
     {
@@ -2527,7 +2536,8 @@
       "state": "unverified",
       "traced_to": [
         "CT-DEC-005",
-        "CT-DEC-008"
+        "CT-DEC-008",
+        "CT-ADM-007"
       ]
     },
     {
@@ -2535,7 +2545,8 @@
       "state": "unverified",
       "traced_to": [
         "CT-DEC-006",
-        "CT-DEC-007"
+        "CT-DEC-007",
+        "CT-SCT-011"
       ]
     },
     {
@@ -2639,14 +2650,17 @@
       "requirement_id": "R-0319",
       "state": "unverified",
       "traced_to": [
-        "CT-DEC-015"
+        "CT-DEC-015",
+        "CT-SCT-010",
+        "CT-SCT-011"
       ]
     },
     {
       "requirement_id": "R-0320",
       "state": "unverified",
       "traced_to": [
-        "CT-DEC-017"
+        "CT-DEC-017",
+        "CT-SCT-015"
       ]
     },
     {
@@ -3329,7 +3343,8 @@
       "traced_to": [
         "CT-DEC-013",
         "CT-DEC-018",
-        "CT-SCT-008"
+        "CT-SCT-008",
+        "CT-SCT-014"
       ]
     },
     {
@@ -3387,14 +3402,16 @@
       "requirement_id": "R-0423",
       "state": "unverified",
       "traced_to": [
-        "CT-SCT-004"
+        "CT-SCT-004",
+        "CT-SCT-013"
       ]
     },
     {
       "requirement_id": "R-0424",
       "state": "unverified",
       "traced_to": [
-        "CT-SCT-008"
+        "CT-SCT-008",
+        "CT-SCT-014"
       ]
     },
     {
@@ -3446,6 +3463,84 @@
         "CT-REL-029",
         "CT-REL-035"
       ]
+    },
+    {
+      "requirement_id": "R-0432",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-009"
+      ]
+    },
+    {
+      "requirement_id": "R-0433",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-009"
+      ]
+    },
+    {
+      "requirement_id": "R-0434",
+      "state": "unverified",
+      "traced_to": [
+        "CT-SCT-009"
+      ]
+    },
+    {
+      "requirement_id": "R-0435",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ADM-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0436",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ADM-001",
+        "CT-ADM-002",
+        "CT-ADM-003",
+        "CT-ADM-004"
+      ]
+    },
+    {
+      "requirement_id": "R-0437",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ADM-001"
+      ]
+    },
+    {
+      "requirement_id": "R-0438",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ADM-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0439",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ADM-001",
+        "CT-ADM-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0440",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ADM-002",
+        "CT-ADM-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0441",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ADM-004",
+        "CT-ADM-005",
+        "CT-ADM-006",
+        "CT-ADM-007"
+      ]
     }
   ],
   "manual_reviews": [
@@ -3483,5 +3578,5 @@
   ],
   "harness_findings": [],
   "evidence_manifest_ref": "evidence://manifest-run-1.json",
-  "evidence_manifest_sha256": "74d0187f1ce64246983f3c306af41fdaefbbad09295cae7ccaa462c655dab668"
+  "evidence_manifest_sha256": "44ab6e4e8980da36b624139f18944714a7bbf0a6da6b99e596661dc633ecf4ab"
 }

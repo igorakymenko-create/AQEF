@@ -1,7 +1,7 @@
 # AQEF CTS Harness Contract
 
-**Version:** 0.4. **For:** AQEF Conformance Test Specification Working Draft 7; AQEF
-Working Draft 0.38 and 0.39.
+**Version:** 0.5. **For:** AQEF Conformance Test Specification Working Draft 8; AQEF
+Working Draft 0.41.1.
 
 **Status:** Draft, ready for Stage C contract testing. Not yet tested against any
 implementation.
@@ -206,19 +206,21 @@ surface. "Typed" operations have their arguments fixed in
 | `get_artifacts` | `GET .../executions/{execution}/artifacts` | CT-EXE-012, Section 23 | |
 | `get_results` | `GET .../executions/{execution}/results` | Sections 12, 13 | yes |
 | `review_result` | `POST .../results/{result}/review` | Section 20; CT-DEC-010 to 012 | yes |
-| `reassess_result` | `POST .../results/{result}/reassess` | CT-DEC-013, 014, 018; CT-SCT-008 | yes |
+| `reassess_result` | `POST .../results/{result}/reassess` | CT-DEC-013, 014, 018; CT-SCT-008, 014 | yes |
 | `recheck_validator` | as the implementation documents (Volume V permits it) | CT-ASM-009, CT-ASM-018 | |
-| `confirm_control` | `POST .../seeded-controls/{scenario}/confirm` | CT-SCT-004 | |
+| `confirm_control` | `POST .../seeded-controls/{scenario}/confirm` | CT-SCT-004, 013 | |
 | `invalidate_control` | `POST .../seeded-controls/{scenario}/invalidate` | CT-SCT-007 | |
-| `requalify_oracle` | `POST /projects/{project}/requalifications` | CT-SCT-008 | |
-| `list_requalifications` | `GET /projects/{project}/requalifications` | CT-SCT-008 | |
+| `requalify_oracle` | `POST /projects/{project}/requalifications` | CT-SCT-008, 014 | |
+| `list_requalifications` | `GET /projects/{project}/requalifications` | CT-SCT-008, 014 | |
+| `record_admission` | `POST /projects/{project}/admissions` | CTS Section 16 | |
+| `list_admissions` | `GET /projects/{project}/admissions` | CTS Section 16 | |
 | `evaluate_gates` | `POST /projects/{project}/gates/check` | Sections 13, 14 | yes |
 | `get_gate_results` | the GateResults of an evaluation or a Release Decision | CT-REL-014 | |
 | `override_gate` | `POST .../gates/{gate}/override` | CT-REL-006 to 009 | yes |
 | `get_snapshot` | `GET .../snapshots/{snapshot}` | CT-REL-013 | |
 | `designate_baseline` | `POST .../baselines` | CT-REL-021, CT-PLG-004 | |
 | `list_baselines` | `GET .../baselines` | CT-REL-021 | |
-| `get_report` | `GET .../reports/{report}` | CT-REL-029, CT-REL-035 | yes |
+| `get_report` | `GET .../reports/{report}` | CT-REL-029, CT-REL-035; CT-ADM-004, 005 | yes |
 | `record_release` | `POST .../releases` | Section 14 | yes |
 | `list_releases` | `GET .../releases` | CT-REL-018 | |
 | `approve_policy` | `POST .../release-policies` | `RP-1`, CT-REL-031 | |
@@ -690,4 +692,6 @@ cases built to break it.
 |---|---|---|---|
 | 0.1 | 2026-10-18 | external audit, Stage B | First draft: adapter boundary, outcomes, evidence, manual review, fault and clock profiles, security, slices. |
 | 0.2 | 2026-10-18 | external audit, Stage B | Envelope schemas, error origin and phase, observation lifecycle, digests, aggregation algebra, invariants. |
-| 0.3 | 2026-10-20 | after the Contract Verification Audit | Run plan and report completeness; RFC 8785 canonicalization as published; evidence verified byte by byte; unit tests of every check; CI (decisions, part F). |
+| 0.3 | 2026-10-19 | integrated into the AQEF repository | v0.1 and v0.2 merged and checked against AQEF 0.39 and CTS WD7. |
+| 0.4 | 2026-10-20 | after the Contract Verification Audit | Run plan and report completeness; RFC 8785 canonicalization as published; evidence verified byte by byte; unit tests of every check. |
+| 0.5 | 2026-10-23 | for CTS WD8 | Written for CTS WD8 and AQEF 0.41.1. Operations `record_admission` and `list_admissions` for the Admission tests (CTS Section 16); the tests of clean controls added to the operations they use. The history above is restored: 0.3 and 0.4 had been merged into one row. |

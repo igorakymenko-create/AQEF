@@ -1,5 +1,5 @@
 {
-  "contract_version": "0.4",
+  "contract_version": "0.5",
   "operation": "raw_request",
   "run_id": "run-1",
   "case_id": "CT-REL-028",

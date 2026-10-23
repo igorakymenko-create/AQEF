@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.4/manual-review.schema.json",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.5/manual-review.schema.json",
   "title": "Manual review record 0.4",
   "description": "Decision of a named reviewer for an Inspection or Declaration test (CTS 1.8).",
   "type": "object",

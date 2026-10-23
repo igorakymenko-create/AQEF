@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.4/cts-report.schema.json",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.5/cts-report.schema.json",
   "title": "CTS run report 0.4",
   "type": "object",
   "additionalProperties": false,

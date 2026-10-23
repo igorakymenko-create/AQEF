@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.4/fixture-recipe.schema.json",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.5/fixture-recipe.schema.json",
   "title": "Fixture recipe 0.4",
   "description": "Machine-readable form of a CTS fixture (CTS 2.7). The CTS text is authoritative; a recipe that differs from it is wrong.",
   "type": "object",

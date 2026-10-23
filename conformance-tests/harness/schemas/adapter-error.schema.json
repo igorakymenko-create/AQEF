@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.4/adapter-error.schema.json",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.5/adapter-error.schema.json",
   "title": "Adapter error 0.4",
   "description": "Why an operation produced no SUT outcome. A SUT rejection is not an error: it is an outcome (adapter-response, sut.outcome = rejected).",
   "type": "object",
