@@ -174,11 +174,17 @@ labelled_by: [cts-labeller-1, cts-labeller-2]
   when every Judge configuration in it is."
 - **Method:** Automated
 - **Fixture:** F-PANEL (Section 21), with `semantic-gate` given
-  `require_admitted_judges: true`; all three Judges behave as `J-PASS-90`. Setup:
-  execute `cts-suite`, and read the `oracle` identifiers of `cts-scripted-judge-a@1`,
-  `-b`, and `-c` (`ORACLE-A`, `ORACLE-B`, `ORACLE-C`) from the implementation's records
-  of the panel's Result, or, where it reports them only in its documentation, from
-  there.
+  `require_admitted_judges: true`; all three Judges behave as `J-PASS-90`. A panel
+  member with the same model and criteria configuration as a single Judge is the same
+  Judge configuration (Appendix C §C.7, `oracle`), so each member's identifier is read
+  from a single-Judge run. Setup, in the test's Project: bind `s-greeting`'s
+  Expectation to `cts-scripted-judge-a@1` alone, with `confidence_source: self_rating`
+  and the criteria and `confidence_threshold` of F-BASE; execute `cts-suite` and read
+  the `oracle` on the Expectation's Result (`ORACLE-A`). Do the same for `-b` and `-c`
+  (`ORACLE-B`, `ORACLE-C`), each bound as a governed change (14.1). Then bind the
+  Expectation to F-PANEL's panel, as a governed change, and execute `cts-suite`; the
+  Gates below are evaluated for this batch. Setup check: the three identifiers
+  differ.
 - **Action:** (a) Record `ADM-PASS` for `ORACLE-A` and for `ORACLE-B`; evaluate the
   Gates. (b) Record `ADM-PASS` for `ORACLE-C`; evaluate the Gates. (c) Record
   `ADM-FAIL` for `ORACLE-B`; evaluate the Gates.

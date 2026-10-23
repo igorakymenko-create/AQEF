@@ -142,7 +142,7 @@ farewell that `greeting-missing` stands for here.
 
 ### CT-SCT-004 — A control confirmed by a Human Reviewer is invalid until confirmed
 
-- **Capability:** `seeded_controls` together with `human_review`
+- **Capability:** `seeded_controls`
 - **Requirement:** as CT-SCT-003; Appendix A §A.4, `confirmed_by: human_reviewer`: "a
   Human Reviewer confirms it per run."
 - **Method:** Automated
@@ -342,7 +342,7 @@ farewell that `greeting-missing` stands for here.
 
 ### CT-SCT-013 — A clean control confirmed by a Human Reviewer is invalid until confirmed
 
-- **Capability:** `seeded_controls` together with `human_review`
+- **Capability:** `seeded_controls`
 - **Requirement:** as CT-SCT-012; Appendix C §C.3, `POST
   .../seeded-controls/{scenario}/confirm`: "Record a Human Reviewer's confirmation that
   the planted defect is present (or, for a clean control, that the defect class is

@@ -80,7 +80,9 @@ Admission of Judges.
   have tests of their own; CT-SCT-001 to CT-SCT-008 and CT-DEC-015 to CT-DEC-018 still
   test defect controls, unchanged.
 - **Tests revised.** CT-REL-035 checks the sixth signal, `unadmitted_judges`. CT-SCT-008
-  quotes the revised Requalification rule.
+  quotes the revised Requalification rule. CT-SCT-004 belongs to `seeded_controls`
+  alone: confirming a control needs a Person holding `review`, not the capability
+  `human_review`, which is about Human Reviewers as Oracles.
 - **Fixture corrected.** F-SEED-V confirmed its planted farewell with a
   `forbidden-content` Validator, which fails when the farewell is present, while
   Appendix A §A.4 makes a confirmation pass when the Evidence is as the control
