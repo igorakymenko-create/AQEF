@@ -537,7 +537,7 @@ This section is the record format for CTS 1.8.
   decision.
 - **Signature.** `signature_ref` points to a signature over the JCS serialization of the
   record without that field, or to an authenticated record that identifies the
-  reviewer. The mechanism is a Stage C item (Q-04).
+  reviewer.
 - **Per test.** For CT-REL-023, the reviewer follows the actual record links and cites
   each. For CT-ABD-007 and every Declaration, the report states that the evidence is a
   statement. For Section 26 `RUI` tests, screenshots show the URL and a visible time.
