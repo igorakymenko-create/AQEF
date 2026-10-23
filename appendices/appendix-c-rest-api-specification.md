@@ -243,18 +243,22 @@ where such a record exists; `reassess` (above) relies on it.
 | `admitted` | Boolean | Whether the value meets the threshold. |
 | `labelled_by` | List of String | The Human Reviewers who established the correct verdicts. |
 | `arbitrations` | List of String | References to the records of how disagreements between them were settled. |
-| `recorded_at` | DateTime | When the record was made. |
-| `recorded_by` | String | The Person who made it. |
+| `recorded_at` | DateTime | When the implementation accepted the record. |
+| `recorded_by` | String | The Person who made the request. |
 
-Every field is required except `arbitrations`. An absent `arbitrations` means that none
-were recorded; an empty one, that there was no disagreement to settle. `labelled_by` names
-at least one reviewer. `items` is at least 1, the counts in `verdict_distribution` add up
-to `items`, and `raw_agreement` lies between 0 and 1. Where `chance_corrected_agreement`
-is `"not_computed"`, `admitted` is `false`. A value meets `threshold` when it is equal to
-it or above it. A request that breaks any of these MUST be rejected.
+The implementation sets `id`, `recorded_at`, and `recorded_by`; a request that supplies
+any of them MUST be rejected. Every other field is required except `arbitrations`. An
+absent `arbitrations` means that none were recorded; an empty one, that there was no
+disagreement to settle. `labelled_by` names at least one reviewer. `items` is at least 1,
+the counts in `verdict_distribution` are not negative and add up to `items`, and
+`raw_agreement` lies between 0 and 1. `chance_corrected_agreement` is a number or
+`"not_computed"`, never `null`; where it is `"not_computed"`, `admitted` is `false`. A
+value meets `threshold` when it is equal to it or above it. A request that breaks any of
+these MUST be rejected.
 
-An Admission record is never modified. A Judge configuration is admitted when the most
-recent Admission record for it has `admitted: true`; a later record with
+An Admission record is never modified. The most recent Admission record for a Judge
+configuration is the one the implementation accepted last. A Judge configuration is
+admitted when its most recent Admission record has `admitted: true`; a later record with
 `admitted: false` withdraws an earlier admission. A Quality Gate with
 `require_admitted_judges` (Appendix A §A.10) relies on it. A Multi Judge panel is
 admitted when every Judge configuration in it is.

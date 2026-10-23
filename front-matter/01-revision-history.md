@@ -1,6 +1,6 @@
 # 1. Revision History
 
-**Status:** current through v0.41.
+**Status:** current through v0.41.1.
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
@@ -27,3 +27,4 @@
 | 0.39 | 2026-10 | Igor Akymenko | Editorial. Document Status no longer says that every design decision is recorded with its reasoning. Appendix E redrawn for the current model (Principals and Release Policy, Quality Gates and the records of a Release Decision, Seeded Controls and requalification, Boundary Validator, panel reporting; new E.8). Examples H.2 and H.3 made valid: their tools are declared as ToolDefs, with an Action Boundary. A clipped note in Appendix F.6 shortened. No normative change. |
 | 0.40 | 2026-10 | Igor Akymenko | A Seeded Control can be a clean control (`kind: clean`): Evidence free of its defect class that the Oracle must pass. A false alarm on it counts as a miss and is reported as such (`false_alarm`, `seeded_control_false_alarm`); a Project SHOULD keep a clean control for every Judge that feeds a Gate. A Judge can be admitted before use, on its agreement with a Reference Set that Human Reviewers labelled, raw and corrected for chance (Volume VI, Admission; Appendix C, `/admissions`); a Quality Gate MAY require admitted Judges (`require_admitted_judges`, `judge_not_admitted`), and every Report shows Judges not admitted. A Human Reviewer who confirms a Seeded Control SHOULD not know which items are controls. Best Practices extended. Examples updated (Appendix H). |
 | 0.41 | 2026-10 | Igor Akymenko | Admission records made exact. Every field except `arbitrations` is required; `items` agrees with the verdict distribution; a chance-corrected value that cannot be computed is recorded as `"not_computed"` and is never admitted; a value equal to the threshold meets it; a request that breaks these is rejected. The most recent Admission record for a Judge configuration decides whether it is admitted, so a later failed record withdraws an earlier admission (Volume VI; Appendices B, C, D). |
+| 0.41.1 | 2026-10 | Igor Akymenko | Admission records: the implementation sets `id`, `recorded_at`, and `recorded_by`, and a request that supplies them is rejected; the most recent record is the one the implementation accepted last. Counts in `verdict_distribution` are not negative, and `chance_corrected_agreement` is never `null` (Appendices B, C). |
