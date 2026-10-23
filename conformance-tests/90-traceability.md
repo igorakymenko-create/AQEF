@@ -1,14 +1,15 @@
 # 90. Traceability
 
-This section maps every requirement in the MUST inventory of AQEF Working Draft 0.38 to
-the tests that check it, or says why no test does. The inventory is
+This section maps every requirement in the MUST inventory of AQEF Working Draft 0.41.1
+to the tests that check it, or says why no test does. The inventory is
 `_inventory/must-inventory.md` (391 rows, extracted from Working Draft 0.36) together
-with `_inventory/must-inventory-v037-additions.md` (28 rows added by 0.37) and
-`_inventory/must-inventory-v038-additions.md` (12 rows added by 0.38), 431 rows in
-all, identified `R-nnnn`. It lists every sentence containing MUST or MUST NOT, and every
-field Appendix A or C marks as required, so a few rows are definitions or restatements
-rather than requirements of their own. Ten rows whose text 0.37 or 0.38 revised keep
-their IDs and are marked.
+with `_inventory/must-inventory-v037-additions.md` (28 rows added by 0.37),
+`_inventory/must-inventory-v038-additions.md` (12 rows added by 0.38), and
+`_inventory/must-inventory-v041-additions.md` (10 rows added by 0.40 to 0.41.1), 441
+rows in all, identified `R-nnnn`. It lists every sentence containing MUST or MUST NOT,
+and every field Appendix A or C marks as required, so a few rows are definitions or
+restatements rather than requirements of their own. Seventeen rows whose text 0.37 to
+0.41.1 revised keep their IDs and are marked.
 
 ## 90.1 Status values
 
@@ -25,13 +26,13 @@ their IDs and are marked.
 
 | Status | Rows |
 |---|---|
-| Tested | 358 |
+| Tested | 368 |
 | Restates | 44 |
 | Field | 0 |
 | Scoped | 0 |
 | Not testable | 29 |
 | Not yet covered | 0 |
-| **Total** | **431** |
+| **Total** | **441** |
 
 ## 90.3 Requirement → test
 
@@ -76,7 +77,7 @@ their IDs and are marked.
 | R-0037 | Vol I, Aggregate Basis | Tested | CT-DEC-002 |
 | R-0038 | Vol I, Aggregate Basis | Tested | CT-DEC-021 |
 | R-0039 | Vol I, Quality Gates | Tested | CT-REL-001, CT-REL-003 |
-| R-0040 | Vol I, Quality Gates | Tested | CT-DEC-015, CT-DEC-017 |
+| R-0040 | Vol I, Quality Gates | Tested | CT-DEC-015, CT-DEC-017, CT-SCT-011, CT-SCT-015 |
 | R-0041 | Vol I, Quality Gates | Tested | CT-DEC-004 |
 | R-0042 | Vol I, Quality Gates | Tested | CT-REL-001, CT-REL-002 |
 | R-0043 | Vol I, Quality Gates | Tested | CT-REL-002, CT-REL-006 |
@@ -124,8 +125,8 @@ their IDs and are marked.
 | R-0085 | Vol VIII, Test Design Process | Not testable | applies to Test Design, a human activity |
 | R-0086 | Vol VIII, AI Test Patterns | Not testable | describes a test pattern |
 | R-0087 | Vol VIII, Seeded Controls | Tested | CT-SCT-007 |
-| R-0088 | Vol VIII, Seeded Controls | Tested | CT-DEC-016 |
-| R-0089 | Vol VIII, Seeded Controls | Tested | CT-SCT-001 |
+| R-0088 | Vol VIII, Seeded Controls | Tested | CT-DEC-016, CT-SCT-010 |
+| R-0089 | Vol VIII, Seeded Controls | Tested | CT-SCT-001; text revised in v0.40 or later |
 | R-0090 | Vol VIII, Seeded Controls | Tested | CT-SCT-003, CT-SCT-004 |
 | R-0091 | Vol VIII, Seeded Controls | Tested | CT-SCT-006 |
 | R-0092 | Vol VIII, Seeded Controls | Tested | CT-SCT-005 |
@@ -202,7 +203,7 @@ their IDs and are marked.
 | R-0163 | App A, A.4 — Scenario | Tested | CT-CFG-008 |
 | R-0164 | App A, A.4 — Scenario | Tested | CT-SCT-001 |
 | R-0165 | App A, A.4 — Scenario | Tested | CT-SCT-005 |
-| R-0166 | App A, A.4 — Scenario | Tested | CT-SCT-001 |
+| R-0166 | App A, A.4 — Scenario | Tested | CT-SCT-001, CT-SCT-009; text revised in v0.40 or later |
 | R-0167 | App A, A.4 — Scenario | Tested | CT-SCT-001 |
 | R-0168 | App A, A.4 — Scenario | Tested | CT-SCT-002 |
 | R-0169 | App A, A.4 — Scenario | Tested | CT-SCT-002 |
@@ -325,23 +326,23 @@ their IDs and are marked.
 | R-0286 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ASM-006, CT-ASM-007 |
 | R-0287 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ASM-006 |
 | R-0288 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-SCT-006 |
-| R-0289 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-SCT-003, CT-SCT-004 |
+| R-0289 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-SCT-003, CT-SCT-004, CT-SCT-012, CT-SCT-013; text revised in v0.40 or later |
 | R-0290 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-015 |
 | R-0291 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ASM-013, CT-MJG-008 |
-| R-0292 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-MJG-008 |
+| R-0292 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-MJG-008, CT-MJG-009 |
 | R-0293 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-002 |
 | R-0294 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-004 |
 | R-0295 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ABD-001 |
 | R-0296 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ABD-003, CT-ABD-004 |
 | R-0297 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ABD-006 |
 | R-0298 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-REL-022 |
-| R-0299 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-012, CT-DEC-014, CT-DEC-018, CT-SCT-008 |
+| R-0299 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-012, CT-DEC-014, CT-DEC-018, CT-SCT-008, CT-SCT-014 |
 | R-0300 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-012 |
 | R-0301 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-010 |
-| R-0302 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-015 |
+| R-0302 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-015, CT-SCT-011 |
 | R-0303 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ASM-014 |
-| R-0304 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-005, CT-DEC-008 |
-| R-0305 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-006, CT-DEC-007 |
+| R-0304 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-005, CT-DEC-008, CT-ADM-007 |
+| R-0305 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-006, CT-DEC-007, CT-SCT-011; text revised in v0.40 or later |
 | R-0306 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-REL-006, CT-REL-008; text revised in v0.37 or later |
 | R-0307 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-REL-007 |
 | R-0308 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-REL-004 |
@@ -355,8 +356,8 @@ their IDs and are marked.
 | R-0316 | App C | Tested | CT-SDK-001, CT-SDK-002 |
 | R-0317 | App C, C.1 — Design Principles | Tested | CT-EXE-007 |
 | R-0318 | App C, C.3 — Operations by Resource | Tested | CT-CFG-017 |
-| R-0319 | App C, C.3 — Operations by Resource | Tested | CT-DEC-015 |
-| R-0320 | App C, C.3 — Operations by Resource | Tested | CT-DEC-017 |
+| R-0319 | App C, C.3 — Operations by Resource | Tested | CT-DEC-015, CT-SCT-010, CT-SCT-011 |
+| R-0320 | App C, C.3 — Operations by Resource | Tested | CT-DEC-017, CT-SCT-015 |
 | R-0321 | App C, C.3 — Operations by Resource | Tested | CT-SCT-007 |
 | R-0322 | App C, C.3 — Operations by Resource | Tested | CT-SCT-007 |
 | R-0323 | App C, C.3 — Operations by Resource | Tested | CT-REL-008; text revised in v0.37 or later |
@@ -398,7 +399,7 @@ their IDs and are marked.
 | R-0359 | App D | Tested | CT-SDK-002 |
 | R-0360 | App D | Restates | R-0007 (CT-ASM-004) |
 | R-0361 | App D | Restates | R-0316 (CT-SDK-001, CT-SDK-002) |
-| R-0362 | App D | Restates | R-0090 (CT-SCT-003, CT-SCT-004) |
+| R-0362 | App D | Restates | R-0090 (CT-SCT-003, CT-SCT-004); text revised in v0.40 or later |
 | R-0363 | App D | Restates | R-0006 (CT-ASM-003, CT-ASM-009) |
 | R-0364 | App H, H.4 — Contract Composition and Reusable Contracts | Restates | R-0084 (CT-CFG-007); text revised in v0.37 or later |
 | R-0365 | App H, H.5 — Multi-Judge: Independence vs. Stability | Restates | R-0189 (CT-MJG-001) |
@@ -451,7 +452,7 @@ their IDs and are marked.
 | R-0412 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-REL-018; added in v0.37 |
 | R-0413 | App C, C.3 — Operations by Resource | Tested | CT-DEC-012, CT-DEC-013, CT-DEC-018; added in v0.37 |
 | R-0414 | App C, C.3 — Operations by Resource | Tested | CT-DEC-012, CT-HRV-002, CT-HRV-005; text revised in v0.37 or later; added in v0.37 |
-| R-0415 | App C, C.3 — Operations by Resource | Tested | CT-DEC-013, CT-DEC-018, CT-SCT-008; text revised in v0.37 or later; added in v0.37 |
+| R-0415 | App C, C.3 — Operations by Resource | Tested | CT-DEC-013, CT-DEC-018, CT-SCT-008, CT-SCT-014; text revised in v0.40 or later; added in v0.37 |
 | R-0416 | App C, C.3 — Operations by Resource | Tested | CT-REL-031; added in v0.37 |
 | R-0417 | App C, C.3 — Operations by Resource | Tested | CT-REL-031; added in v0.37 |
 | R-0418 | App C, C.7 — Result Response Shape | Tested | CT-ASM-006; added in v0.37 |
@@ -459,8 +460,8 @@ their IDs and are marked.
 | R-0420 | App A, A.5 — Quality Contract | Tested | CT-HRV-006; added in v0.38 |
 | R-0421 | App A, A.5 — Quality Contract | Tested | CT-HRV-006; added in v0.38 |
 | R-0422 | App B, B.2 — Property Constraints | Tested | CT-HRV-006; added in v0.38 |
-| R-0423 | App C, C.3 — Operations by Resource | Tested | CT-SCT-004; added in v0.38 |
-| R-0424 | App C, C.3 — Operations by Resource | Tested | CT-SCT-008; added in v0.38 |
+| R-0423 | App C, C.3 — Operations by Resource | Tested | CT-SCT-004, CT-SCT-013; text revised in v0.40 or later; added in v0.38 |
+| R-0424 | App C, C.3 — Operations by Resource | Tested | CT-SCT-008, CT-SCT-014; text revised in v0.40 or later; added in v0.38 |
 | R-0425 | App C, C.7 — Result Response Shape | Tested | CT-ASM-019; added in v0.38 |
 | R-0426 | App C, C.10 — Report Response Shape | Tested | CT-REL-029; added in v0.38 |
 | R-0427 | App C, C.10 — Report Response Shape | Tested | CT-REL-029; added in v0.38 |
@@ -468,6 +469,16 @@ their IDs and are marked.
 | R-0429 | App C, C.10 — Report Response Shape | Tested | CT-REL-029; added in v0.38 |
 | R-0430 | App C, C.10 — Report Response Shape | Tested | CT-REL-029; added in v0.38 |
 | R-0431 | App C, C.10 — Report Response Shape | Tested | CT-REL-029, CT-REL-035; added in v0.38 |
+| R-0432 | App A, A.4 — Scenario | Tested | CT-SCT-009; added in v0.40 to v0.41.1 |
+| R-0433 | App B, B.2 — Property Constraints | Tested | CT-SCT-009; added in v0.40 to v0.41.1 |
+| R-0434 | App B, B.2 — Property Constraints | Tested | CT-SCT-009; added in v0.40 to v0.41.1 |
+| R-0435 | Vol VI, Admission | Tested | CT-ADM-001; added in v0.40 to v0.41.1 |
+| R-0436 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ADM-001, CT-ADM-002, CT-ADM-003, CT-ADM-004; added in v0.40 to v0.41.1 |
+| R-0437 | App C, C.3 — Operations by Resource | Tested | CT-ADM-001; added in v0.40 to v0.41.1 |
+| R-0438 | App C, C.3 — Operations by Resource | Tested | CT-ADM-003; added in v0.40 to v0.41.1 |
+| R-0439 | App C, C.3 — Operations by Resource | Tested | CT-ADM-001, CT-ADM-002; added in v0.40 to v0.41.1 |
+| R-0440 | App C, C.3 — Operations by Resource | Tested | CT-ADM-002, CT-ADM-003; added in v0.40 to v0.41.1 |
+| R-0441 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ADM-004, CT-ADM-005, CT-ADM-006, CT-ADM-007; added in v0.40 to v0.41.1 |
 
 ## 90.4 Not yet covered
 
@@ -597,6 +608,13 @@ run; the test report lists it (1.7).
 | CT-REL-035 | R-0097, R-0431 |
 | CT-REL-036 | R-0101 |
 | CT-REL-037 | R-0112 |
+| CT-ADM-001 | R-0435, R-0436, R-0437, R-0439 |
+| CT-ADM-002 | R-0436, R-0439, R-0440 |
+| CT-ADM-003 | R-0436, R-0438, R-0440 |
+| CT-ADM-004 | R-0436, R-0441 |
+| CT-ADM-005 | R-0441 |
+| CT-ADM-006 | R-0441 |
+| CT-ADM-007 | R-0304, R-0441 |
 | CT-API-001 | R-0331, R-0332 |
 | CT-API-002 | R-0348, R-0349 |
 | CT-HRV-001 | R-0183 |
@@ -613,6 +631,7 @@ run; the test report lists it (1.7).
 | CT-MJG-006 | R-0076, R-0191, R-0192 |
 | CT-MJG-007 | R-0077 |
 | CT-MJG-008 | R-0291, R-0292 |
+| CT-MJG-009 | R-0292 |
 | CT-SCT-001 | R-0089, R-0164, R-0166, R-0167 |
 | CT-SCT-002 | R-0168, R-0169, R-0170, R-0264, R-0265 |
 | CT-SCT-003 | R-0090, R-0289 |
@@ -621,6 +640,13 @@ run; the test report lists it (1.7).
 | CT-SCT-006 | R-0091, R-0136, R-0288 |
 | CT-SCT-007 | R-0087, R-0321, R-0322 |
 | CT-SCT-008 | R-0299, R-0415, R-0424 |
+| CT-SCT-009 | R-0166, R-0432, R-0433, R-0434 |
+| CT-SCT-010 | R-0088, R-0319 |
+| CT-SCT-011 | R-0040, R-0302, R-0305, R-0319 |
+| CT-SCT-012 | R-0289 |
+| CT-SCT-013 | R-0289, R-0423 |
+| CT-SCT-014 | R-0299, R-0415, R-0424 |
+| CT-SCT-015 | R-0040, R-0320 |
 | CT-ABD-001 | R-0050, R-0141, R-0295 |
 | CT-ABD-002 | R-0143, R-0144, R-0145, R-0146, R-0148, R-0149, R-0150 |
 | CT-ABD-003 | R-0051, R-0060, R-0296 |

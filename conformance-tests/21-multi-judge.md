@@ -147,3 +147,21 @@ each. Unless a test says otherwise, all three behave as `J-PASS-90`.
 - **Expected:** (a) The Result is `not_assessed`, `verdict: null`. (b) The Result has a
   verdict (`pass`) and `panel: { configured: 3, counted: 2 }`.
 - **Fails if:** (a) has a verdict, or (b) is `not_assessed` or counts Judge `a`.
+
+### CT-MJG-009 — A false alarm counts against the quorum as a miss does
+
+- **Capability:** `multi_judge` together with `seeded_controls`
+- **Requirement:** as CT-MJG-008; Appendix B §B.3, Clean control: a false alarm "is a
+  miss for every rule on missed Seeded Controls (invalidation, failing fast, quorum,
+  ...)".
+- **Method:** Automated
+- **Fixture:** F-PANEL plus F-CLEAN's `s-clean` (Section 22), whose Expectation uses the
+  same panel; `s-clean` placed first in `cts-suite`, and `execution: { scheduling:
+  sequential }`. `cts-scripted-judge-a@1` behaves as `J-ALARM` (it raises a false alarm
+  on the control); `-b` and `-c` behave as `J-PASS-90`. Two variants: (a) no
+  `min_qualified`; (b) `min_qualified: 2`.
+- **Action:** Execute `cts-suite` for each variant; retrieve `s-greeting`'s Expectation
+  Result.
+- **Expected:** (a) The Result is `not_assessed`, `verdict: null`. (b) The Result has a
+  verdict (`pass`) and `panel: { configured: 3, counted: 2 }`.
+- **Fails if:** (a) has a verdict, or (b) is `not_assessed` or counts Judge `a`.

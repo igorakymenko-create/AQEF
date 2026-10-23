@@ -6,7 +6,7 @@ Every test has the same fields:
 
 | Field | Meaning |
 |---|---|
-| **ID** | `CT-<area>-<nnn>`. Areas: `CFG` configuration, `EXE` execution, `ASM` assessment, `DEC` decision, `REL` release and governance, `API` API behavior not tied to one layer; for scoped capabilities, `HRV` Human Review, `MJG` Multi Judge, `SCT` Seeded Controls, `ABD` Action Boundary, `DSR` Dataset sources, `PLG` Plugins, `SDK` SDKs and CLI, `RUI` Reference UI, `TTP` Test Types. IDs are never reused. |
+| **ID** | `CT-<area>-<nnn>`. Areas: `CFG` configuration, `EXE` execution, `ASM` assessment, `DEC` decision, `REL` release and governance, `ADM` Admission of Judges, `API` API behavior not tied to one layer; for scoped capabilities, `HRV` Human Review, `MJG` Multi Judge, `SCT` Seeded Controls, `ABD` Action Boundary, `DSR` Dataset sources, `PLG` Plugins, `SDK` SDKs and CLI, `RUI` Reference UI, `TTP` Test Types. IDs are never reused. |
 | **Capability** | The Conformance Statement identifier the test belongs to (§10). `core` for the non-negotiable core. |
 | **Requirement** | Where the requirement is stated, by Volume or Appendix and section, with the operative words quoted. |
 | **Method** | How the outcome is observed (1.3). |

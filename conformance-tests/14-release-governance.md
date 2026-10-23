@@ -646,7 +646,10 @@ Workflow governs it.
 
 - **Capability:** core
 - **Requirement:** Volume XI, Reports: "a Report MUST surface the specific signals
-  earlier Volumes have already flagged as worth including"; Appendix C §C.10, `signals`.
+  earlier Volumes have already flagged as worth including"; Appendix C §C.10, `signals`;
+  `unadmitted_judges`: "Every Judge configuration whose Results are in scope and that is
+  not admitted"; Volume VI, Admission: "Whether or not any Gate requires it, every Report
+  shows the Judges in its scope that have not been admitted."
 - **Method:** Automated
 - **Fixture:** F-MULTI with `semantic-gate`; add `execution: { scheduling: sequential,
   retry: { max_attempts: 2, on: infrastructure_failure } }`; scripted subject
@@ -657,10 +660,12 @@ Workflow governs it.
 - **Expected:** `signals.retries` shows one Retry for `s-1`. `signals.low_confidence`
   shows, for `cts-scripted-judge@1`, two `inconclusive` Results of three. `signals.
   multi_judge`, `unenforced_boundaries`, and `boundary_attempts` are present and empty.
-  `gates` holds both Gates, `semantic-gate` with `non_actionable_results`, each with its
-  `basis`.
-- **Fails if:** `signals` or any of its five lists is missing, or any count above is
-  wrong.
+  `signals.unadmitted_judges` lists the Judge configuration of the Expectation: no
+  Admission record exists for it. `gates` holds both Gates, `semantic-gate` with
+  `non_actionable_results` and without `judge_not_admitted`, since it does not require
+  admitted Judges; each with its `basis`.
+- **Fails if:** `signals` or any of its six lists is missing; any count above is wrong;
+  `unadmitted_judges` omits the Judge; or `semantic-gate` reports `judge_not_admitted`.
 
 ### CT-REL-036 — A KPI decomposes into the Metrics and Results behind it
 

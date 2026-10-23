@@ -15,7 +15,7 @@ draft this is and which version of the specification its tests were written for.
 | `00-introduction.md` | Purpose, what a test result means, scope, versioning |
 | `01-conventions.md` | Test format, outcomes, verification methods, test harness, isolation, test report, review of Inspection and Declaration |
 | `02-fixtures.md` | Base configuration, scripted subject and Judge, postcondition fixtures, harness self-test |
-| `10-…` to `15-…` | Tests of the non-negotiable core |
+| `10-…` to `16-…` | Tests of the non-negotiable core |
 | `20-…` to `26-…` | Tests of scoped capabilities, one section per capability |
 | `90-traceability.md` | Every requirement of the specification, and the tests that check it |
 | `harness/` | Harness Contract: the test infrastructure, a separate document with its own version, schemas, and examples |

@@ -1,7 +1,6 @@
 # AQEF Conformance Test Specification
 
-**Status:** Working Draft 7. Tests for AQEF Working Draft 0.38; valid for 0.39, which
-makes no normative change.
+**Status:** Working Draft 8. Tests for AQEF Working Draft 0.41.1.
 
 **License:** CC BY 4.0, as the specification.
 
@@ -56,6 +55,7 @@ when the requirement it checks changes.
 | 13 | Decision: aggregation, Quality Gates, Result Resolution |
 | 14 | Release Decision and Governance |
 | 15 | API behavior: pagination, deletion |
+| 16 | Admission of Judges |
 | 20 | Capability `human_review` |
 | 21 | Capability `multi_judge` |
 | 22 | Capability `seeded_controls` |
@@ -67,6 +67,27 @@ when the requirement it checks changes.
 | `harness/` | Harness Contract: a separate document specifying the test infrastructure (1.4) |
 
 ### 0.6 Changes
+
+**Working Draft 8** covers what AQEF 0.40 to 0.41.1 added: clean controls, and the
+Admission of Judges.
+
+- **Tests added.** CT-SCT-009 to CT-SCT-015 and CT-MJG-009, for clean controls: their
+  configuration, a passed control, a false alarm and what it invalidates, confirmation
+  of cleanness, requalification after a false alarm, `halt_run`, and the quorum. Section
+  16, CT-ADM-001 to CT-ADM-007, for Admission: who records it, what a record must hold,
+  `admitted` against the threshold, the most recent record deciding at the Gate and in
+  the Report, a changed Judge, a panel, and the reasons a Gate lists. Clean controls
+  have tests of their own; CT-SCT-001 to CT-SCT-008 and CT-DEC-015 to CT-DEC-018 still
+  test defect controls, unchanged.
+- **Tests revised.** CT-REL-035 checks the sixth signal, `unadmitted_judges`. CT-SCT-008
+  quotes the revised Requalification rule.
+- **Fixture corrected.** F-SEED-V confirmed its planted farewell with a
+  `forbidden-content` Validator, which fails when the farewell is present, while
+  Appendix A §A.4 makes a confirmation pass when the Evidence is as the control
+  declares. It now uses a `schema` pattern that passes when the farewell is present, so
+  CT-SCT-003 and CT-SCT-004 expect what the specification says.
+- **Inventory.** `_inventory/must-inventory-v041-additions.md` adds R-0432 to R-0441;
+  eight revised rows keep their IDs (Section 90).
 
 **Working Draft 7** answers a feasibility review of Working Draft 6: whether an
 independent developer can carry out each test without asking the author.

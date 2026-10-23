@@ -98,7 +98,8 @@ itself, and the registration is a setup check (1.6).
 | Principals (`P-RELEASE`, `P-APPROVER`, `P-NOPERM`, `P-EDITOR`, `P-REVIEWER`, `P-ADMIN`, `SA-CI`), `RP-1` | 14.1 |
 | F-HR, `P-REVIEWER-2` | 20 |
 | F-PANEL | 21 |
-| `SR-BYE`, F-SEED-V | 22 |
+| `ORACLE-1`, `ADM-PASS`, `ADM-FAIL`, `SA-REVIEW`, `gate-admitted` | 16 |
+| `SR-BYE`, F-SEED-V, `SR-HI`, `J-ALARM`, F-CLEAN, F-CLEAN-V | 22 |
 | F-ACT, `SR-CALL(url)` | 23 |
 | `cts-probe` | 25 |
 
@@ -130,7 +131,9 @@ behavior directly, without the implementation (Harness Contract §8.6), and chec
 2.2, 2.3, 13.1, 22, and 23 say: each subject code returns its Response or fails as
 stated; each Judge code returns its verdict and Confidence; `J-MAP` follows its
 mapping; `J-CATCH` returns `fail` with Confidence `0.90` for `Goodbye.` and for
-`Bye now.`, and `pass` with `0.90` for `Hello! How can I help?`; and every first-call
+`Bye now.`, and `pass` with `0.90` for `Hello! How can I help?`; `J-ALARM` returns
+`fail` with `0.90` for `Hi there! What do you need?` and `pass` with `0.90` for
+`Hello! How can I help?`; and every first-call
 behavior changes after its first call and starts afresh after a reset (1.6). The
 Custom Validators of 2.5 are checked the same way: `cts-len` passes `"a"` and fails
 `""`; `cts-flaky` passes, then fails; `cts-crash` raises an error. Every test that uses a
