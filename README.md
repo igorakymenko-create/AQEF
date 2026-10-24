@@ -62,6 +62,24 @@ whether an implementation meets the requirements it claims in its Conformance St
 the specification disagree, the specification is right. `conformance-tests/_inventory/`
 lists every requirement the tests trace to. Each release carries it as its own PDF.
 
+## Reference implementation
+
+[aqef-reference-engine](https://github.com/igorakymenko-create/aqef-reference-engine)
+(Apache 2.0) is a minimal engine built to show that this specification can be
+implemented as written. An agent that never saw the Conformance Test Specification
+wrote it from the specification text alone, one slice at a time. The tests were run
+against every slice; each failure was traced to the engine, the tests, or the
+specification, and the specification's share was fixed in releases 0.41.2 to 0.41.5.
+
+Its [Conformance Statement](https://github.com/igorakymenko-create/aqef-reference-engine/blob/main/docs/CONFORMANCE-STATEMENT.md)
+claims Conformance to 0.41.5 for the core, `human_review`, `multi_judge`, and
+`seeded_controls`. Conformance Tests WD9 against it: 171 passed, none failed, 32 not
+applicable to the capabilities it claims, 9 pending review (Inspection and Declaration
+tests).
+
+The engine is a feasibility proof, not a product: one process, SQLite, a scripted HTTP
+interface for the system under test and its Judges.
+
 ## Core concepts
 
 | Concept | What it is |
