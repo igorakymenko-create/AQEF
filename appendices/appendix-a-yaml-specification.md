@@ -204,12 +204,10 @@ scenarios:
       planted_defect:
         target: response
         change: "abusive phrase inserted mid-paragraph"
-      confirmation:
-        validator: forbidden-content
+      confirmation:                       # passes when the planted phrase is present
+        validator: schema
         target: response
-        expected:
-          patterns:
-            - regex: "(?i)\\b<planted phrase>\\b"
+        expected: { type: string, pattern: "(?i)\\b<planted phrase>\\b" }
     variables:
       user_message: "..."
     prompt:
@@ -248,7 +246,7 @@ VII).
 |---|---|---|---|
 | `validator` | String | MUST | Validator type: `schema`, `tool-call`, `structural`, `forbidden-content`, `latency`, `cost`, `boundary`, or a Custom Validator name. |
 | `target` | String | MUST | What to inspect: `response`, `conversation`, `artifacts.*`, or a specific path. |
-| `expected` | Any | MUST | The threshold, schema, pattern(s), or rule the Validator checks against — for example, a `forbidden-content` Constraint's `patterns` list lives *inside* `expected`, not as a sibling field. Structure varies by validator type. |
+| `expected` | Any | MUST | The threshold, schema, pattern(s), or rule the Validator checks against — for example, a `forbidden-content` Constraint's `patterns` list lives *inside* `expected`, not as a sibling field. Structure varies by validator type. A `schema` Constraint's schema applies to the target value as the Evidence holds it: a Response is text (Volume V, Built-in Validators). For a Custom Validator, the structure is the one the implementation documents for it; a structure it does not accept MUST be rejected when the configuration is loaded, never ignored. |
 | `veto` | Boolean | MAY | If true, failure of this Constraint is a Hard Veto (Volume V). Default: `false`. |
 | `id` | String | MAY | Identifies this clause across Contract Composition (Volume VII). Two contributed clauses are the same clause only when they declare the same `id`: identical content is one clause, differing content is a composition conflict. A clause without `id` is never the same clause as another, and simply applies. Unique within one Contract. Where present, a Result's `clause` uses it (Appendix C §C.7). |
 | `dimension` | String | MAY | The Quality Dimension whose aggregate this clause's Results count toward (Volume I, Chapter 6): `functional`, `semantic`, `operational`, or `safety`. Default by Validator type: `functional` for `schema`, `tool-call`, and `structural`; `operational` for `latency` and `cost`; `safety` for `forbidden-content` and `boundary`. MUST be given for a Custom Validator. A clause that belongs to two dimensions is written as two clauses. |

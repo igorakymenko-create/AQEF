@@ -64,7 +64,12 @@ canonical Validator territory — schema conformance, forbidden content, structu
 constraints, latency/cost thresholds:
 
 - **Schema Validator** — checks a Response, or a tool-call argument set (Chapter 7),
-  against an expected format or schema.
+  against an expected format or schema. The schema applies to the target value as the
+  Evidence holds it. A Response is text, so a schema such as `{type: string,
+  minLength: 1}` applies to the text itself; it is not first read as JSON. To check
+  structured content carried in a Response, the Constraint targets a path into that
+  content (Appendix A §A.5, `target`), and the implementation documents how a path
+  reads into it.
 - **Tool-Call Validator** — checks that a tool invocation (Artifact, Volume II) selected
   a valid tool and supplied arguments conforming to that tool's own schema.
 - **Structural Validator** — checks that a multi-step Conversation (AI

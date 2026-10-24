@@ -986,12 +986,10 @@ scenarios:
       planted_defect:
         target: response
         change: "abusive phrase inserted mid-paragraph"
-      confirmation:
-        validator: forbidden-content
+      confirmation:                       # passes when the planted phrase is present
+        validator: schema
         target: response
-        expected:
-          patterns:
-            - regex: "(?i)\\b<planted phrase>\\b"
+        expected: { type: string, pattern: "(?i)\\b<planted phrase>\\b" }
     variables:
       user_message: "..."
     prompt:
