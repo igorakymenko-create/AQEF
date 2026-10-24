@@ -341,10 +341,13 @@ loosening its Contract until it stops checking anything meaningful, restoring a 
 Suite without restoring any actual check. Test Maintainability is this Volume's answer:
 Reusable Contracts (Volume VII) reduce duplicated clauses that would otherwise need
 updating independently in a dozen places; Dataset and Contract Versioning (Volume IV,
-Volume VII) make it possible to tell a deliberate change from silent drift; and a
-Contract loosened to stop a Suite from failing MUST be treated as a Requirements or Risk
-Analysis decision (Chapter 5) — recorded and justified — not a Test Design convenience
-applied quietly to make a red build green.
+Volume VII) make it possible to tell a deliberate change from silent drift; and the
+people who own a Project MUST treat a Contract loosened to stop a Suite from failing as a
+Requirements or Risk Analysis decision (Chapter 5) — recorded and justified — not a Test
+Design convenience applied quietly to make a red build green. That duty is theirs: an
+implementation cannot tell why a Contract was loosened. An implementation's part is
+Approval Workflow: every change to a Contract is `contract_define` (Volume XII; Appendix
+B §B.3), approved by a Person and recorded, so that no change is applied quietly.
 
 ---
 
