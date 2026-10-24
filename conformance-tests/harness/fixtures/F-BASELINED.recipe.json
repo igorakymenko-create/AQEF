@@ -1,7 +1,7 @@
 {
   "fixture_id": "F-BASELINED",
   "recipe_version": "0.3.0",
-  "cts_ref": "CTS WD8 §2.7",
+  "cts_ref": "CTS WD9 §2.7",
   "base": "F-BASE",
   "base_changes": [],
   "behaviors": {

@@ -164,24 +164,24 @@ Conversations, and Artifacts that result, and the calls the scripted subject rec
 - **Capability:** core
 - **Requirement:** Volume III, Artifact Collection: what it "records about the
   infrastructure-level facts of a turn — the exact request a tool call sent, the exact
-  latency observed — MUST itself be captured deterministically."
+  latency observed — MUST itself be captured deterministically." (The request a tool
+  call sent belongs to `action_boundary`, Section 23.)
 - **Method:** Automated, Harness
 - **Fixture:** F-BASE; scripted subject `SR-SLOW-200`. Add to the Scenario's
   Constraints:
   ```yaml
   - validator: latency
     target: artifacts.duration_ms
-    expected: { max: 100 }
+    expected: { max: 150 }
   ```
   (or the implementation's documented path for observed latency).
 - **Action:** Execute `cts-suite`; retrieve the Artifacts and the latency Constraint's
   Result. Then switch to `SR-OK` and execute again.
-- **Expected:** The first Execution's Artifacts record a latency of at least 200 ms and
-  the request exactly as the harness received it; its latency Result is `fail`. The
-  second Execution's latency Result is `pass`. If the harness log shows that the harness
-  itself took 100 ms or more to answer the second Execution, that Execution is repeated,
-  up to three times; if none is answered in under 100 ms, the test is `NOT_RUN`, with the
-  harness's times as the reason.
-- **Fails if:** The recorded latency is below what the harness observed, the recorded
-  request differs from the one received, or either latency Result contradicts the
-  harness log.
+- **Expected:** The first Execution's Artifacts record a latency of at least the delay
+  the harness observed, which is at least 200 ms, and its latency Result is `fail`. In
+  each Execution, the latency Result agrees with the latency that Execution's Artifacts
+  record: `pass` when it is at most 150 ms, `fail` when above. (An implementation's own
+  overhead counts in what it observes; the test does not require the second Execution to
+  pass.)
+- **Fails if:** A recorded latency is below what the harness observed for that
+  Execution; or a latency Result contradicts the latency its own Execution recorded.

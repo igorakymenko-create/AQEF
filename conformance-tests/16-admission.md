@@ -30,7 +30,7 @@ measure: cohen_kappa
 chance_corrected_agreement: 0.76
 threshold: 0.70
 admitted: true
-labelled_by: [cts-labeller-1, cts-labeller-2]
+labelled_by: [P-REVIEWER, P-APPROVER]
 ```
 
 **`ADM-FAIL`.** As `ADM-PASS`, with `raw_agreement: 0.80`,

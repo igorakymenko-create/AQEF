@@ -1,10 +1,10 @@
 # AQEF CTS Harness Contract
 
-**Version:** 0.5. **For:** AQEF Conformance Test Specification Working Draft 8; AQEF
-Working Draft 0.41.1.
+**Version:** 0.6. **For:** AQEF Conformance Test Specification Working Draft 9; AQEF
+Working Draft 0.41.4.
 
-**Status:** Draft, ready for Stage C contract testing. Not yet tested against any
-implementation.
+**Status:** Draft. A harness built to version 0.5 ran CTS Working Draft 8 against a
+reference implementation; this version carries what that run showed.
 
 **License:** CC BY 4.0, as the specification.
 
@@ -226,7 +226,7 @@ surface. "Typed" operations have their arguments fixed in
 | `approve_policy` | `POST .../release-policies` | `RP-1`, CT-REL-031 | |
 | `revoke_policy` | `POST .../release-policies/{policy}/revoke` | CT-REL-018 | |
 | `get_policy` | `GET .../release-policies/{policy}` | CT-REL-031 | |
-| `audit_query` | `GET .../audit` | CT-REL-015, 019, 028; CT-API-001 | |
+| `audit_query` | `GET .../audit` | CT-REL-015, 019, 028, 038; CT-API-001 | |
 | `list_approvals` | `GET .../approvals` | CT-REL-020 | |
 | `approve_change` | Approval Workflow, as the implementation documents | "a governed change", CTS 14.1 | |
 | `register_plugin` | `POST /plugins` | CTS 2.5; Section 25 | |
@@ -286,6 +286,7 @@ decides.
 |---|---|---|---|
 | 1 | The test's capability is not in the Conformance Statement. | `NOT_APPLICABLE` | `CAPABILITY_NOT_CLAIMED` |
 | 2 | The test checks an optional feature, says that its absence is not applicable, and a probe shows it absent. | `NOT_APPLICABLE` | `OPTIONAL_FEATURE_ABSENT` |
+| 2a | The test checks what an implementation does when it does not claim a capability, and the capability is in the Conformance Statement (CTS 1.2). | `NOT_APPLICABLE` | `CAPABILITY_CLAIMED` |
 | 3 | A behavior the test uses failed its self-test. | `NOT_RUN` | `HARNESS_SELF_TEST_FAILED` |
 | 4 | A fixture the tester supplies (a test plugin, a pipeline, a reviewer) cannot be provided. | `NOT_RUN` | `FIXTURE_UNAVAILABLE` |
 | 5 | Any error, of any origin, in phase `setup`, or a failed setup check. | `NOT_RUN` | `SETUP_FAILED` |
@@ -322,9 +323,9 @@ The harness implements every behavior the CTS defines, exactly as defined there:
 | Source | Behaviors |
 |---|---|
 | CTS 2.2 | `SR-OK`, `SR-EMPTY`, `SR-503-THEN-OK`, `SR-ECHO`, `SR-SLOW-200` |
-| CTS 2.3 | `J-PASS-90`, `J-PASS-60`, `J-FAIL-90`, `J-DOWN`, `J-DOWN-THEN-PASS-90`, `J-FAIL-THEN-PASS-90` |
+| CTS 2.3 | `J-PASS-90`, `J-PASS-60`, `J-FAIL-90`, `J-DOWN`, `J-DOWN-THEN-PASS-90`, `J-FAIL-THEN-PASS-90`, `J-PASS-90-A3` |
 | CTS 13.1 | `J-MAP(a, b, c)`, `J-CATCH` |
-| CTS 22 | `SR-BYE` |
+| CTS 22 | `SR-BYE`, `SR-HI`, `J-ALARM` |
 | CTS 23 | `SR-CALL(url)`, and the tool targets `cts-stub.example`, `cts-trip.example`, `cts-outside.example`, hosted by the harness |
 
 The CTS text is the definition; a harness that differs from it is wrong.
@@ -695,3 +696,4 @@ cases built to break it.
 | 0.3 | 2026-10-19 | integrated into the AQEF repository | v0.1 and v0.2 merged and checked against AQEF 0.39 and CTS WD7. |
 | 0.4 | 2026-10-20 | after the Contract Verification Audit | Run plan and report completeness; RFC 8785 canonicalization as published; evidence verified byte by byte; unit tests of every check. |
 | 0.5 | 2026-10-23 | for CTS WD8 | Written for CTS WD8 and AQEF 0.41.1. Operations `record_admission` and `list_admissions` for the Admission tests (CTS Section 16); the tests of clean controls added to the operations they use. The history above is restored: 0.3 and 0.4 had been merged into one row. |
+| 0.6 | 2026-10-24 | for CTS WD9 | Written for CTS WD9 and AQEF 0.41.4, after the first run of WD8 against a reference implementation. Behavior registry completed (`SR-HI`, `J-ALARM` were missing) and `J-PASS-90-A3` added; `audit_query` serves CT-REL-038. Reason code `CAPABILITY_CLAIMED` (§7, row 2a). |

@@ -21,7 +21,7 @@ Every test has the same fields:
 |---|---|
 | `PASS` | The implementation behaved as **Expected**. Where **Expected** allows alternatives, any one of them is a `PASS`. |
 | `FAIL` | The implementation did not behave as **Expected**: one of the **Fails if** observations was made, or any other observation that contradicts **Expected**. |
-| `NOT_APPLICABLE` | The test's capability is not claimed in the implementation's Conformance Statement; or the test checks a feature the specification leaves optional (MAY), the implementation does not offer it, and the test says that this outcome applies. |
+| `NOT_APPLICABLE` | The test's capability is not claimed in the implementation's Conformance Statement; or the test checks a feature the specification leaves optional (MAY), the implementation does not offer it, and the test says that this outcome applies; or the test checks what an implementation does when it does not claim a capability, and the capability is claimed. |
 | `NOT_RUN` | The test could not be carried out, with the reason stated: for example, its setup could not be built (1.6), a fixture the tester supplies could not be provided or registered, or the harness failed its self-test (2.8). A `NOT_RUN` is not a `PASS`. |
 
 **Cases.** A test whose **Action** lists numbered cases gives each case an identifier of
@@ -77,7 +77,11 @@ disagree, this document is right.
   syntax to the implementation (Appendix A §A.4, PromptDef); the tester substitutes the
   implementation's own.
 - "Loaded" means accepted at configuration load time, before any Execution. "Rejected"
-  means refused at that point, with an error that identifies what was wrong.
+  means refused at that point. The specification does not say what an error must
+  contain, so no test requires an error to name its cause. A refusal for a reason that
+  has nothing to do with the configuration is not a rejection of it: missing or failed
+  authentication, a missing Permission, or an operation the implementation does not
+  offer. Where an error does name a cause, the test report records it.
 
 ## 1.6 Isolation
 
@@ -102,6 +106,11 @@ tests ran before it.
   built or a check fails, the test is `NOT_RUN`, with the step that failed as its
   reason: the behavior that failed belongs to the test that checks it, which reports it
   as a `FAIL` there.
+- **Rejection tests.** A test whose **Expected** is that a configuration is rejected
+  first loads the configuration it starts from, unchanged, in a Project of its own, as
+  a setup check. If that is rejected, the rejection of the changed one shows nothing,
+  and the test is `NOT_RUN`, with that reason. A test with variants or cases does this
+  once for each starting configuration it uses.
 - **Reusing a configuration.** "As CT-xxx" in a **Fixture**, without "after", reuses that
   test's configuration only. No test relies on another test having run.
 - **Waiting.** Where a test waits for something to happen (a review timeout, a pipeline

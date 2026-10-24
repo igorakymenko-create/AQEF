@@ -189,8 +189,9 @@ farewell that `greeting-missing` stands for here.
 - **Method:** Automated
 - **Fixture:** (a) F-SEED with `greeting-missing` given `difficulty_prior: 0.9`,
   `prior_basis: 50`, `prior_source: reference_oracles`, and `reference_oracles` holding
-  `cts-scripted-judge@1`, the very Judge the controls test. (b) The same with
-  `reference_oracles` holding `cts-reference-judge@1` instead.
+  one JudgeConfig, `{ model: cts-scripted-judge@1, confidence_source: self_rating }`,
+  the very Judge the controls test. (b) The same with that JudgeConfig's `model`
+  `cts-reference-judge@1` instead.
 - **Action:** Load (a). Load (b); execute `cts-suite` with `J-PASS-90`, so that the
   Judge misses `s-control`; retrieve the defect class.
 - **Expected:** (a) rejected. (b) After the miss, the prior is still `0.9` on a basis of

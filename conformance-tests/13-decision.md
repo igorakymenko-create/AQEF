@@ -494,3 +494,20 @@ Judge passes `Goodbye.` and so misses the control; with `J-CATCH`, it catches it
   `stale_results`.
 - **Fails if:** (a) `semantic-gate` passes, or `functional-gate` fails; (b) either Gate
   passes, or either lacks `stale_results`.
+
+### CT-DEC-024 — A Gate with nothing to aggregate fails with insufficient basis
+
+- **Capability:** core
+- **Requirement:** Volume I, Chapter 6, Quality Gates: "Where the Results a Gate reads
+  include no `actionable` Result, no aggregate can be computed. The Gate MUST NOT pass,
+  its value is recorded as not computed, and insufficient basis is among its recorded
+  reasons, alongside every other reason that applies"; Appendix A §A.12, `reasons`
+  (`insufficient_basis`); Appendix B §B.3, Aggregate Basis reporting.
+- **Method:** Automated
+- **Fixture:** F-BASE with `semantic-gate`, declaring no `min_basis`; scripted Judge
+  `J-PASS-60`.
+- **Action:** Execute `cts-suite`; evaluate the Gates.
+- **Expected:** `semantic-gate`: `status: fail`, `value: "not_computed"`, and `reasons`
+  containing both `insufficient_basis` and `non_actionable_results`.
+- **Fails if:** The Gate passes; `value` is a number or bare `null`; or `reasons` lacks
+  either.

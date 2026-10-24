@@ -342,7 +342,7 @@ them needs an Execution.
 
 ### CT-CFG-025 — A configuration missing a required field is rejected
 
-- **Capability:** core; case `CT-CFG-025.25`: `seeded_controls`
+- **Capability:** core; case `CT-CFG-025.24`: `dataset_mechanism:edge_cases`; case `CT-CFG-025.25`: `seeded_controls`
 - **Requirement:** Appendix A, every field marked MUST in the tables of §A.1 to §A.10
   that the cases below name; Appendix A, introduction: "A conformant implementation MUST
   accept configurations expressible within this specification", which a configuration
@@ -390,11 +390,66 @@ them needs an Execution.
 | `CT-CFG-025.24` | R-0211 | F-DS | `datasets[0].mechanisms[0].type` |
 | `CT-CFG-025.25` | R-0132 | F-SEED | `defect_classes[0].name` |
 
-- **Expected:** In each case, the configuration is rejected, with an error that
-  identifies what was wrong (1.5): the missing field, or what its absence left
-  unresolved. `CT-CFG-025.25` is `NOT_APPLICABLE` unless `seeded_controls` is claimed.
+- **Expected:** In each case, the configuration is rejected (1.5). `CT-CFG-025.24` is
+  `NOT_APPLICABLE` unless `dataset_mechanism:edge_cases` is claimed: an implementation
+  that does not claim it rejects F-DS's mechanism itself (Appendix A §A.8), so the
+  starting configuration does not load. `CT-CFG-025.25` is `NOT_APPLICABLE` unless
+  `seeded_controls` is claimed.
   (The other branch of `CT-CFG-025.21`, a Dataset that is not `static` loading without
   `rows`, belongs to `dataset:<source>`, Section 24.)
 - **Fails if:** A case is `FAIL` when its configuration loads, including with a default
-  supplied silently for the missing field, or when it is rejected with no error that
-  identifies what was wrong. The test's own outcome summarizes its cases (1.2).
+  supplied silently for the missing field. The test's own outcome summarizes its cases
+  (1.2).
+
+### CT-CFG-026 — A Gate that no clause can feed is rejected
+
+- **Capability:** core
+- **Requirement:** Appendix B §B.3, Gate coverage: "A Quality Gate whose `aggregate` is
+  `functional`, `semantic`, `operational`, or `safety` MUST be rejected unless at least
+  one clause in its scope, outside a Seeded Control, has that `dimension`, given or by
+  default"; Appendix A §A.10, `aggregate`; Volume I, Chapter 6, Quality Gates.
+- **Method:** Automated
+- **Fixture:** F-BASE with `semantic-gate`. Variants:
+  - (a) the Expectation removed from `s-greeting`;
+  - (b) a further Gate `{ name: operational-gate, aggregate: operational, threshold:
+    0.5, on_failure: warn }`, with no `latency` or `cost` Constraint;
+  - (c) F-BASE with `semantic-gate`, unchanged.
+
+  As a governed change after (c) loads, remove the Expectation from `s-greeting`.
+- **Action:** Load (a), (b), and (c); then make the change.
+- **Expected:** (a) and (b) are rejected. (c) loads. The change is rejected, and
+  `s-greeting`, retrieved, still has its Expectation.
+- **Fails if:** (a) or (b) loads; (c) is rejected; or the change takes effect.
+
+### CT-CFG-027 — A lower level cannot loosen how Constraints combine
+
+- **Capability:** core
+- **Requirement:** Volume VII, Contract Composition: "The effective
+  `validator_composition` ... is the strictest one contributed, in the order
+  `hard-veto`, then `AND`, then `OR`; a lower level that contributes a looser value than
+  a higher one has contributed is a conflict, surfaced like any other"; Appendix B §B.3,
+  Composition conflict surfacing; Appendix A §A.5, Policies.
+- **Method:** Automated
+- **Fixture:** F-BASE, with a Project-level Contract holding one Constraint (`validator:
+  schema`, `target: response`, `expected: { type: string }`) and `policies: {
+  validator_composition: <P> }`, and `s-greeting`'s Contract given `policies: {
+  validator_composition: <S> }`. Variants, as (P, S): (a) (`AND`, `OR`); (b)
+  (`hard-veto`, `AND`); (c) (`OR`, `AND`).
+- **Action:** Load each variant.
+- **Expected:** (a) and (b) are rejected as conflicts. (c) loads.
+- **Fails if:** (a) or (b) loads; or (c) is rejected.
+
+### CT-CFG-028 — A Dataset mechanism the implementation does not claim is rejected
+
+- **Capability:** core
+- **Requirement:** Appendix A §A.8, `mechanisms`: "Each `type` is a scoped capability,
+  `dataset_mechanism:<type>` ...; an implementation that does not claim it MUST reject a
+  Dataset naming that `type` when the configuration is loaded."
+- **Method:** Automated
+- **Fixture:** F-DS (CT-CFG-025). Variants: `ds-1` given `mechanisms: [ { type: <t> } ]`,
+  one variant for each `t` of `data_mutation`, `fuzzing`, `edge_cases`, and
+  `adversarial`.
+- **Action:** Load each variant.
+- **Expected:** Each variant whose `dataset_mechanism:<t>` the Conformance Statement does
+  not claim is rejected. Where every one is claimed, the test is `NOT_APPLICABLE` (1.2).
+- **Fails if:** A variant whose mechanism is not claimed loads.

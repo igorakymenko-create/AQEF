@@ -15,12 +15,16 @@ the Permissions each Role holds.
 | Principal | Kind | Permissions |
 |---|---|---|
 | `P-RELEASE` | Person | `read`, `execute`, `release_decide` |
-| `P-APPROVER` | Person | `read`, `execute`, `contract_define`, `gate_override`, `baseline_approve`, `environment_edit`, `scenario_edit`, `environment_delete` |
+| `P-APPROVER` | Person | `read`, `execute`, `contract_define`, `gate_override`, `baseline_approve`, `environment_edit`, `scenario_edit`, `environment_delete`; for loading fixtures, `project_create`, `project_edit`, `dataset_create` (Appendix C §C.3) |
 | `P-NOPERM` | Person | `read`, `execute` |
 | `P-EDITOR` | Person | `read`, `project_edit`, `scenario_edit` |
 | `P-REVIEWER` | Person | `read`, `review`; holds the Role `reviewer` |
 | `P-ADMIN` | Person | `read`, `project_delete`, `audit_read` |
 | `SA-CI` | Service Account, owned by `P-RELEASE` | `read`, `execute`, `release_decide`, `gate_override`, `baseline_approve`, `contract_define` |
+
+`P-APPROVER` loads every fixture, unless a test says otherwise. Where an implementation
+needs a further Permission to load or replace a configuration, the tester grants it to
+`P-APPROVER` and states it in the test report.
 
 `SA-CI` deliberately holds Permissions it may not use for every action: what a Service
 Account may do is limited by what it is, not only by what it holds (Volume XII,
@@ -54,6 +58,10 @@ approval_role: "<a Role of the acting Principal that holds release_decide>"
 report_id: "<the Report the implementation produced for the batch>"
 snapshot_id: "<the snapshot_id the latest evaluation returned>"
 ```
+
+Where the implementation sets a field itself (`gates`, `approved_by`, `approved_at`, or
+`approval_role`, from the acting Principal and the evaluation named), the tester omits it,
+and the test checks the stored value instead of the one sent.
 
 **Overriding.** "Override `<gate>`" means
 `POST /projects/cts-base/gates/<gate>/override` naming that Gate's GateResult from the
@@ -230,8 +238,7 @@ Workflow governs it.
   `semantic-gate`'s `threshold` to `0.9`. As `P-RELEASE`, record a Release Decision with
   the first evaluation's `snapshot_id`. Then evaluate the Gates again for the same batch
   and record the Release Decision with the new `snapshot_id`.
-- **Expected:** The first attempt is rejected, naming `semantic-gate` as changed. The
-  second evaluation returns a new `snapshot_id` and a `semantic-gate` GateResult with
+- **Expected:** The first attempt is rejected (1.5). The second evaluation returns a new `snapshot_id` and a `semantic-gate` GateResult with
   `threshold: 0.9`; the second attempt is accepted. The scripted subject and Judge
   received no further calls after the first Execution.
 - **Fails if:** The first attempt is accepted; the second is rejected; or the
@@ -248,7 +255,7 @@ Workflow governs it.
 - **Action:** Execute `cts-suite`; evaluate the Gates. As a governed change, set the
   Expectation's `confidence_threshold` in `s-greeting`'s inline Contract to `0.85`. As
   `P-RELEASE`, record a Release Decision with the evaluation's `snapshot_id`.
-- **Expected:** Rejected, naming the changed Contract.
+- **Expected:** Rejected (1.5).
 - **Fails if:** Accepted.
 
 ### CT-REL-012 — An Environment changed after the Snapshot blocks the Release Decision
@@ -377,8 +384,10 @@ Workflow governs it.
   details. If the implementation lets a Service Account be created, attempt to create one
   with no owning Person.
 - **Expected:** The entries for (b) and (d) name `SA-CI` as a Service Account; any entry
-  for a Person's action names a Person. `SA-CI`'s details name `P-RELEASE` as owner. The
-  Service Account with no owner is rejected.
+  for a Person's action names a Person. `SA-CI`'s details name `P-RELEASE` as owner;
+  where the implementation offers no operation to retrieve a Principal, a reviewer
+  establishes the owner by Inspection (1.8). The Service Account with no owner is
+  rejected.
 - **Fails if:** An entry does not state the kind of Principal; no owner is recorded for
   `SA-CI`; or the owner-less Service Account is created.
 
@@ -502,11 +511,12 @@ Workflow governs it.
 - **Method:** Inspection
 - **Fixture:** None.
 - **Action:** Obtain the implementation's published Conformance Statement.
-- **Expected:** It states a specification version and lists its claimed capabilities
-  using §10's identifiers. It is the statement this test run uses to decide which tests
-  are `NOT_APPLICABLE`.
-- **Fails if:** No statement is published, it states no version, or a claimed
-  capability is not given by a §10 identifier.
+- **Expected:** It states a specification version, lists its claimed capabilities using
+  §10's identifiers, and states how it binds Projects and Suites to Teams, or that it
+  binds none (Volume XII, Teams). It is the statement this test run uses to decide
+  which tests are `NOT_APPLICABLE`.
+- **Fails if:** No statement is published; it states no version; a claimed capability is
+  not given by a §10 identifier; or it says nothing about Team binding.
 
 ### CT-REL-028 — Every operation is authenticated and resolves to a Principal
 
@@ -617,8 +627,13 @@ Workflow governs it.
   Principal record. Review whether the implementation lets a Service Account be created
   or presented with a Person's attributes (a personal name, a personal e-mail login, or
   a flag marking it as a Person).
-- **Expected:** Wherever `SA-CI` appears, it is identified as a Service Account. The
-  implementation offers no way to mark a Service Account as a Person.
+- **Expected:** Wherever the implementation records a Principal's kind, `SA-CI`'s is
+  Service Account: in its audit entries, in its Principal record, and in any field of
+  the decision that states a kind. A Release Decision has no such field of its own
+  (Appendix A §A.12); decision (b) names `SA-CI` in `approved_by` and carries
+  `release_policy`, which only a Service Account's decision does (Appendix B §B.3,
+  Automatic release). The implementation offers no way to mark a Service Account as a
+  Person.
 - **Fails if:** `SA-CI` appears anywhere as, or indistinguishable from, a Person; or a
   Service Account can be set up as one.
 
@@ -698,6 +713,41 @@ Workflow governs it.
 - **Fails if:** A Gate is defined, evaluated, or changed in the platform rather than in
   the implementation.
 
+### CT-REL-038 — Audit records what changed state, and reading it changes nothing
+
+- **Capability:** core
+- **Requirement:** Volume XII, Audit: "Audit MUST record every action that changes state,
+  when it takes effect ... Each record names the Principal, its kind (Person or Service
+  Account), the action, its target, and when it took effect ... an implementation that
+  records [reads] keeps them apart from this record, so that reading the audit log never
+  changes what is being read."
+- **Method:** Automated
+- **Fixture:** F-BASE with `semantic-gate`; scripted Judge `J-PASS-90`.
+- **Action:**
+  - As `P-NOPERM`, execute `cts-suite`.
+  - As `P-RELEASE`, evaluate the Gates and record a Release Decision.
+  - As `P-ADMIN`, read the audit log twice, in full, one read straight after the other.
+- **Expected:** The log holds an entry for the Execution naming `P-NOPERM`, kind
+  Person, and one for the Release Decision naming `P-RELEASE`, kind Person, each with
+  action, target, and time. The two reads return the same entries.
+- **Fails if:** Either action has no entry, or its entry lacks the Principal, its kind,
+  the action, the target, or the time; or the second read differs from the first.
+
+### CT-REL-039 — A Team binding denies access outside the Team
+
+- **Capability:** core
+- **Requirement:** Volume XII, Teams: "Where an implementation binds a Project or a Suite
+  to Teams, it MUST deny a Principal outside those Teams any access to it, whatever
+  Permissions the Principal's Roles grant. An implementation MAY bind none".
+- **Method:** Automated
+- **Fixture:** F-BASE, bound to a Team `cts-team` in the way the Conformance Statement
+  describes. `P-OUTSIDE`: a Person holding `read` and `execute`, not in `cts-team`.
+- **Action:** As `P-OUTSIDE`, retrieve `cts-base`, and execute `cts-suite`.
+- **Expected:** Both are refused, and no Execution is started. Where the Conformance
+  Statement says the implementation binds no Project or Suite to Teams, the test is
+  `NOT_APPLICABLE` (1.2: a feature the specification leaves optional).
+- **Fails if:** Either request succeeds.
+
 ## 14.3 Core coverage
 
 Not tests: a map of which tests exercise each part of the non-negotiable core (§10).
@@ -706,11 +756,11 @@ among its tests has not been shown to be met.
 
 | Core part | Tests |
 |---|---|
-| Layer: Definition | CT-CFG-001…025 |
+| Layer: Definition | CT-CFG-001…028 |
 | Layer: Execution | CT-EXE-001…007, CT-EXE-009…011 |
 | Layer: Evidence | CT-EXE-003, CT-EXE-008, CT-EXE-012 |
-| Layer: Assessment | CT-ASM-001…012, CT-ASM-014…019 |
-| Layer: Decision | CT-DEC-001…009, CT-DEC-013, CT-DEC-014, CT-DEC-019…023, CT-REL-001…023, CT-REL-029…036 |
+| Layer: Assessment | CT-ASM-001…012, CT-ASM-014…020 |
+| Layer: Decision | CT-DEC-001…009, CT-DEC-013, CT-DEC-014, CT-DEC-019…024, CT-REL-001…023, CT-REL-029…036, CT-REL-038, CT-REL-039 |
 | Conformance Statement | CT-REL-027 |
 | Principle: Contracts over Assertions | CT-CFG-002, CT-CFG-003, CT-CFG-004, CT-CFG-007, CT-CFG-012, CT-CFG-013, CT-CFG-015, CT-CFG-019, CT-ASM-011, CT-ASM-019, CT-REL-036 |
 | Principle: Validation before Evaluation | CT-ASM-001, CT-ASM-002, CT-ASM-014, CT-ASM-017 |

@@ -66,6 +66,7 @@ Unless a test says otherwise, the scripted subject behaves as `SR-OK`.
 | `J-DOWN` | Refuses the connection on every call; no verdict. |
 | `J-DOWN-THEN-PASS-90` | First call as `J-DOWN`; every later call as `J-PASS-90`. |
 | `J-FAIL-THEN-PASS-90` | First call as `J-FAIL-90`; every later call as `J-PASS-90`. |
+| `J-PASS-90-A3` | As `J-PASS-90`, and reports that it assessed three independent assertions, where the implementation's Judge interface carries such a count (CT-ASM-019). |
 
 Unless a test says otherwise, the scripted Judge behaves as `J-PASS-90`.
 
@@ -129,7 +130,7 @@ differs from this table, this table is right.
 Before a test run, and after any change to the harness, the tester calls each scripted
 behavior directly, without the implementation (Harness Contract §8.6), and checks that it does what Sections
 2.2, 2.3, 13.1, 22, and 23 say: each subject code returns its Response or fails as
-stated; each Judge code returns its verdict and Confidence; `J-MAP` follows its
+stated; each Judge code returns its verdict and Confidence, and `J-PASS-90-A3` its count; `J-MAP` follows its
 mapping; `J-CATCH` returns `fail` with Confidence `0.90` for `Goodbye.` and for
 `Bye now.`, and `pass` with `0.90` for `Hello! How can I help?`; `J-ALARM` returns
 `fail` with `0.90` for `Hi there! What do you need?` and `pass` with `0.90` for

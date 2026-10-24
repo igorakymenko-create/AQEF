@@ -2,8 +2,8 @@
   "schema_version": "0.5",
   "run_id": "run-1",
   "provenance": {
-    "aqef_version": "0.41.1",
-    "cts_revision": "WD8",
+    "aqef_version": "0.41.4",
+    "cts_revision": "WD9",
     "cts_commit": "<commit of the CTS used>",
     "harness_contract_version": "0.5",
     "harness_version": "0.5.0",
@@ -34,8 +34,8 @@
     "cases": {
       "FAIL": 1,
       "NOT_RUN": 1,
-      "PASS": 25,
-      "NOT_APPLICABLE": 2
+      "PASS": 24,
+      "NOT_APPLICABLE": 3
     },
     "tests": {
       "FAIL": 1,
@@ -44,10 +44,10 @@
       "NOT_APPLICABLE": 1
     },
     "requirements": {
-      "verified": 24,
+      "verified": 23,
       "violated": 4,
-      "unverified": 374,
-      "not_applicable": 3
+      "unverified": 384,
+      "not_applicable": 4
     }
   },
   "cases": [
@@ -400,17 +400,14 @@
     {
       "case_id": "CT-CFG-025.24",
       "test_id": "CT-CFG-025",
-      "capability": "core",
-      "outcome": "PASS",
-      "reason_code": "EXPECTED_MET",
-      "evidence_refs": [
-        "evidence://CT-CFG-025.24.json"
-      ],
-      "evidence_grades": [
-        "observed"
-      ],
-      "setup_status": "ready",
-      "cleanup_status": "complete"
+      "capability": "dataset_mechanism:edge_cases",
+      "outcome": "NOT_APPLICABLE",
+      "reason_code": "CAPABILITY_NOT_CLAIMED",
+      "reason": "dataset_mechanism:edge_cases is not claimed in the Conformance Statement.",
+      "evidence_refs": [],
+      "evidence_grades": [],
+      "setup_status": "not_needed",
+      "cleanup_status": "skipped"
     },
     {
       "case_id": "CT-CFG-025.25",
@@ -1891,7 +1888,7 @@
     },
     {
       "requirement_id": "R-0211",
-      "state": "verified",
+      "state": "not_applicable",
       "traced_to": [
         "CT-CFG-025.24"
       ]
@@ -2390,7 +2387,8 @@
       "requirement_id": "R-0285",
       "state": "unverified",
       "traced_to": [
-        "CT-CFG-007"
+        "CT-CFG-007",
+        "CT-CFG-027"
       ]
     },
     {
@@ -2452,7 +2450,8 @@
       "requirement_id": "R-0293",
       "state": "unverified",
       "traced_to": [
-        "CT-DEC-002"
+        "CT-DEC-002",
+        "CT-DEC-024"
       ]
     },
     {
@@ -3541,6 +3540,80 @@
         "CT-ADM-006",
         "CT-ADM-007"
       ]
+    },
+    {
+      "requirement_id": "R-0442",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ASM-020"
+      ]
+    },
+    {
+      "requirement_id": "R-0443",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-028"
+      ]
+    },
+    {
+      "requirement_id": "R-0444",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-026"
+      ]
+    },
+    {
+      "requirement_id": "R-0445",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-026"
+      ]
+    },
+    {
+      "requirement_id": "R-0446",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-026"
+      ],
+      "derived_from": "R-0445"
+    },
+    {
+      "requirement_id": "R-0447",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DEC-024"
+      ]
+    },
+    {
+      "requirement_id": "R-0448",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-027"
+      ]
+    },
+    {
+      "requirement_id": "R-0449",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-039"
+      ]
+    },
+    {
+      "requirement_id": "R-0450",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-028",
+        "CT-REL-038",
+        "CT-API-002"
+      ]
+    },
+    {
+      "requirement_id": "R-0451",
+      "state": "unverified",
+      "traced_to": [
+        "CT-REL-027"
+      ],
+      "derived_from": "R-0448"
     }
   ],
   "manual_reviews": [

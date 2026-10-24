@@ -1,6 +1,6 @@
 # AQEF Conformance Test Specification
 
-**Status:** Working Draft 8. Tests for AQEF Working Draft 0.41.1.
+**Status:** Working Draft 9. Tests for AQEF Working Draft 0.41.4.
 
 **License:** CC BY 4.0, as the specification.
 
@@ -25,8 +25,10 @@ set of tests can. A test that fails shows that it did not. An implementation's
 Conformance Statement (AQEF §10) says which capabilities it claims; this document says
 how each claim can be checked, and a test report says how the checks came out.
 
-No test in this draft has yet been run against an implementation. Tests may be revised
-once they are.
+Working Draft 8 was run against a reference implementation, built from the specification
+text by a party that had not seen these tests. Working Draft 9 revises what that run
+showed to be wrong in the tests, rather than in the implementation or the specification.
+Tests may be revised again as other implementations are run.
 
 ### 0.3 Scope of this draft
 
@@ -60,13 +62,52 @@ when the requirement it checks changes.
 | 21 | Capability `multi_judge` |
 | 22 | Capability `seeded_controls` |
 | 23 | Capability `action_boundary` |
-| 24 | Capabilities `dataset:<source>` |
+| 24 | Capabilities `dataset:<source>` (`dataset_mechanism:<type>` has one case, in CT-CFG-025, and CT-CFG-028) |
 | 25 | Capabilities `plugins:<type>` |
 | 26 | Capabilities `cli`, `sdk:<language>`, `reference_ui`, `test_type:<name>` |
 | 90 | Traceability: requirement → test |
 | `harness/` | Harness Contract: a separate document specifying the test infrastructure (1.4) |
 
 ### 0.6 Changes
+
+**Working Draft 9** follows the first run of these tests against an implementation, and
+covers what AQEF 0.41.2 to 0.41.4 added.
+
+- **Tests added.**
+  - CT-CFG-026: a Gate that no clause can feed is rejected at load.
+  - CT-CFG-027: a lower level cannot loosen a higher level's `validator_composition`.
+  - CT-CFG-028: a Dataset mechanism the implementation does not claim is rejected.
+  - CT-ASM-020: a Custom Validator's `expected` in a form the implementation does not
+    accept is rejected.
+  - CT-DEC-024: a Gate with no `actionable` Result fails with `insufficient_basis` and
+    `value: "not_computed"`.
+  - CT-REL-038: Audit records actions that change state, and reading the audit log
+    does not change it.
+  - CT-REL-039: a Team binding, where an implementation has one, denies access outside
+    the Team.
+- **Tests revised where they asked more than the specification does.**
+  - A rejection is no longer required to name its cause, since the specification says
+    nothing about what an error contains (1.5). CT-CFG-025, CT-REL-010, and CT-REL-011
+    change with it.
+  - CT-EXE-012 checks the subject's latency, not the request: the specification's
+    "exact request" is a tool call's (Section 23). It no longer assumes that an
+    implementation adds less than a fixed overhead.
+  - CT-REL-019 and CT-REL-033 read a Principal's kind where the implementation records
+    it. A Release Decision has no field for it.
+  - CT-SCT-006 gives `reference_oracles` as JudgeConfigs (Appendix A §A.1).
+  - CT-ASM-016 gives `cts-len`'s `expected` in the form the implementation documents
+    (Appendix A §A.5, 0.41.2).
+  - CT-ASM-019 uses a scripted Judge, `J-PASS-90-A3`, that reports how many assertions
+    it assessed, where the implementation's Judge interface carries a count.
+  - `CT-CFG-025.24` belongs to `dataset_mechanism:edge_cases` (0.41.4).
+- **Conventions.**
+  - Every test that expects a rejection first loads its unchanged starting
+    configuration as a setup check (1.6).
+  - The Principal that loads fixtures holds the Permissions loading needs (14.1).
+  - The fields of a Release Decision that the implementation sets itself need not be
+    sent (14.1).
+  - `ADM-PASS` names registered Persons in `labelled_by`.
+  - 1.2 adds a third ground for `NOT_APPLICABLE`.
 
 **Working Draft 8** covers what AQEF 0.40 to 0.41.1 added: clean controls, and the
 Admission of Judges.

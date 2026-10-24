@@ -1,15 +1,16 @@
 # 90. Traceability
 
-This section maps every requirement in the MUST inventory of AQEF Working Draft 0.41.1
+This section maps every requirement in the MUST inventory of AQEF Working Draft 0.41.4
 to the tests that check it, or says why no test does. The inventory is
 `_inventory/must-inventory.md` (391 rows, extracted from Working Draft 0.36) together
 with `_inventory/must-inventory-v037-additions.md` (28 rows added by 0.37),
-`_inventory/must-inventory-v038-additions.md` (12 rows added by 0.38), and
-`_inventory/must-inventory-v041-additions.md` (10 rows added by 0.40 to 0.41.1), 441
-rows in all, identified `R-nnnn`. It lists every sentence containing MUST or MUST NOT,
-and every field Appendix A or C marks as required, so a few rows are definitions or
-restatements rather than requirements of their own. Seventeen rows whose text 0.37 to
-0.41.1 revised keep their IDs and are marked.
+`_inventory/must-inventory-v038-additions.md` (12 rows added by 0.38),
+`_inventory/must-inventory-v041-additions.md` (10 rows added by 0.40 to 0.41.1), and
+`_inventory/must-inventory-v0414-additions.md` (10 rows added by 0.41.2 to 0.41.4),
+451 rows in all, identified `R-nnnn`. It lists every sentence containing MUST or MUST
+NOT, and every field Appendix A or C marks as required, so a few rows are definitions or
+restatements rather than requirements of their own. Twenty rows whose text 0.37 to
+0.41.4 revised keep their IDs and are marked.
 
 ## 90.1 Status values
 
@@ -26,13 +27,13 @@ restatements rather than requirements of their own. Seventeen rows whose text 0.
 
 | Status | Rows |
 |---|---|
-| Tested | 368 |
-| Restates | 44 |
+| Tested | 376 |
+| Restates | 46 |
 | Field | 0 |
 | Scoped | 0 |
 | Not testable | 29 |
 | Not yet covered | 0 |
-| **Total** | **441** |
+| **Total** | **451** |
 
 ## 90.3 Requirement → test
 
@@ -53,7 +54,7 @@ restatements rather than requirements of their own. Seventeen rows whose text 0.
 | R-0013 | §9, Scope of Normative Force | Not testable | definition |
 | R-0014 | §10, What Conformance Requires | Not testable | definition of Conformance |
 | R-0015 | §10, What Conformance Requires | Tested | CT-REL-024 |
-| R-0016 | §10, Conformance Statement | Tested | CT-REL-027 |
+| R-0016 | §10, Conformance Statement | Tested | CT-REL-027; text revised in v0.41.2 or later |
 | R-0017 | §10, The Non-Negotiable Core | Tested | CT-REL-026 |
 | R-0018 | §10, The Non-Negotiable Core | Tested | CT-REL-026 |
 | R-0019 | §10, Deviating from a SHOULD | Not testable | editorial |
@@ -322,7 +323,7 @@ restatements rather than requirements of their own. Seventeen rows whose text 0.
 | R-0282 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-CFG-018, CT-DSR-003 |
 | R-0283 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-CFG-010, CT-EXE-004 |
 | R-0284 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-REL-034 |
-| R-0285 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-CFG-007; text revised in v0.37 or later |
+| R-0285 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-CFG-007, CT-CFG-027; text revised in v0.37 or later; text revised in v0.41.2 or later |
 | R-0286 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ASM-006, CT-ASM-007 |
 | R-0287 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ASM-006 |
 | R-0288 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-SCT-006 |
@@ -330,7 +331,7 @@ restatements rather than requirements of their own. Seventeen rows whose text 0.
 | R-0290 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-015 |
 | R-0291 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ASM-013, CT-MJG-008 |
 | R-0292 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-MJG-008, CT-MJG-009 |
-| R-0293 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-002 |
+| R-0293 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-002, CT-DEC-024; text revised in v0.41.2 or later |
 | R-0294 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DEC-004 |
 | R-0295 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ABD-001 |
 | R-0296 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ABD-003, CT-ABD-004 |
@@ -479,6 +480,16 @@ restatements rather than requirements of their own. Seventeen rows whose text 0.
 | R-0439 | App C, C.3 — Operations by Resource | Tested | CT-ADM-001, CT-ADM-002; added in v0.40 to v0.41.1 |
 | R-0440 | App C, C.3 — Operations by Resource | Tested | CT-ADM-002, CT-ADM-003; added in v0.40 to v0.41.1 |
 | R-0441 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ADM-004, CT-ADM-005, CT-ADM-006, CT-ADM-007; added in v0.40 to v0.41.1 |
+| R-0442 | App A, A.5 — Quality Contract | Tested | CT-ASM-020; added in v0.41.2 to v0.41.4 |
+| R-0443 | App A, A.8 — Dataset | Tested | CT-CFG-028; added in v0.41.2 to v0.41.4 |
+| R-0444 | App A, A.10 — Quality Gates | Tested | CT-CFG-026; added in v0.41.2 to v0.41.4 |
+| R-0445 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-CFG-026; added in v0.41.2 to v0.41.4 |
+| R-0446 | Vol I, Chapter 6 — Quality Gates | Restates | R-0445 (CT-CFG-026); added in v0.41.2 to v0.41.4 |
+| R-0447 | Vol I, Chapter 6 — Quality Gates | Tested | CT-DEC-024; added in v0.41.2 to v0.41.4 |
+| R-0448 | Vol XII, Teams | Tested | CT-REL-027; added in v0.41.2 to v0.41.4 |
+| R-0449 | Vol XII, Teams | Tested | CT-REL-039; added in v0.41.2 to v0.41.4 |
+| R-0450 | Vol XII, Audit | Tested | CT-REL-028, CT-REL-038, CT-API-002; added in v0.41.2 to v0.41.4 |
+| R-0451 | §10, Conformance Statement | Restates | R-0448 (CT-REL-027); added in v0.41.2 to v0.41.4 |
 
 ## 90.4 Not yet covered
 
@@ -517,6 +528,9 @@ run; the test report lists it (1.7).
 | CT-CFG-023 | R-0172 |
 | CT-CFG-024 | R-0221 |
 | CT-CFG-025 | By case: .01 R-0129; .02 R-0137; .03 R-0138; .04 R-0139; .05 R-0140; .06 R-0142; .07 R-0151; .08 R-0155; .09 R-0175; .10 R-0176; .11 R-0177; .12 R-0185; .13 R-0187; .14 R-0216; .15 R-0217; .16 R-0218; .17 R-0219; .18 R-0213; .19 R-0195; .20 R-0198; .21 R-0199; .22 R-0202; .23 R-0203; .24 R-0211; .25 R-0132 |
+| CT-CFG-026 | R-0444, R-0445 |
+| CT-CFG-027 | R-0285 |
+| CT-CFG-028 | R-0443 |
 | CT-EXE-001 | R-0048 |
 | CT-EXE-002 | R-0057, R-0162 |
 | CT-EXE-003 | R-0055 |
@@ -548,6 +562,7 @@ run; the test report lists it (1.7).
 | CT-ASM-017 | R-0069 |
 | CT-ASM-018 | R-0071 |
 | CT-ASM-019 | R-0074, R-0425 |
+| CT-ASM-020 | R-0442 |
 | CT-DEC-001 | R-0243, R-0244, R-0245, R-0246, R-0247, R-0248, R-0249, R-0324, R-0396 |
 | CT-DEC-002 | R-0036, R-0037, R-0293, R-0324 |
 | CT-DEC-003 | R-0325 |
@@ -571,6 +586,7 @@ run; the test report lists it (1.7).
 | CT-DEC-021 | R-0038 |
 | CT-DEC-022 | R-0411, R-0419 |
 | CT-DEC-023 | R-0411, R-0419 |
+| CT-DEC-024 | R-0293, R-0447 |
 | CT-REL-001 | R-0039, R-0042, R-0311, R-0230, R-0231, R-0232, R-0233, R-0234, R-0235, R-0236, R-0237, R-0238, R-0239, R-0240, R-0241, R-0394 |
 | CT-REL-002 | R-0042, R-0043, R-0220 |
 | CT-REL-003 | R-0039, R-0098, R-0220 |
@@ -597,8 +613,8 @@ run; the test report lists it (1.7).
 | CT-REL-024 | R-0015, R-0113 |
 | CT-REL-025 | R-0114 |
 | CT-REL-026 | R-0017, R-0018 |
-| CT-REL-027 | R-0016 |
-| CT-REL-028 | R-0327, R-0328 |
+| CT-REL-027 | R-0016, R-0448 |
+| CT-REL-028 | R-0327, R-0328, R-0450 |
 | CT-REL-029 | R-0098, R-0099, R-0100, R-0426, R-0427, R-0428, R-0429, R-0430, R-0431 |
 | CT-REL-030 | R-0329, R-0330 |
 | CT-REL-031 | R-0397, R-0398, R-0399, R-0400, R-0401, R-0402, R-0403, R-0404, R-0405, R-0406, R-0416, R-0417 |
@@ -608,6 +624,8 @@ run; the test report lists it (1.7).
 | CT-REL-035 | R-0097, R-0431 |
 | CT-REL-036 | R-0101 |
 | CT-REL-037 | R-0112 |
+| CT-REL-038 | R-0450 |
+| CT-REL-039 | R-0449 |
 | CT-ADM-001 | R-0435, R-0436, R-0437, R-0439 |
 | CT-ADM-002 | R-0436, R-0439, R-0440 |
 | CT-ADM-003 | R-0436, R-0438, R-0440 |
@@ -616,7 +634,7 @@ run; the test report lists it (1.7).
 | CT-ADM-006 | R-0441 |
 | CT-ADM-007 | R-0304, R-0441 |
 | CT-API-001 | R-0331, R-0332 |
-| CT-API-002 | R-0348, R-0349 |
+| CT-API-002 | R-0348, R-0349, R-0450 |
 | CT-HRV-001 | R-0183 |
 | CT-HRV-002 | R-0184, R-0414 |
 | CT-HRV-003 | R-0078 |

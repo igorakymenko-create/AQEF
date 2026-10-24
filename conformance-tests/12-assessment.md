@@ -256,7 +256,8 @@ calls the scripted Judge receives.
   ... to explain the verdict without re-running the check."
 - **Method:** Automated
 - **Fixture:** F-BASE; add a Constraint `validator: cts-len`, `target: response`,
-  `expected: {}`, `dimension: functional`.
+  `dimension: functional`, and `expected` in the form the implementation documents for a
+  Custom Validator that takes no parameter (Appendix A §A.5), for example `{}`.
 - **Action:** Execute `cts-suite` twice; retrieve the `cts-len` Results.
 - **Expected:** Each has `oracle_type: validator`, `verdict: pass`,
   `confidence: "not_applicable"`, `disposition: actionable`, an `oracle` naming
@@ -313,11 +314,27 @@ calls the scripted Judge receives.
   `assertions`.
 - **Method:** Automated
 - **Fixture:** Two variants of F-BASE. (a) The Expectation's `criteria` set to `"The
-  response greets the user, offers help, and names no product."` (b) F-BASE unchanged.
+  response greets the user, offers help, and names no product."`, with scripted Judge
+  `J-PASS-90-A3`. (b) F-BASE unchanged, with `J-PASS-90`.
 - **Action:** Execute `cts-suite` for each; retrieve the Expectation's Result.
 - **Expected:** (a) The Result has `assertions`, an integer greater than 1; the test
-  report records its value. (b) The Result has no `assertions`. (How the Judge splits a
-  criterion into assertions is the implementation's; the specification requires only
-  that a Result over several assertions says so, so any count above one meets it.)
+  report records its value. (b) The Result has no `assertions`. (How the count is
+  obtained is the implementation's: from the Judge, as `J-PASS-90-A3` reports it, or by
+  its own reading of the criterion. The specification requires only that a Result over
+  several assertions says so, so any count above one meets it.)
 - **Fails if:** (a) has no `assertions`, or a value that is not an integer greater than
   1; or (b) has one.
+
+### CT-ASM-020 — A Custom Validator's `expected` in a form it does not accept is rejected
+
+- **Capability:** core
+- **Requirement:** Appendix A §A.5, `expected`: "For a Custom Validator, the structure is
+  the one the implementation documents for it; a structure it does not accept MUST be
+  rejected when the configuration is loaded, never ignored."
+- **Method:** Automated
+- **Fixture:** CT-ASM-016's configuration. Variant: the `cts-len` Constraint's
+  `expected` replaced by a structure the implementation's documentation for `cts-len`
+  does not accept, for example `{ minimum: "one" }`. The tester states which.
+- **Action:** Load CT-ASM-016's configuration; load the variant.
+- **Expected:** The first loads; the variant is rejected.
+- **Fails if:** The variant loads, including with `expected` ignored.
