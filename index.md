@@ -1,5 +1,5 @@
 # AQEF — AI Quality Engineering Framework
-### Master Index (Working Draft v0.41.2)
+### Master Index (Working Draft v0.41.3)
 
 Legend: ✅ drafted & confirmed · 🟨 partially drafted · ⬜ not yet drafted
 

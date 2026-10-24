@@ -1,6 +1,6 @@
 # 1. Revision History
 
-**Status:** current through v0.41.2.
+**Status:** current through v0.41.3.
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
@@ -29,3 +29,4 @@
 | 0.41 | 2026-10 | Igor Akymenko | Admission records made exact. Every field except `arbitrations` is required; `items` agrees with the verdict distribution; a chance-corrected value that cannot be computed is recorded as `"not_computed"` and is never admitted; a value equal to the threshold meets it; a request that breaks these is rejected. The most recent Admission record for a Judge configuration decides whether it is admitted, so a later failed record withdraws an earlier admission (Volume VI; Appendices B, C, D). |
 | 0.41.1 | 2026-10 | Igor Akymenko | Admission records: the implementation sets `id`, `recorded_at`, and `recorded_by`, and a request that supplies them is rejected; the most recent record is the one the implementation accepted last. Counts in `verdict_distribution` are not negative, and `chance_corrected_agreement` is never `null` (Appendices B, C). |
 | 0.41.2 | 2026-10 | Igor Akymenko | The Schema Validator applies its schema to the target value as the Evidence holds it: a text Response is checked as text, not first read as JSON (Volume V; Appendix A §A.5). The Seeded Control examples confirm a planted phrase with a check that passes when it is present; they used `forbidden-content`, which fails then (Appendices A, H). A Custom Validator's `expected` has the structure the implementation documents for it; one it does not accept is rejected when the configuration loads (Appendix A §A.5). Found while building a reference implementation. |
+| 0.41.3 | 2026-10 | Igor Akymenko | A Gate whose aggregate cannot be computed (no `actionable` Result) fails with `insufficient_basis` among its reasons; until now that reason covered only an unmet `min_basis` (Volume I, Chapter 6; Appendices A §A.12, B §B.3). A Quality Gate reading a dimension that no clause in its scope counts toward is rejected when the configuration loads (Volume I, Chapter 6; Appendices A §A.10, B §B.3). Before invoking the subject, an implementation should report a blocking Gate the run cannot feed and a Judge it cannot reach, and should not start while a Judge is unreachable unless asked to (Volume III). Found while building a reference implementation. |

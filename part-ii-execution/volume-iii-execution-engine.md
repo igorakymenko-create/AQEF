@@ -48,6 +48,18 @@ and Evaluation instead of producing them. No other Scenario may carry fixed Evid
 such an Execution, like every Seeded Control, is excluded from Aggregation (Volume I,
 Chapter 6).
 
+Invoking the subject has a cost, so before it does, an implementation SHOULD check for
+what would leave a run's Results unusable by any Gate, and report it to the requester:
+
+- a blocking Quality Gate applicable to the Suite whose dimension no clause of that
+  Suite counts toward, so that the Gate cannot pass on this run;
+- a Judge named by the Suite's Contracts that cannot be reached.
+
+Where a Judge cannot be reached, the implementation SHOULD NOT start the run unless the
+request asks it to proceed. A Gate that no clause anywhere in its scope can feed is not
+a matter for this check: it is rejected when the configuration is loaded (Volume I,
+Chapter 6).
+
 ## Runtime
 
 The Runtime is the concrete process that hosts one Execution while it runs: it resolves

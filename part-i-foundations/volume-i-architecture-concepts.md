@@ -741,6 +741,19 @@ failed threshold says the system fell short, and an insufficient basis says ther
 yet enough evidence to say either way. Where a Gate declares no minimum, it is evaluated
 on its threshold alone, and its Aggregate Basis is still reported.
 
+Where the Results a Gate reads include no `actionable` Result, no aggregate can be
+computed. The Gate MUST NOT pass, its value is recorded as not computed, and insufficient
+basis is among its recorded reasons, alongside every other reason that applies (for
+example a missed Seeded Control, or Results that are not actionable). This happens when
+an Oracle could not be reached, when every Result fell below its confidence threshold,
+while Results await Human Review, or when a Seeded Control invalidated them. In each of
+these the Evidence is kept, and the Results can later be resolved without invoking the
+subject again (Result Resolution, above). A Gate that no clause could ever feed is
+different: it is a configuration error, and it is rejected when the configuration is
+loaded. A Gate whose aggregate is a Quality Dimension MUST have, in its scope, at least
+one clause outside a Seeded Control that counts toward that dimension (Appendix A §A.10;
+Appendix B §B.3).
+
 A Quality Gate MAY require that the Judges whose Results it reads have been admitted
 (`require_admitted_judges`, Appendix A §A.10; Volume VI, Admission). Where it does, a
 Result from a Judge configuration that is not admitted is treated as blocking, counted
