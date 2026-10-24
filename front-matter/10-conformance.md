@@ -27,7 +27,7 @@ CI/CD is not non-conformant for lacking Volume XIII's behavior, because Volume X
 rules simply do not apply to a capability it does not claim. An implementation that does
 integrate with CI/CD MUST follow Volume XIII's rules for it. The same scoping applies to
 specific SDKs (Volume XIV), Reference UI (Volume XV), Plugin Architecture (Volume XVI),
-Dataset sources beyond Static (Volume IV), Test Types (Volume IX) beyond whichever
+Dataset sources beyond Static and Dataset mechanisms (Volume IV), Test Types (Volume IX) beyond whichever
 ones a Project's own Contracts actually use, Multi Judge and Human Review (Volume VI),
 Seeded Controls (Volume VIII), and subjects that act through tools (Action Boundary,
 Volume III).
@@ -40,13 +40,15 @@ Conformance MUST publish a **Conformance Statement** stating:
 
 - the version of this specification it conforms to;
 - the capabilities it claims, from the scoped set above, using the identifiers below;
-  the non-negotiable core (next section) is part of every claim and is not listed.
+  the non-negotiable core (next section) is part of every claim and is not listed;
+- how it binds Projects and Suites to Teams, or that it binds none (Volume XII, Teams).
 
 It MAY also state capabilities it deliberately does not offer, and SHOULD-level
 requirements it deviates from (see Deviating from a SHOULD, below).
 
 | Identifier | Capability |
 |---|---|
+| `dataset_mechanism:<type>` | A Dataset mechanism: `data_mutation`, `fuzzing`, `edge_cases`, `adversarial` (Volume IV; Appendix A §A.8) |
 | `dataset:<source>` | A Dataset source beyond Static: `synthetic`, `generated`, `production_replay` (Volume IV) |
 | `multi_judge` | Multi Judge, Consensus, Voting (Volume VI) |
 | `human_review` | Human Reviewer as an Oracle and Human Review (Volume VI) |

@@ -283,7 +283,7 @@ An Expectation MUST specify exactly one of `judge`, `multi_judge`, or `human_rev
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `validator_composition` | String | MAY | How Constraints combine: `AND`, `OR`, or `hard-veto`. Default: `AND`. |
+| `validator_composition` | String | MAY | How Constraints combine: `AND`, `OR`, or `hard-veto`. Default: `AND`. Across composed levels, the strictest contributed value applies (`hard-veto`, then `AND`, then `OR`), and a looser lower value is a conflict (Volume VII — Contract Composition). |
 | `weight` | Float | MAY | Business Quality weight for the Aggregation Model (Volume I, Chapter 6). |
 
 ## A.6 — JudgeConfig
@@ -330,7 +330,7 @@ A named, versioned collection of input data (Volume II, Volume IV).
 | `generator` | GeneratorConfig | MUST (if `generated`) | AI-generation configuration. |
 | `capture` | CaptureConfig | MUST (if `production_replay`) | Production capture configuration. |
 | `base_dataset` | String | MAY | Reference to a parent Dataset for Data Mutation or Fuzzing, written `name@version` as in §A.4. |
-| `mechanisms` | List of MechanismConfig | MAY | Coverage mechanisms applied to this Dataset. |
+| `mechanisms` | List of MechanismConfig | MAY | Coverage mechanisms applied to this Dataset. Each `type` is a scoped capability, `dataset_mechanism:<type>` (Conformance); an implementation that does not claim it MUST reject a Dataset naming that `type` when the configuration is loaded. |
 
 **Row**
 

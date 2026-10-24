@@ -161,8 +161,10 @@ MUST be rejected where it does not allow the resolution requested.
 
 **Triggering:** `POST /executions` accepts a body specifying `suite`, `environment`,
 and optional `gates` to check after completion. The response returns a batch
-identifier for tracking. Executions are asynchronous — the caller polls or subscribes
-for completion.
+identifier for tracking. An implementation MAY run the batch to completion before it
+responds, and then returns its Executions with the identifier; otherwise it responds at
+once, and the caller polls or subscribes for completion. Which of the two it does is
+implementation-defined and documented.
 
 **Seeded Control Reporting:** whenever an Execution ran one or more Seeded Controls
 (Volume VIII), `GET .../executions/{execution}` MUST include a `seeded_control_results`

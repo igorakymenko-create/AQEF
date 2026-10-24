@@ -146,7 +146,12 @@ A Contract MAY be attached at three levels: to a Project, to a Suite, and to a S
 part of a Suite, is the composition of all three: the Project's Contracts, that Suite's
 Contracts, and the Scenario's own. Composition across levels follows the same rules as
 any other: it is additive, and a lower level adds clauses but cannot remove or weaken a
-clause contributed by a higher one. Where a Scenario needs a different value for the
+clause contributed by a higher one. Policies compose the same way. The effective
+`validator_composition` (Appendix A §A.5) is the strictest one contributed, in the order
+`hard-veto`, then `AND`, then `OR`; a lower level that contributes a looser value than a
+higher one has contributed is a conflict, surfaced like any other. A `weight` applies to
+the clauses of the Contract that declares it; a lower level cannot change the weight of
+a clause contributed by a higher one. Where a Scenario needs a different value for the
 same clause, that is a conflict, and it is surfaced like any other. Because a Scenario
 MAY belong to more than one Suite, its effective Contract is determined per Suite. An
 effective Contract with no clauses is invalid, at whatever level it would have been

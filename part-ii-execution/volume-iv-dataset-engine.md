@@ -8,7 +8,10 @@ Execution time (Volume I), and Volume III's Execution Pipeline names it directly
 source Variable Resolution draws on. This Volume specifies what a Dataset (Volume II)
 actually is in practice: the four ways rows come to exist, the four further mechanisms
 that deliberately shape coverage once rows exist, and the one concern — Versioning —
-that applies across all of them.
+that applies across all of them. Static Datasets and Versioning are part of the
+non-negotiable core. Every other source, and each of the four mechanisms, is a scoped
+capability an implementation claims or does not (Conformance): a source as
+`dataset:<source>`, a mechanism as `dataset_mechanism:<type>`.
 
 ```mermaid
 flowchart TD

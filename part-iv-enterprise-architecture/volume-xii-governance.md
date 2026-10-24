@@ -22,6 +22,13 @@ Reusable Contracts (Volume VII) and Dashboards (Volume XI) are typically scoped 
 well — the same organizational boundary recurring across what a group shares, not a
 separate concept invented for Governance alone.
 
+How Projects and Suites are bound to Teams is implementation-defined, and an
+implementation MUST state it in its Conformance Statement (Conformance). Where an
+implementation binds a Project or a Suite to Teams, it MUST deny a Principal outside
+those Teams any access to it, whatever Permissions the Principal's Roles grant. An
+implementation MAY bind none, as a Minimal Engine serving one Team does; it then states
+that every Principal's scope is every Project.
+
 ## Roles
 
 A Role is a named, reusable bundle of Permissions (below) assigned to a Principal — a
@@ -79,6 +86,17 @@ the fact. Audit answers "what happened," at whatever scope the question is asked
 without needing to already know which specific decision to look for; Traceability,
 below, is the narrower counterpart for when the specific decision is already known and
 what's needed is its full chain.
+
+Audit MUST record every action that changes state, when it takes effect: each of the
+four governed actions; each Execution triggered; each Human Reviewer verdict, Seeded
+Control confirmation or invalidation, and Requalification; each Admission record; each
+Release Policy approved or revoked; and every creation, change, or deletion of
+configuration or of an entity Appendix C exposes. Each record names the Principal, its
+kind (Person or Service Account), the action, its target, and when it took effect; a
+deletion's record states which kind of deletion was requested (Appendix C §C.8). A
+rejected request need not be recorded. Recording reads is not required; an
+implementation that records them keeps them apart from this record, so that reading the
+audit log never changes what is being read.
 
 ## Traceability
 
