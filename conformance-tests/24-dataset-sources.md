@@ -3,6 +3,8 @@
 Tests in this section apply to an implementation whose Conformance Statement claims
 `dataset:<source>` for the source named in each test (§10). For a source it does not
 claim, the test is `NOT_APPLICABLE`. Static Datasets are core (Sections 10 and 11).
+`dataset:synthetic` is reserved in AQEF 1.0 and has no tests here; CT-CFG-028 checks
+that it is rejected.
 
 ### CT-DSR-001 — A Generated Dataset declares how it is generated
 
@@ -64,3 +66,20 @@ claim, the test is `NOT_APPLICABLE`. Static Datasets are core (Sections 10 and 1
 - **Expected:** Loaded. The scripted subject receives the captured Prompt, `Hello`.
 - **Fails if:** The configuration is rejected for the missing `prompt`, or the subject
   receives anything else.
+
+### CT-DSR-005 — A malformed generation produces no Dataset version
+
+- **Capability:** `dataset:generated`
+- **Requirement:** Volume IV, Generated Datasets: "A generation that fails, or whose
+  output includes anything that is not a valid Row, MUST produce no Dataset version, and
+  the implementation reports the failure. It MUST NOT repair, complete, or drop rows to
+  make a version out of such output."
+- **Method:** Automated, Harness
+- **Fixture:** As CT-DSR-003, with `ds-gen@2.0.0`, whose scripted generator returns two
+  rows: `{ id: g1, variables: { query: "Gen-1" } }` and one with no `id`,
+  `{ variables: { query: "Gen-2" } }`.
+- **Action:** Generate `ds-gen@2.0.0`. Retrieve it, and the list of `ds-gen`'s versions.
+- **Expected:** The generation is reported as failed. No version `2.0.0` of `ds-gen`
+  exists.
+- **Fails if:** A version `2.0.0` exists, with one row, two rows, or a row given an `id`
+  the generator did not return; or the failure is not reported.

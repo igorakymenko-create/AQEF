@@ -1,17 +1,18 @@
 # 90. Traceability
 
-This section maps every requirement in the MUST inventory of AQEF Working Draft 0.41.5
+This section maps every requirement in the MUST inventory of AQEF 1.0-CR1
 to the tests that check it, or says why no test does. The inventory is
 `_inventory/must-inventory.md` (391 rows, extracted from Working Draft 0.36) together
 with `_inventory/must-inventory-v037-additions.md` (28 rows added by 0.37),
 `_inventory/must-inventory-v038-additions.md` (12 rows added by 0.38),
 `_inventory/must-inventory-v041-additions.md` (10 rows added by 0.40 to 0.41.1),
-`_inventory/must-inventory-v0414-additions.md` (10 rows added by 0.41.2 to 0.41.4), and
-`_inventory/must-inventory-v0415-additions.md` (2 rows added by 0.41.5), 453 rows in
+`_inventory/must-inventory-v0414-additions.md` (10 rows added by 0.41.2 to 0.41.4),
+`_inventory/must-inventory-v0415-additions.md` (2 rows added by 0.41.5), and
+`_inventory/must-inventory-v10cr1-additions.md` (3 rows added by 1.0-CR1), 456 rows in
 all, identified `R-nnnn`. It lists every sentence containing MUST or MUST
 NOT, and every field Appendix A or C marks as required, so a few rows are definitions or
-restatements rather than requirements of their own. Twenty-one rows whose text 0.37 to
-0.41.5 revised keep their IDs and are marked.
+restatements rather than requirements of their own. Twenty-four rows whose text 0.37 to
+1.0-CR1 revised keep their IDs and are marked.
 
 ## 90.1 Status values
 
@@ -28,13 +29,13 @@ restatements rather than requirements of their own. Twenty-one rows whose text 0
 
 | Status | Rows |
 |---|---|
-| Tested | 378 |
+| Tested | 381 |
 | Restates | 46 |
 | Field | 0 |
 | Scoped | 0 |
 | Not testable | 29 |
 | Not yet covered | 0 |
-| **Total** | **453** |
+| **Total** | **456** |
 
 ## 90.3 Requirement → test
 
@@ -90,7 +91,7 @@ restatements rather than requirements of their own. Twenty-one rows whose text 0
 | R-0048 | Vol II, Entities | Tested | CT-EXE-001 |
 | R-0049 | Vol III, Runtime | Tested | CT-EXE-007 |
 | R-0050 | Vol III, Action Boundary | Tested | CT-ABD-001, CT-ABD-005 |
-| R-0051 | Vol III, Action Boundary | Tested | CT-ABD-003 |
+| R-0051 | Vol III, Action Boundary | Tested | CT-ABD-003, CT-ABD-007; text revised in 1.0-CR1 |
 | R-0052 | Vol III, Action Boundary | Tested | CT-ABD-007 |
 | R-0053 | Vol III, Scheduling | Tested | CT-EXE-009 |
 | R-0054 | Vol III, Parallelization | Tested | CT-EXE-006 |
@@ -152,7 +153,7 @@ restatements rather than requirements of their own. Twenty-one rows whose text 0
 | R-0110 | Vol XII, Approval Workflow | Not testable | describes Approval Workflow; its four cases are tested separately |
 | R-0111 | Vol XII, Approval Workflow | Tested | CT-REL-007 |
 | R-0112 | Vol XIII, Azure DevOps | Tested | CT-REL-037 |
-| R-0113 | Vol XIII, Quality Gates | Tested | CT-REL-024 |
+| R-0113 | Vol XIII, Quality Gates | Tested | CT-REL-024; text revised in 1.0-CR1 |
 | R-0114 | Vol XIII, Quality Gates | Tested | CT-REL-025 |
 | R-0115 | Vol XIV, CLI | Tested | CT-SDK-001 |
 | R-0116 | Vol XV, Visual Test Designer | Tested | CT-RUI-001 |
@@ -165,7 +166,7 @@ restatements rather than requirements of their own. Twenty-one rows whose text 0
 | R-0123 | Vol XVI, Validator Plugins | Tested | CT-PLG-002 |
 | R-0124 | Vol XVI, Dataset Plugins | Tested | CT-PLG-006 |
 | R-0125 | Vol XVI, Report Plugins | Tested | CT-PLG-007 |
-| R-0126 | Vol XVI, Plugin Invocation | Tested | CT-PLG-003 |
+| R-0126 | Vol XVI, Plugin Invocation | Tested | CT-PLG-003, CT-PLG-008 |
 | R-0127 | Vol XVI, Extension Lifecycle | Tested | CT-PLG-004 |
 | R-0128 | App A | Tested | CT-CFG-001 |
 | R-0129 | App A, A.1 — Project | Tested | CT-CFG-025.01 |
@@ -250,7 +251,7 @@ restatements rather than requirements of their own. Twenty-one rows whose text 0
 | R-0208 | App A, A.8 — Dataset | Tested | CT-DSR-002 |
 | R-0209 | App A, A.8 — Dataset | Tested | CT-DSR-002 |
 | R-0210 | App A, A.8 — Dataset | Tested | CT-DSR-002 |
-| R-0211 | App A, A.8 — Dataset | Tested | CT-CFG-025.24 |
+| R-0211 | App A, A.8 — Dataset | Tested | CT-CFG-025.24, CT-CFG-028; MechanismConfig is reserved in 1.0-CR1 and rejected whole |
 | R-0212 | App A, A.9 — ExecutionConfig | Tested | CT-EXE-006 |
 | R-0213 | App A, A.9 — ExecutionConfig | Tested | CT-CFG-025.18 |
 | R-0214 | App A, A.9 — ExecutionConfig | Tested | CT-CFG-010 |
@@ -482,7 +483,7 @@ restatements rather than requirements of their own. Twenty-one rows whose text 0
 | R-0440 | App C, C.3 — Operations by Resource | Tested | CT-ADM-002, CT-ADM-003; added in v0.40 to v0.41.1 |
 | R-0441 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-ADM-004, CT-ADM-005, CT-ADM-006, CT-ADM-007; added in v0.40 to v0.41.1 |
 | R-0442 | App A, A.5 — Quality Contract | Tested | CT-ASM-020; added in v0.41.2 to v0.41.4 |
-| R-0443 | App A, A.8 — Dataset | Tested | CT-CFG-028; added in v0.41.2 to v0.41.4 |
+| R-0443 | App A, A.8 — Dataset | Tested | CT-CFG-028; added in v0.41.2 to v0.41.4; text revised in 1.0-CR1 |
 | R-0444 | App A, A.10 — Quality Gates | Tested | CT-CFG-026; added in v0.41.2 to v0.41.4 |
 | R-0445 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-CFG-026; added in v0.41.2 to v0.41.4 |
 | R-0446 | Vol I, Chapter 6 — Quality Gates | Restates | R-0445 (CT-CFG-026); added in v0.41.2 to v0.41.4 |
@@ -493,6 +494,9 @@ restatements rather than requirements of their own. Twenty-one rows whose text 0
 | R-0451 | §10, Conformance Statement | Restates | R-0448 (CT-REL-027); added in v0.41.2 to v0.41.4 |
 | R-0452 | App B, Introduction | Tested | CT-API-003; added in v0.41.5 |
 | R-0453 | App B, Introduction | Tested | CT-CFG-029.01, CT-CFG-029.02, CT-CFG-029.03, CT-CFG-029.04, CT-CFG-029.05, CT-CFG-029.06, CT-CFG-029.07, CT-CFG-029.08, CT-CFG-029.09; added in v0.41.5 |
+| R-0454 | App A, A.2 — Environment | Tested | CT-ABD-008; added in 1.0-CR1 |
+| R-0455 | App A, A.8 — Dataset | Tested | CT-CFG-028; added in 1.0-CR1 |
+| R-0456 | Vol IV, Generated Datasets | Tested | CT-DSR-005; added in 1.0-CR1 |
 
 ## 90.4 Not yet covered
 
@@ -533,7 +537,7 @@ run; the test report lists it (1.7).
 | CT-CFG-025 | By case: .01 R-0129; .02 R-0137; .03 R-0138; .04 R-0139; .05 R-0140; .06 R-0142; .07 R-0151; .08 R-0155; .09 R-0175; .10 R-0176; .11 R-0177; .12 R-0185; .13 R-0187; .14 R-0216; .15 R-0217; .16 R-0218; .17 R-0219; .18 R-0213; .19 R-0195; .20 R-0198; .21 R-0199; .22 R-0202; .23 R-0203; .24 R-0211; .25 R-0132 |
 | CT-CFG-026 | R-0444, R-0445 |
 | CT-CFG-027 | R-0285 |
-| CT-CFG-028 | R-0443 |
+| CT-CFG-028 | R-0211, R-0443, R-0455 |
 | CT-CFG-029 | R-0453 |
 | CT-EXE-001 | R-0048 |
 | CT-EXE-002 | R-0057, R-0162 |
@@ -676,11 +680,13 @@ run; the test report lists it (1.7).
 | CT-ABD-004 | R-0060, R-0296 |
 | CT-ABD-005 | R-0050 |
 | CT-ABD-006 | R-0147, R-0297 |
-| CT-ABD-007 | R-0052 |
+| CT-ABD-007 | R-0051, R-0052 |
+| CT-ABD-008 | R-0454 |
 | CT-DSR-001 | R-0200, R-0204, R-0205 |
 | CT-DSR-002 | R-0201, R-0206, R-0207, R-0208, R-0209, R-0210 |
 | CT-DSR-003 | R-0063, R-0282 |
 | CT-DSR-004 | R-0158, R-0279 |
+| CT-DSR-005 | R-0456 |
 | CT-PLG-001 | R-0122, R-0384 |
 | CT-PLG-002 | R-0123 |
 | CT-PLG-003 | R-0126 |
@@ -688,6 +694,7 @@ run; the test report lists it (1.7).
 | CT-PLG-005 | R-0121 |
 | CT-PLG-006 | R-0124 |
 | CT-PLG-007 | R-0125 |
+| CT-PLG-008 | R-0126 |
 | CT-SDK-001 | R-0115, R-0316, R-0383 |
 | CT-SDK-002 | R-0316, R-0352, R-0359, R-0383 |
 | CT-RUI-001 | R-0116 |

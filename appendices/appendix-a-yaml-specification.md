@@ -89,20 +89,20 @@ environments:
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `name` | String | MUST | Tool identifier. |
-| `parameters` | Map of String → TypeDef | MUST | Parameter schema for tool-call validation. |
+| `parameters` | Map of String → TypeDef | MUST | Parameter schema for tool-call validation. A TypeDef is a JSON Schema (draft 2020-12) for that parameter's value. |
 
 **ActionBoundary**
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `enforced` | Boolean | MUST | `true` if the harness denies everything outside `entries`; `false` if it can only observe. A `false` boundary MUST be surfaced in Reports (Volume XI). |
+| `enforced` | Boolean | MUST | `true` only if every route by which the subject can reach a system passes through the harness, and the harness denies everything outside `entries`; otherwise `false` (Volume III, Action Boundary). A `false` boundary MUST be surfaced in Reports (Volume XI). |
 | `entries` | List of BoundaryEntry | MUST | Systems, endpoints, or tools the subject may reach. |
 
 **BoundaryEntry**
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| `target` | String | MUST | Identifier or pattern of the system, endpoint, or tool. |
+| `target` | String | MUST | Identifier or pattern of the system, endpoint, or tool. Pattern syntax is implementation-defined and MUST be documented by the implementation; matching is deterministic. |
 | `kind` | String | MUST | `stub` (records only), `sandbox` (working copy, no effect outside the test), or `real`. |
 | `tripwire` | Boolean | MAY | Only for `kind: stub`. Marks a deliberate tempting shortcut (Volume VIII). Any touch is recorded and fails the Boundary Validator. Default: `false`. |
 
@@ -325,12 +325,12 @@ A named, versioned collection of input data (Volume II, Volume IV).
 |---|---|---|---|
 | `name` | String | MUST | Unique within the Project. |
 | `version` | String | MUST | Pinned version identifier. Every Dataset MUST be versioned (Volume IV). |
-| `source` | String | MUST | `static`, `synthetic`, `generated`, or `production_replay`. |
+| `source` | String | MUST | `static`, `synthetic`, `generated`, or `production_replay`. `synthetic` is reserved: it is specified in a later version, and an implementation MUST reject a Dataset with `source: synthetic` when the configuration is loaded. |
 | `rows` | List of Row | MUST (if `static`) | The actual data rows. |
 | `generator` | GeneratorConfig | MUST (if `generated`) | AI-generation configuration. |
 | `capture` | CaptureConfig | MUST (if `production_replay`) | Production capture configuration. |
 | `base_dataset` | String | MAY | Reference to a parent Dataset for Data Mutation or Fuzzing, written `name@version` as in §A.4. |
-| `mechanisms` | List of MechanismConfig | MAY | Coverage mechanisms applied to this Dataset. Each `type` is a scoped capability, `dataset_mechanism:<type>` (Conformance); an implementation that does not claim it MUST reject a Dataset naming that `type` when the configuration is loaded. |
+| `mechanisms` | List of MechanismConfig | MAY | Coverage mechanisms applied to this Dataset. Mechanisms are reserved: they are specified in a later version (`dataset_mechanism:<type>`, Conformance), and an implementation MUST reject a Dataset whose `mechanisms` names any `type` when the configuration is loaded. |
 
 **Row**
 
@@ -362,8 +362,9 @@ A named, versioned collection of input data (Volume II, Volume IV).
 | Field | Type | Required | Description |
 |---|---|---|---|
 | `type` | String | MUST | `data_mutation`, `fuzzing`, `edge_cases`, or `adversarial`. |
-| `transforms` | List of TransformDef | MAY | For `data_mutation`: field-level transform definitions. |
-| `perturbations` | List of PerturbationDef | MAY | For `fuzzing`: field-level perturbation definitions. |
+
+MechanismConfig is reserved, with Dataset mechanisms. Its parameters are specified in a
+later version.
 
 ## A.9 — ExecutionConfig
 

@@ -439,20 +439,22 @@ them needs an Execution.
 - **Expected:** (a) and (b) are rejected as conflicts. (c) loads.
 - **Fails if:** (a) or (b) loads; or (c) is rejected.
 
-### CT-CFG-028 — A Dataset mechanism the implementation does not claim is rejected
+### CT-CFG-028 — A reserved Dataset source or mechanism is rejected
 
 - **Capability:** core
-- **Requirement:** Appendix A §A.8, `mechanisms`: "Each `type` is a scoped capability,
-  `dataset_mechanism:<type>` ...; an implementation that does not claim it MUST reject a
-  Dataset naming that `type` when the configuration is loaded."
+- **Requirement:** Appendix A §A.8, `source`: "`synthetic` is reserved: it is specified
+  in a later version, and an implementation MUST reject a Dataset with `source:
+  synthetic` when the configuration is loaded"; `mechanisms`: "Mechanisms are reserved
+  ...; an implementation MUST reject a Dataset whose `mechanisms` names any `type` when
+  the configuration is loaded."
 - **Method:** Automated
-- **Fixture:** F-DS (CT-CFG-025). Variants: `ds-1` given `mechanisms: [ { type: <t> } ]`,
-  one variant for each `t` of `data_mutation`, `fuzzing`, `edge_cases`, and
-  `adversarial`.
+- **Fixture:** F-DS (CT-CFG-025). Variants of `ds-1`:
+  - (a) to (d): `mechanisms: [ { type: <t> } ]`, one variant for each `t` of
+    `data_mutation`, `fuzzing`, `edge_cases`, and `adversarial`;
+  - (e): `source: synthetic`, with `rows` removed.
 - **Action:** Load each variant.
-- **Expected:** Each variant whose `dataset_mechanism:<t>` the Conformance Statement does
-  not claim is rejected. Where every one is claimed, the test is `NOT_APPLICABLE` (1.2).
-- **Fails if:** A variant whose mechanism is not claimed loads.
+- **Expected:** Every variant is rejected.
+- **Fails if:** Any variant loads.
 
 ### CT-CFG-029 — Every operation that changes configuration enforces the rules of a full load
 

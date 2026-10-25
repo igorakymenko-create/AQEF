@@ -459,15 +459,21 @@ Workflow governs it.
 
 - **Capability:** `ci_cd:<platform>`
 - **Requirement:** Volume XIII, Quality Gates: "the Pipeline MUST reflect the override's
-  outcome, not the underlying Gate's raw failure."
+  outcome, not the underlying Gate's raw failure"; "An override changes only its own
+  GateResult's contribution: any other blocking GateResult that failed without an
+  override still fails the Pipeline."
 - **Method:** Automated
 - **Fixture:** CT-REL-006's configuration, run from a pipeline on the claimed platform.
 - **Action:** Run the pipeline to the point where it checks the Gates; override
   `semantic-gate`; let the pipeline continue.
+  Then run it again with `functional-gate` made to fail as well (scripted subject
+  `SR-EMPTY`), and override `semantic-gate` only.
 - **Expected:** Before the override, the pipeline's Gate check fails. After it, the
-  pipeline shows the overridden outcome, distinguishable from a plain pass.
-- **Fails if:** The pipeline stays failed after the override, or shows it as a plain
-  pass.
+  pipeline shows the overridden outcome, distinguishable from a plain pass. In the
+  second run, the pipeline still fails after the override, because `functional-gate`
+  failed without one.
+- **Fails if:** The pipeline stays failed after the override in the first run, or shows
+  it as a plain pass; or the second run's pipeline passes.
 
 ### CT-REL-025 — An unanswered review fails the pipeline instead of hanging it
 
@@ -760,7 +766,7 @@ among its tests has not been shown to be met.
 | Layer: Execution | CT-EXE-001…007, CT-EXE-009…011 |
 | Layer: Evidence | CT-EXE-003, CT-EXE-008, CT-EXE-012 |
 | Layer: Assessment | CT-ASM-001…012, CT-ASM-014…020 |
-| Layer: Decision | CT-DEC-001…009, CT-DEC-013, CT-DEC-014, CT-DEC-019…024, CT-REL-001…023, CT-REL-029…036, CT-REL-038, CT-REL-039 |
+| Layer: Decision | CT-DEC-001…009, CT-DEC-013, CT-DEC-014, CT-DEC-019…024, CT-TTP-001, CT-REL-001…023, CT-REL-029…036, CT-REL-038, CT-REL-039 |
 | Conformance Statement | CT-REL-027 |
 | Principle: Contracts over Assertions | CT-CFG-002, CT-CFG-003, CT-CFG-004, CT-CFG-007, CT-CFG-012, CT-CFG-013, CT-CFG-015, CT-CFG-019, CT-ASM-011, CT-ASM-019, CT-REL-036 |
 | Principle: Validation before Evaluation | CT-ASM-001, CT-ASM-002, CT-ASM-014, CT-ASM-017 |

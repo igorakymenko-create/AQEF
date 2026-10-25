@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.7/adapter-manifest.schema.json",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.8/adapter-manifest.schema.json",
   "title": "Adapter manifest 0.4",
   "description": "What this adapter and harness can do. Not the SUT's Conformance Statement: applicability is read from the statement referenced here, never from this manifest.",
   "type": "object",

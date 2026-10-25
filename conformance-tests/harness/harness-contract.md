@@ -1,7 +1,6 @@
 # AQEF CTS Harness Contract
 
-**Version:** 0.7. **For:** AQEF Conformance Test Specification Working Draft 10; AQEF
-Working Draft 0.41.5.
+**Version:** 0.8. **For:** AQEF Conformance Test Specification 1.0-CR1; AQEF 1.0-CR1.
 
 **Status:** Draft. Harnesses built to versions 0.5 and 0.6 ran CTS Working Drafts 8 and 9
 against a reference implementation; this version carries what those runs showed.
@@ -402,6 +401,8 @@ for the run; every case using it is `NOT_RUN` (`HARNESS_SELF_TEST_FAILED`).
 | `judge.unreachable` | Refused connection, no verdict | harness (`J-DOWN`) | CT-ASM-006, CT-ASM-007, CT-ASM-008, CT-DEC-007, CT-DEC-014 |
 | `validator.crash` | A Validator raises before any Result | test plugin `cts-crash`, or a hook the SUT documents | CT-ASM-014 |
 | `validator.malformed` | A Validator Result without `verdict` | test plugin `cts-probe` | CT-PLG-003 |
+| `judge.malformed` | A Judge Plugin Result without `confidence` | test plugin `cts-judge-probe` | CT-PLG-008 |
+| `generator.malformed` | A generation whose output includes a row without `id` | harness (scripted generator) | CT-DSR-005 |
 | `subject.latency` | A delay before the Response | harness (`SR-SLOW-200`) | CT-EXE-012 |
 | `review.timeout` | A review left unanswered past `review_timeout` | none: the runner does not answer | CT-HRV-003, CT-HRV-005, CT-REL-025 |
 | `tool.boundary_attempt` | A tool call outside the Action Boundary | harness (`SR-CALL(url)`) | Section 23 |
@@ -708,3 +709,4 @@ cases built to break it.
 | 0.5 | 2026-10-23 | for CTS WD8 | Written for CTS WD8 and AQEF 0.41.1. Operations `record_admission` and `list_admissions` for the Admission tests (CTS Section 16); the tests of clean controls added to the operations they use. The history above is restored: 0.3 and 0.4 had been merged into one row. |
 | 0.6 | 2026-10-24 | for CTS WD9 | Written for CTS WD9 and AQEF 0.41.4, after the first run of WD8 against a reference implementation. Behavior registry completed (`SR-HI`, `J-ALARM` were missing) and `J-PASS-90-A3` added; `audit_query` serves CT-REL-038. Reason code `CAPABILITY_CLAIMED` (§7, row 2a). |
 | 0.7 | 2026-10-24 | for CTS WD10 | Written for CTS WD10 and AQEF 0.41.5, after the review of WD9's Inspection and Declaration tests. A review record may decide `NOT_APPLICABLE` (`NOT_OFFERED`) where the test names it (§13; §7, row 2b); a reviewer that cannot sign is signed for by the person who commissioned the review (§13). Version numbers in schemas and examples, left at 0.5 in 0.6, read 0.7; schema `$id`s move to `/schemas/0.7/`. |
+| 0.8 | 2026-10-24 | for CTS 1.0-CR1 | Written for CTS and AQEF 1.0-CR1. Fault profiles `judge.malformed` (CT-PLG-008) and `generator.malformed` (CT-DSR-005). Version numbers in schemas and examples read 0.8. |

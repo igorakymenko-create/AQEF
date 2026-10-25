@@ -74,7 +74,9 @@ What every implementation MUST hold to is the logical shape of one assessment:
   Conversation, Artifacts, or both — Volume II), the clause's own content (a
   Constraint's `expected`, an Expectation's `criteria`), its own versioned configuration,
   and the identifiers of the Execution and clause it is assessing. A Validator Plugin
-  receives nothing else (Volume V — Validator SDK).
+  receives no other input to its assessment (Volume V — Validator SDK). Data that only
+  carries or authenticates the invocation, such as transport headers or credentials, is
+  not an input to the assessment.
 - **Output.** A Result for exactly that Execution and clause, in the shape Appendix C
   §C.7 specifies, with `oracle` naming the plugin and its version. The implementation
   validates the Result before recording it.

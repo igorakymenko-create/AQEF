@@ -4,7 +4,7 @@
 
 **An open specification for AI Quality Engineering as an engineering discipline.**
 
-Version 0.41.5 · 2026-10 · Working Draft, open for comment · by Igor Akymenko
+Version 1.0-CR1 · 2026-10 · Candidate Recommendation, open for review · by Igor Akymenko
 
 📖 **[Read the specification](index.md)** · 📄 **[Download PDF](https://github.com/igorakymenko-create/AQEF/releases/latest)** · 💬 **[Open an issue](https://github.com/igorakymenko-create/AQEF/issues)**
 
@@ -121,7 +121,10 @@ it — see [Scope](front-matter/06-scope.md) and
 
 ## Status
 
-Working Draft. Open for comment, and expected to change in response to it.
+Candidate Recommendation 1. The content is believed complete, and implementers are
+invited to build against it and report issues, for a review period of at least eight
+weeks. Some capabilities are marked at risk, and two are reserved for a later version;
+see [Document Status](front-matter/00-document-status.md).
 
 Nothing here is settled by authority — where a decision is contested, the argument for it
 is written down and can be attacked on its merits. The design decisions behind the
@@ -152,7 +155,7 @@ contributions welcome once the structure has stabilised.
 
 If you reference or build on AQEF, please credit:
 
-> Igor Akymenko, *AQEF — AI Quality Engineering Framework*, Working Draft v0.41.5,
+> Igor Akymenko, *AQEF — AI Quality Engineering Framework*, Candidate Recommendation 1.0-CR1,
 > https://github.com/igorakymenko-create/AQEF
 
 ## License

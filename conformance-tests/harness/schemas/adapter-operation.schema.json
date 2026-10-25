@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.7/adapter-operation.schema.json",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.8/adapter-operation.schema.json",
   "title": "Adapter operation request 0.4",
   "description": "One request from the CTS runner to the adapter or the harness. Operations whose arguments are typed in $defs/args are fixed in 0.3; for the others, arguments are an object whose fields the Stage C operation profile fixes.",
   "type": "object",

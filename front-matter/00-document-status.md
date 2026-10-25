@@ -1,33 +1,77 @@
 # 0. Document Status
 
-**Status:** Working Draft.
+**Status:** Candidate Recommendation 1.
 
 **AQEF — AI Quality Engineering Framework**
 
 | Property | Value |
 |---|---|
-| Status | Working Draft |
-| Version | 0.41.5 |
+| Status | Candidate Recommendation |
+| Version | 1.0-CR1 |
 | Date | 2026-10 |
-| Maturity | Draft — not for implementation |
+| Maturity | Candidate Recommendation — implementers invited to build and report issues |
 
-> **Warning:** This document is a **Working Draft**. It has not undergone formal review
-> and is subject to change without notice. It is published for early feedback and
-> directional alignment only. **Do not build conformant implementations against this
-> version** — normative requirements may be added, removed, or substantially revised
-> before the first Candidate Recommendation.
+## What "Candidate Recommendation" Means
 
-## What "Working Draft" Means
+The content of this version is believed complete. Implementers are invited to build
+against it, run the AQEF Conformance Test Specification (CTS), and report every place
+where the text could not be followed as written. A Candidate Recommendation is not a
+Standard: it may still change, under the rules below, in response to what implementing
+it shows.
 
-- All Volumes (I–XVII) have been drafted and are internally consistent.
-- The Glossary (Appendix D), Reference Examples (Appendix H), Best Practices (Appendix
-  I), and Migration Guide (Appendix J) are available for practitioner guidance.
-- The formal YAML Specification (Appendix A), JSON Schema (Appendix B), and REST API
-  Specification (Appendix C) are drafted in prose format.
-- A Quick Start Guide (Appendix K) is available for practitioners who want a minimal,
-  step-by-step introduction.
-- Cross-references between Volumes have been verified for this draft but may shift as
-  the specification evolves.
+This version enters Candidate Recommendation on this evidence:
+
+- A reference implementation, written from the specification text alone by a party that
+  had not seen the CTS, claims Conformance to the non-negotiable core and to
+  `human_review`, `multi_judge`, and `seeded_controls`. The CTS finds no failure against
+  it. The implementation, the harness that ran the tests, the run, and its evidence are
+  public.
+- Every testable MUST in the requirement inventory has at least one CTS test (CTS,
+  Section 90).
+- The capabilities no implementation has yet built were read independently, as an
+  implementer would read them. Their defects were corrected in this version, or the
+  capability is reserved (below).
+
+## Features at Risk
+
+These capabilities have no implementation yet. Each stays in this version during
+Candidate Recommendation. A feature at risk that has no implementation passing its CTS
+tests when Candidate Recommendation ends is removed from 1.0, or moved to a later
+version. Removing it does not restart Candidate Recommendation.
+
+- `action_boundary` (Volume III, Action Boundary)
+- `dataset:generated`, `dataset:production_replay` (Volume IV)
+- `plugins:validator`, `plugins:judge`, `plugins:dataset`, `plugins:report` (Volume XVI)
+- `ci_cd:<platform>` (Volume XIII)
+- `sdk:<language>`, `cli` (Volume XIV)
+- `reference_ui` (Volume XV)
+
+## Reserved
+
+These capabilities are named but not specified in this version. No implementation can
+claim them, and every implementation rejects a configuration that uses them (Appendix A
+§A.8). They are to be specified in a later version.
+
+- `dataset:synthetic` (Volume IV, Synthetic Datasets)
+- `dataset_mechanism:<type>` (Volume IV, Data Mutation, Fuzzing, Edge Cases, Adversarial)
+
+## Reporting Issues
+
+Report an issue at https://github.com/igorakymenko-create/AQEF/issues. Quote the text,
+and say what you could not decide from it or what you would have built differently.
+Every issue is answered, and the answer recorded: accepted with a change, accepted as
+editorial, or declined with reasons.
+
+The review period for this Candidate Recommendation runs for at least eight weeks from
+its publication.
+
+## Changes During Candidate Recommendation
+
+- An editorial change, which changes no requirement, is published as a patch: 1.0-CR1.1.
+- A normative change to a feature that is not at risk is published as a new Candidate
+  Recommendation, 1.0-CR2, with the CTS revised to match.
+- A feature at risk may be removed without a new Candidate Recommendation.
+- No new feature is added. New features go to version 1.1.
 
 ## Authorship and Consensus
 
@@ -47,7 +91,7 @@ claim of authority over how any person, team, or organization ought to work.
 
 | Stage | Meaning |
 |---|---|
-| **Working Draft** ← current | Content is directionally stable but subject to structural change. |
-| Candidate Recommendation | Content is believed complete. Implementers are invited to build and report issues. |
-| Proposed Standard | Candidate has been validated by at least one reference implementation. |
+| Working Draft | Content is directionally stable but subject to structural change. Versions 0.1 to 0.41.5. |
+| **Candidate Recommendation** ← current | Content is believed complete. Implementers are invited to build and report issues. |
+| Proposed Standard | Every capability that is not at risk has at least two independent implementations, each passing the CTS with no failure and with its reviews signed. Every feature at risk has one such implementation, or has been removed. The review period has ended with every issue answered. A third party has repeated at least one published CTS run from its published harness and evidence. No normative issue is open. |
 | Standard | Specification is stable and versioned for production use. |

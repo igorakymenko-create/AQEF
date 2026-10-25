@@ -310,6 +310,7 @@ properties:
 - When `source` is `static`: `rows` REQUIRED.
 - When `source` is `generated`: `generator` REQUIRED.
 - When `source` is `production_replay`: `capture` REQUIRED.
+- `source: synthetic` and any entry in `mechanisms` are reserved (§A.8): rejected.
 
 **ExecutionConfig**
 ```

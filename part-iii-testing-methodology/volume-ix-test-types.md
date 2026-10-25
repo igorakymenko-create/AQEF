@@ -9,6 +9,12 @@ Chapters 1–7 and Volumes III–VIII, which each build one continuous case, a t
 taxonomy is a reference list, and the point is to let someone name the check they need
 quickly — the same reference style Volume II's Entities section already established.
 
+A Test Type is not a conformance capability (Conformance). It names the purpose of a
+Suite built from the core: its Scenarios, Contracts, Oracles, and Gates. This Volume adds
+no requirement of its own. Where a type depends on a rule stated elsewhere, a Regression
+Suite on Volume X or an agent's trajectory on Volume I, Chapter 7, that rule binds
+through its own Volume.
+
 ## Test-Cycle Types
 
 These four name a Suite's purpose and scope — when and why it runs — not a category of

@@ -1,11 +1,11 @@
 {
-  "schema_version": "0.7",
+  "schema_version": "0.8",
   "run_id": "run-1",
   "provenance": {
-    "aqef_version": "0.41.5",
-    "cts_revision": "WD10",
+    "aqef_version": "1.0-CR1",
+    "cts_revision": "1.0-CR1",
     "cts_commit": "<commit of the CTS used>",
-    "harness_contract_version": "0.7",
+    "harness_contract_version": "0.8",
     "harness_version": "0.5.0",
     "adapter_id": "example-rest-adapter",
     "adapter_version": "0.4.0",
@@ -46,8 +46,8 @@
     "requirements": {
       "verified": 23,
       "violated": 4,
-      "unverified": 386,
-      "not_applicable": 4
+      "unverified": 390,
+      "not_applicable": 3
     }
   },
   "cases": [
@@ -823,7 +823,8 @@
       "requirement_id": "R-0051",
       "state": "unverified",
       "traced_to": [
-        "CT-ABD-003"
+        "CT-ABD-003",
+        "CT-ABD-007"
       ]
     },
     {
@@ -1300,7 +1301,8 @@
       "requirement_id": "R-0126",
       "state": "unverified",
       "traced_to": [
-        "CT-PLG-003"
+        "CT-PLG-003",
+        "CT-PLG-008"
       ]
     },
     {
@@ -1888,9 +1890,10 @@
     },
     {
       "requirement_id": "R-0211",
-      "state": "not_applicable",
+      "state": "unverified",
       "traced_to": [
-        "CT-CFG-025.24"
+        "CT-CFG-025.24",
+        "CT-CFG-028"
       ]
     },
     {
@@ -3636,6 +3639,27 @@
         "CT-CFG-029.08",
         "CT-CFG-029.09"
       ]
+    },
+    {
+      "requirement_id": "R-0454",
+      "state": "unverified",
+      "traced_to": [
+        "CT-ABD-008"
+      ]
+    },
+    {
+      "requirement_id": "R-0455",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-028"
+      ]
+    },
+    {
+      "requirement_id": "R-0456",
+      "state": "unverified",
+      "traced_to": [
+        "CT-DSR-005"
+      ]
     }
   ],
   "manual_reviews": [
@@ -3673,5 +3697,5 @@
   ],
   "harness_findings": [],
   "evidence_manifest_ref": "evidence://manifest-run-1.json",
-  "evidence_manifest_sha256": "446e31fd60ed72255ec18a2cf4ed134030790a5611f2fde1ddd034d1922e1a9c"
+  "evidence_manifest_sha256": "4a50c6e069dc7298976a05b69de3f9871a4322cc8b0c97949ec5031cb572e83a"
 }

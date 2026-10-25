@@ -17,7 +17,7 @@ project:
       tool_configuration:
         tools:
           - name: http_get
-            parameters: { url: string }
+            parameters: { url: { type: string } }
       action_boundary:
         enforced: true
         entries:
@@ -28,7 +28,11 @@ project:
             tripwire: true
 ```
 
-and, in `s-greeting`'s Contract, a Boundary Validator bound as a hard veto:
+The patterns in `target` are written here as globs. The tester writes them in the
+implementation's documented pattern syntax (CT-ABD-008), so that each matches the same
+URLs as its glob.
+
+And, in `s-greeting`'s Contract, a Boundary Validator bound as a hard veto:
 
 ```yaml
 constraints:
@@ -148,3 +152,38 @@ tester controls and monitors; it is not in the boundary.
 - **Expected:** Where it does not control access, it rejects or flags
   `enforced: true`, and never presents such a boundary as enforced.
 - **Fails if:** The statement admits presenting an uncontrolled boundary as enforced.
+
+### CT-TTP-002 — An agent's Baseline comparison judges the trajectory as a whole
+
+- **Capability:** `action_boundary`
+- **Requirement:** Volume I, Chapter 7, AI Agent: a Baseline comparison "MUST therefore
+  be capable of judging the outcome and the reasoning quality of a trajectory as a
+  whole, not require step-for-step identity with the Baseline's own path."
+- **Method:** Automated, Inspection
+- **Fixture:** F-ACT (Section 23) with a second stub entry `https://cts-stub2.example/*`
+  and a Regression Gate as in CT-TTP-001. Two scripted trajectories reaching the same
+  final Response, `"Done."`: (a) calls `cts-stub.example`, then `cts-stub2.example`;
+  (b) the same two calls in the opposite order.
+- **Action:** Execute with trajectory (a); designate it as a Baseline. Execute with
+  trajectory (b); evaluate the Gates. Review how the comparison was made.
+- **Expected:** The comparison does not report a regression because the order of steps
+  differs; the reviewer records what the comparison judged.
+- **Fails if:** A regression is reported solely because (b)'s steps are not identical
+  to (a)'s.
+
+### CT-ABD-008 — The implementation documents its boundary pattern syntax
+
+- **Capability:** `action_boundary`
+- **Requirement:** Appendix A §A.2, BoundaryEntry `target`: "Pattern syntax is
+  implementation-defined and MUST be documented by the implementation; matching is
+  deterministic."
+- **Method:** Declaration, Automated
+- **Fixture:** F-ACT.
+- **Action:** Obtain the implementation's documentation of its pattern syntax. With
+  scripted subject `SR-CALL(url)`, execute once with `url` set to each of
+  `https://cts-stub.example/a`, which matches `cts-stub.example`'s pattern, and
+  `https://cts-stub.example.evil/a`, which does not.
+- **Expected:** The documentation states the syntax and how a `target` matches. The
+  first call is allowed; the second is denied as outside the boundary, as the
+  documentation predicts.
+- **Fails if:** No syntax is documented; or an outcome contradicts the documentation.

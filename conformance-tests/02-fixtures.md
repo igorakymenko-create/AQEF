@@ -102,7 +102,7 @@ itself, and the registration is a setup check (1.6).
 | `ORACLE-1`, `ADM-PASS`, `ADM-FAIL`, `SA-REVIEW`, `gate-admitted` | 16 |
 | `SR-BYE`, F-SEED-V, `SR-HI`, `J-ALARM`, F-CLEAN, F-CLEAN-V | 22 |
 | F-ACT, `SR-CALL(url)` | 23 |
-| `cts-probe` | 25 |
+| `cts-probe`, `cts-judge-probe` | 25 |
 
 ## 2.7 Postcondition fixtures
 

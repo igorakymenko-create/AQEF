@@ -9,6 +9,10 @@ Validator Plugins.
 in the harness log and returns `pass`; when its configuration has `malformed: true`, it
 returns a Result with no `verdict` field at all.
 
+`cts-judge-probe`: a Judge Plugin that returns verdict `pass` with Confidence `0.90`;
+when its configuration has `no_confidence: true`, it returns a Result with a verdict and
+no `confidence` field.
+
 ### CT-PLG-001 — A Validator Plugin whose output varies is not registered
 
 - **Capability:** `plugins:validator`
@@ -41,7 +45,9 @@ returns a Result with no `verdict` field at all.
 - **Requirement:** Volume XVI, Plugin Invocation: "What every implementation MUST hold to
   is the logical shape of one assessment": the Evidence its clause names, the clause's
   content, its versioned configuration, and the Execution and clause identifiers, and
-  "A Validator Plugin receives nothing else"; a Result that fails validation is
+  "A Validator Plugin receives no other input to its assessment ... Data that only
+  carries or authenticates the invocation, such as transport headers or credentials, is
+  not an input to the assessment"; a Result that fails validation is
   `oracle_unavailable`, "never `fail`."
 - **Method:** Automated, Harness
 - **Fixture:** Two variants of F-BASE, each with one Constraint bound to `cts-probe`,
@@ -50,13 +56,16 @@ returns a Result with no `verdict` field at all.
 - **Action:** In each, execute `cts-suite`; read what `cts-probe` received; retrieve the
   `cts-probe` Result.
 - **Expected:** (a) `cts-probe` received the Response, its clause's `expected`, its
-  configuration, and the Execution and clause identifiers, and nothing else. Its Result
+  configuration, and the Execution and clause identifiers, and no other input to its
+  assessment; data that only carries or authenticates the call is not compared. Its
+  Result
   is `pass`, with `oracle` naming `cts-probe` and its version. (b) The `cts-probe`
   Result is `oracle_unavailable`, with `verdict: null`, and the scripted Judge receives
   no call. (The two cases run separately because the specification does not fix the
   order in which a Contract's Validators run, and a Validation that has not passed
   stops there.)
-- **Fails if:** In (a), `cts-probe` received anything beyond those inputs, or the Result
+- **Fails if:** In (a), `cts-probe` received any other input to its assessment, or the
+  Result
   does not name the plugin and version; in (b), the Result is recorded as `fail` or with
   the malformed content, or the Judge is called.
 
@@ -135,3 +144,21 @@ returns a Result with no `verdict` field at all.
   follow the Metric to the Results behind it.
 - **Expected:** The reviewer reaches the individual Results from the Metric.
 - **Fails if:** The Metric cannot be traced to its Results.
+
+### CT-PLG-008 — A Judge Plugin's Result without Confidence assesses nothing
+
+- **Capability:** `plugins:judge`
+- **Requirement:** Volume XVI, Plugin Invocation: "The implementation validates the
+  Result before recording it"; a plugin that "returns a Result that fails validation has
+  assessed nothing: the recorded Result is `oracle_unavailable`, never `fail`"; Volume
+  XVI, Judge Plugins: what can be checked is "does a Judge Plugin's Result carry a
+  Confidence value at all"; Appendix C §C.7, `confidence`.
+- **Method:** Automated
+- **Fixture:** Two variants of F-BASE, with the Expectation's Judge replaced by
+  `cts-judge-probe`. (a) As is. (b) With configuration `no_confidence: true`.
+- **Action:** In each, execute `cts-suite` and retrieve the Expectation's Result.
+- **Expected:** (a) The Result is `pass`, with Confidence `0.90` and `oracle` naming
+  `cts-judge-probe` and its version. (b) The Result is `oracle_unavailable`, with
+  `verdict: null`.
+- **Fails if:** (b) is recorded with the plugin's verdict, or as `fail`, or with a
+  Confidence the plugin did not return.

@@ -150,7 +150,8 @@ def load_inventory(cts=CTS):
     inv = {"tests": {}, "requirements": {}, "fixtures": {}}
     status = (cts / "00-introduction.md").read_text(encoding="utf-8")
     m = re.search(r"\*\*Status:\*\* Working Draft (\d+)\.", status)
-    inv["revision"] = f"WD{m.group(1)}" if m else None
+    cr = re.search(r"\*\*Status:\*\* Candidate Recommendation \d+ \(([0-9.]+-CR\d+)\)\.", status)
+    inv["revision"] = f"WD{m.group(1)}" if m else (cr.group(1) if cr else None)
     text = ""
     for f in sorted(cts.glob("[0-9]*.md")):
         t = f.read_text(encoding="utf-8")

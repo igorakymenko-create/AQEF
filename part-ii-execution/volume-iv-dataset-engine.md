@@ -9,9 +9,11 @@ source Variable Resolution draws on. This Volume specifies what a Dataset (Volum
 actually is in practice: the four ways rows come to exist, the four further mechanisms
 that deliberately shape coverage once rows exist, and the one concern — Versioning —
 that applies across all of them. Static Datasets and Versioning are part of the
-non-negotiable core. Every other source, and each of the four mechanisms, is a scoped
-capability an implementation claims or does not (Conformance): a source as
-`dataset:<source>`, a mechanism as `dataset_mechanism:<type>`.
+non-negotiable core. `generated` and `production_replay` are scoped capabilities an
+implementation claims or does not (Conformance), as `dataset:<source>`. Synthetic
+Datasets and the four mechanisms are reserved in this version: what follows describes
+their purpose, but their configuration is specified in a later version, and an
+implementation rejects a Dataset that uses them (Appendix A §A.8).
 
 ```mermaid
 flowchart TD
@@ -66,6 +68,13 @@ exactly the inputs that model family struggles with, for the same reason a same-
 Judge risks missing exactly the errors that family is prone to. Chapter 3's principle is
 a MUST that names Oracles specifically; a Generated Dataset is not an Oracle, so this
 Volume extends the same reasoning only as far as a SHOULD.
+
+What a generation produces is a set of Rows (Appendix A §A.8), each with an `id` unique
+in the Dataset and its `variables`. A generation that fails, or whose output includes
+anything that is not a valid Row, MUST produce no Dataset version, and the
+implementation reports the failure. It MUST NOT repair, complete, or drop rows to make a
+version out of such output: a Dataset version holds exactly what was generated, or does
+not exist.
 
 ## Production Replay
 

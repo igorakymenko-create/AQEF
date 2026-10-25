@@ -78,7 +78,8 @@ Gate's raw failure — a Pipeline showing a red status for a deployment Governan
 already, explicitly approved would misrepresent a decision that was actually made, the same silent-versus-explicit distinction Approval Workflow exists to keep from getting
 lost downstream. The override that counts is the one recorded against this Pipeline's
 own Gate Result; an override recorded for an earlier batch, even of the same Gate, does
-not apply (Volume XII). A Pipeline that ships automatically records its Release Decision
+not apply (Volume XII). An override changes only its own GateResult's contribution: any
+other blocking GateResult that failed without an override still fails the Pipeline. A Pipeline that ships automatically records its Release Decision
 through a Service Account under a standing release policy (Volume XII — Principals): it
 can record a release whose blocking Gates all passed, but it cannot approve an override.
 

@@ -749,6 +749,10 @@ dataset:
 
 **Coverage Mechanisms**
 
+Dataset mechanisms are reserved in version 1.0 (Appendix A §A.8): an implementation of
+1.0 rejects these configurations. The examples show the intent of a later version and
+are not normative.
+
 ```yaml
 # Data Mutation — intent-preserving transforms (Volume IV)
 dataset:

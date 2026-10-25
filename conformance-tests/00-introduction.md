@@ -1,6 +1,6 @@
 # AQEF Conformance Test Specification
 
-**Status:** Working Draft 10. Tests for AQEF Working Draft 0.41.5.
+**Status:** Candidate Recommendation 1 (1.0-CR1). Tests for AQEF 1.0-CR1.
 
 **License:** CC BY 4.0, as the specification.
 
@@ -37,7 +37,9 @@ This draft covers the non-negotiable core of AQEF Conformance (§10): the five l
 layers and the seven Fundamental Principles, and the path every conformant
 implementation takes from a configuration to a Release Decision. It also covers every
 scoped capability (§10, Conformance Statement), in Sections 20 to 26, each test tagged
-with the capability's identifier; CI/CD tests are in Section 14. Section 90 shows,
+with the capability's identifier; CI/CD tests are in Section 14. Capabilities the
+specification reserves for a later version (AQEF §0, Reserved) have no tests of their
+own; CT-CFG-028 checks that they are rejected. Section 90 shows,
 requirement by requirement, what is covered.
 
 ### 0.4 Versioning
@@ -63,13 +65,38 @@ when the requirement it checks changes.
 | 21 | Capability `multi_judge` |
 | 22 | Capability `seeded_controls` |
 | 23 | Capability `action_boundary` |
-| 24 | Capabilities `dataset:<source>` (`dataset_mechanism:<type>` has one case, in CT-CFG-025, and CT-CFG-028) |
+| 24 | Capabilities `dataset:<source>` (`generated`, `production_replay`) |
 | 25 | Capabilities `plugins:<type>` |
-| 26 | Capabilities `cli`, `sdk:<language>`, `reference_ui`, `test_type:<name>` |
+| 26 | Capabilities `cli`, `sdk:<language>`, `reference_ui` |
 | 90 | Traceability: requirement → test |
 | `harness/` | Harness Contract: a separate document specifying the test infrastructure (1.4) |
 
 ### 0.6 Changes
+
+**Candidate Recommendation 1 (1.0-CR1)** accompanies AQEF 1.0-CR1. The CTS takes the
+specification's version from here on.
+
+- **Reserved capabilities.** CT-CFG-028 now checks that an implementation rejects a
+  Dataset with `source: synthetic`, or with any entry in `mechanisms`. Both are reserved
+  in AQEF 1.0. `CT-CFG-025.24` stays, and is `NOT_APPLICABLE` for every implementation
+  of 1.0.
+- **Test Types are not a capability** (AQEF §10):
+  - CT-TTP-001 moves to Section 13 and becomes `core`;
+  - CT-TTP-002 moves to Section 23, under `action_boundary`.
+
+  Their IDs are kept.
+- **Tests added**, from an independent reading of the capabilities no implementation
+  has built:
+  - CT-DSR-005: a malformed generation produces no Dataset version;
+  - CT-PLG-008: a Judge Plugin's Result without Confidence assesses nothing;
+  - CT-ABD-008: the implementation documents its boundary pattern syntax.
+- **Tests corrected**, where they asked more than the specification:
+  - CT-PLG-003: transport and authentication data are not inputs;
+  - CT-SDK-002: an error's presentation is not compared;
+  - CT-RUI-001: data the implementation sets is not compared.
+- **CT-REL-024** gets a case with two failed Gates, one overridden.
+- **F-ACT** gives its tool parameter as a JSON Schema (AQEF §A.2, TypeDef). It also
+  states that its boundary patterns are written in the implementation's syntax.
 
 **Working Draft 10** covers AQEF 0.41.5, and closes what the final run of Working
 Draft 9 left open.

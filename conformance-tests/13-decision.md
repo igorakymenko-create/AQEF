@@ -511,3 +511,26 @@ Judge passes `Goodbye.` and so misses the control; with `J-CATCH`, it catches it
   containing both `insufficient_basis` and `non_actionable_results`.
 - **Fails if:** The Gate passes; `value` is a number or bare `null`; or `reasons` lacks
   either.
+
+### CT-TTP-001 — A Regression Suite surfaces drift with nothing AQEF-visible changed
+
+- **Capability:** core
+- **Requirement:** Volume X, Model Drift: "a Regression Suite (Volume IX) MUST be able to
+  surface Model Drift even when nothing AQEF-visible changed." (A Regression Suite is a
+  purpose, not a capability, AQEF Volume IX; the requirement binds through Volume X.)
+- **Method:** Automated
+- **Fixture:** F-BASE with `semantic-gate`, plus a Regression Gate:
+  ```yaml
+  - name: regression-gate
+    aggregate: regression
+    compare_against: latest_approved
+    threshold: 0
+    on_failure: block_release
+  ```
+  Scripted Judge `J-CATCH` (Section 13.1).
+- **Action:** Execute `cts-suite` with scripted subject `SR-OK`; as `P-APPROVER`,
+  designate the Execution as a Baseline. Without changing any configuration, switch the
+  scripted subject to `SR-BYE` (Section 22); execute again; evaluate the Gates.
+- **Expected:** `regression-gate` fails, and the implementation's records show that no
+  Environment, Contract, or Dataset changed between the two Executions.
+- **Fails if:** `regression-gate` passes.

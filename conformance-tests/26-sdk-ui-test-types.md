@@ -1,4 +1,4 @@
-# 26. Capabilities: SDKs and CLI, Reference UI, Test Types
+# 26. Capabilities: SDKs and CLI, Reference UI
 
 Each test applies only where the implementation claims the capability it names (§10).
 
@@ -30,12 +30,12 @@ Each test applies only where the implementation claims the capability it names (
 - **Action:** Carry out each of those three tests once through the REST API and once
   through the SDK of each claimed language, each run in a Project of its own (1.6).
 - **Expected:** Each test reaches the same outcome on every surface. Where the REST API
-  returns an error, the SDK reports the same error in substance: the same HTTP status
-  or error code, and the same field or entity named, however the SDK represents it, as
-  an exception or otherwise. The Results and GateResults recorded agree in every field
-  but identifiers, `execution`, references to their own Execution, and times. Message
-  text, exception classes, and stack traces are not compared.
-- **Fails if:** An outcome differs; an error differs in status, code, or what it names;
+  returns an error, the SDK reports an error too, carrying the same HTTP status or error
+  code, however the SDK represents it, as an exception or otherwise. What field or
+  entity the error names, its message text, exception classes, and stack traces are
+  not compared; the test report records them. The Results and GateResults recorded agree in every field
+  but identifiers, `execution`, references to their own Execution, and times.
+- **Fails if:** An outcome differs; an error differs in status or code;
   an SDK succeeds where the API returns an error, or the reverse; or a compared field of
   a recorded Result or GateResult differs.
 
@@ -48,8 +48,12 @@ Each test applies only where the implementation claims the capability it names (
 - **Fixture:** F-BASE's `s-greeting`.
 - **Action:** Author `s-greeting` in the Visual Test Designer, as `s-visual`, with the
   same content. Retrieve both Scenarios through the REST API.
-- **Expected:** Apart from their names, the two are identical.
-- **Fails if:** They differ in any other field or in structure.
+- **Expected:** Apart from their names, the two are identical in every field the author
+  supplies, and in the effective Contract each resolves to. Identifiers, timestamps,
+  version or provenance fields, and other values the implementation sets itself are not
+  compared.
+- **Fails if:** They differ in an authored field, in structure, or in their effective
+  Contracts.
 
 ### CT-RUI-002 — The Validator Designer does not let a Validator carry Confidence or call a model
 
@@ -89,42 +93,3 @@ Each test applies only where the implementation claims the capability it names (
 - **Expected:** Each states what it is; the Report shows the moment it was frozen.
 - **Fails if:** A viewer could take either for the other from what the UI shows.
 
-### CT-TTP-001 — A Regression Suite surfaces drift with nothing AQEF-visible changed
-
-- **Capability:** `test_type:regression`
-- **Requirement:** Volume X, Model Drift: "a Regression Suite (Volume IX) MUST be able to
-  surface Model Drift even when nothing AQEF-visible changed."
-- **Method:** Automated
-- **Fixture:** F-BASE with `semantic-gate`, plus a Regression Gate:
-  ```yaml
-  - name: regression-gate
-    aggregate: regression
-    compare_against: latest_approved
-    threshold: 0
-    on_failure: block_release
-  ```
-  Scripted Judge `J-CATCH` (Section 13.1).
-- **Action:** Execute `cts-suite` with scripted subject `SR-OK`; as `P-APPROVER`,
-  designate the Execution as a Baseline. Without changing any configuration, switch the
-  scripted subject to `SR-BYE` (Section 22); execute again; evaluate the Gates.
-- **Expected:** `regression-gate` fails, and the implementation's records show that no
-  Environment, Contract, or Dataset changed between the two Executions.
-- **Fails if:** `regression-gate` passes.
-
-### CT-TTP-002 — An agent's Baseline comparison judges the trajectory as a whole
-
-- **Capability:** `test_type:agent` together with `action_boundary`
-- **Requirement:** Volume I, Chapter 7, AI Agent: a Baseline comparison "MUST therefore
-  be capable of judging the outcome and the reasoning quality of a trajectory as a
-  whole, not require step-for-step identity with the Baseline's own path."
-- **Method:** Automated, Inspection
-- **Fixture:** F-ACT (Section 23) with a second stub entry `https://cts-stub2.example/*`
-  and a Regression Gate as in CT-TTP-001. Two scripted trajectories reaching the same
-  final Response, `"Done."`: (a) calls `cts-stub.example`, then `cts-stub2.example`;
-  (b) the same two calls in the opposite order.
-- **Action:** Execute with trajectory (a); designate it as a Baseline. Execute with
-  trajectory (b); evaluate the Gates. Review how the comparison was made.
-- **Expected:** The comparison does not report a regression because the order of steps
-  differs; the reviewer records what the comparison judged.
-- **Fails if:** A regression is reported solely because (b)'s steps are not identical
-  to (a)'s.

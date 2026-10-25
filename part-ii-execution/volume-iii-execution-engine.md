@@ -84,8 +84,12 @@ Execution, each marked as a `stub` (a stand-in that only records), a `sandbox` (
 working copy with no effect outside the test), or `real`.
 
 Where the harness controls the subject's access, everything outside the boundary MUST
-be denied by default. Where it cannot (the subject runs on a platform the harness does
-not control, for instance), the Environment MUST declare the boundary `enforced: false`.
+be denied by default. The harness controls access only where every route by which the
+subject can reach a system during an Execution, whether through a declared tool, a
+network, a file system, or any other means, passes through the harness. Where any route
+does not (the subject runs on a platform the harness does not control, for instance, or
+can open connections of its own), the Environment MUST declare the boundary
+`enforced: false`.
 That is not a failure of conformance; it is a fact a Report must show (Volume XI),
 because an unsealed Environment is the one in which a test can do real damage.
 
