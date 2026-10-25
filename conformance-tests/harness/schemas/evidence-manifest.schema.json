@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.5/evidence-manifest.schema.json",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.7/evidence-manifest.schema.json",
   "title": "Evidence manifest 0.4",
   "description": "Index of every evidence object of a run. raw_sha256 is computed over the exact bytes captured; redacted_sha256 over the exact bytes published. manifest_sha256 is SHA-256 over the RFC 8785 (JCS) serialization of this object without manifest_sha256.",
   "type": "object",

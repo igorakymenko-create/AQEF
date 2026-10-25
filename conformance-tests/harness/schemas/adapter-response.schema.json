@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.5/adapter-response.schema.json",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.7/adapter-response.schema.json",
   "title": "Adapter operation response 0.4",
   "description": "Exactly one of data or error. For an operation that reaches the SUT, data.sut records the SUT's own outcome, accepted or rejected, with the unmodified body kept as evidence.",
   "type": "object",

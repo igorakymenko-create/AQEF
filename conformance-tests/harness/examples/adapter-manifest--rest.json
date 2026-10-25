@@ -1,5 +1,5 @@
 {
-  "contract_version": "0.5",
+  "contract_version": "0.7",
   "adapter_id": "example-rest-adapter",
   "adapter_version": "0.3.0",
   "harness_version": "0.3.0",

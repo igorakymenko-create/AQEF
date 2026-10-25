@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.5/manual-review.schema.json",
+  "$id": "https://github.com/igorakymenko-create/AQEF/conformance-tests/harness/schemas/0.7/manual-review.schema.json",
   "title": "Manual review record 0.4",
   "description": "Decision of a named reviewer for an Inspection or Declaration test (CTS 1.8).",
   "type": "object",
@@ -95,6 +95,7 @@
       "enum": [
         "PASS",
         "FAIL",
+        "NOT_APPLICABLE",
         "NOT_RUN"
       ]
     },
@@ -105,7 +106,8 @@
         "INSUFFICIENT_EVIDENCE",
         "UNRESOLVED_INTERPRETATION",
         "DISPUTED",
-        "PENDING"
+        "PENDING",
+        "NOT_OFFERED"
       ]
     },
     "declaration_ref": {
@@ -140,6 +142,37 @@
     }
   },
   "allOf": [
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "const": "NOT_APPLICABLE"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "reason_code": {
+            "const": "NOT_OFFERED"
+          },
+          "checklist": {
+            "contains": {
+              "properties": {
+                "answer": {
+                  "const": "met"
+                },
+                "evidence_refs": {
+                  "minItems": 1
+                }
+              },
+              "required": [
+                "answer"
+              ]
+            }
+          }
+        }
+      }
+    },
     {
       "if": {
         "properties": {

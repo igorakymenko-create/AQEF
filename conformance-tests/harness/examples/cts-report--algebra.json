@@ -1,11 +1,11 @@
 {
-  "schema_version": "0.5",
+  "schema_version": "0.7",
   "run_id": "run-1",
   "provenance": {
-    "aqef_version": "0.41.4",
-    "cts_revision": "WD9",
+    "aqef_version": "0.41.5",
+    "cts_revision": "WD10",
     "cts_commit": "<commit of the CTS used>",
-    "harness_contract_version": "0.5",
+    "harness_contract_version": "0.7",
     "harness_version": "0.5.0",
     "adapter_id": "example-rest-adapter",
     "adapter_version": "0.4.0",
@@ -46,7 +46,7 @@
     "requirements": {
       "verified": 23,
       "violated": 4,
-      "unverified": 384,
+      "unverified": 386,
       "not_applicable": 4
     }
   },
@@ -3614,6 +3614,28 @@
         "CT-REL-027"
       ],
       "derived_from": "R-0448"
+    },
+    {
+      "requirement_id": "R-0452",
+      "state": "unverified",
+      "traced_to": [
+        "CT-API-003"
+      ]
+    },
+    {
+      "requirement_id": "R-0453",
+      "state": "unverified",
+      "traced_to": [
+        "CT-CFG-029.01",
+        "CT-CFG-029.02",
+        "CT-CFG-029.03",
+        "CT-CFG-029.04",
+        "CT-CFG-029.05",
+        "CT-CFG-029.06",
+        "CT-CFG-029.07",
+        "CT-CFG-029.08",
+        "CT-CFG-029.09"
+      ]
     }
   ],
   "manual_reviews": [
@@ -3651,5 +3673,5 @@
   ],
   "harness_findings": [],
   "evidence_manifest_ref": "evidence://manifest-run-1.json",
-  "evidence_manifest_sha256": "44ab6e4e8980da36b624139f18944714a7bbf0a6da6b99e596661dc633ecf4ab"
+  "evidence_manifest_sha256": "446e31fd60ed72255ec18a2cf4ed134030790a5611f2fde1ddd034d1922e1a9c"
 }

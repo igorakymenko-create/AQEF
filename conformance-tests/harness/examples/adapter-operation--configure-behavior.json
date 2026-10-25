@@ -1,5 +1,5 @@
 {
-  "contract_version": "0.5",
+  "contract_version": "0.7",
   "operation": "configure_behavior",
   "run_id": "run-1",
   "case_id": "CT-DEC-008",

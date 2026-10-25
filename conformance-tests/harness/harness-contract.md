@@ -1,10 +1,10 @@
 # AQEF CTS Harness Contract
 
-**Version:** 0.6. **For:** AQEF Conformance Test Specification Working Draft 9; AQEF
-Working Draft 0.41.4.
+**Version:** 0.7. **For:** AQEF Conformance Test Specification Working Draft 10; AQEF
+Working Draft 0.41.5.
 
-**Status:** Draft. A harness built to version 0.5 ran CTS Working Draft 8 against a
-reference implementation; this version carries what that run showed.
+**Status:** Draft. Harnesses built to versions 0.5 and 0.6 ran CTS Working Drafts 8 and 9
+against a reference implementation; this version carries what those runs showed.
 
 **License:** CC BY 4.0, as the specification.
 
@@ -287,6 +287,7 @@ decides.
 | 1 | The test's capability is not in the Conformance Statement. | `NOT_APPLICABLE` | `CAPABILITY_NOT_CLAIMED` |
 | 2 | The test checks an optional feature, says that its absence is not applicable, and a probe shows it absent. | `NOT_APPLICABLE` | `OPTIONAL_FEATURE_ABSENT` |
 | 2a | The test checks what an implementation does when it does not claim a capability, and the capability is in the Conformance Statement (CTS 1.2). | `NOT_APPLICABLE` | `CAPABILITY_CLAIMED` |
+| 2b | A manual review decides `NOT_APPLICABLE` (§13). | `NOT_APPLICABLE` | `OPTIONAL_FEATURE_ABSENT` |
 | 3 | A behavior the test uses failed its self-test. | `NOT_RUN` | `HARNESS_SELF_TEST_FAILED` |
 | 4 | A fixture the tester supplies (a test plugin, a pipeline, a reviewer) cannot be provided. | `NOT_RUN` | `FIXTURE_UNAVAILABLE` |
 | 5 | Any error, of any origin, in phase `setup`, or a failed setup check. | `NOT_RUN` | `SETUP_FAILED` |
@@ -526,7 +527,12 @@ This section is the record format for CTS 1.8.
 - **Checklist.** One item per statement of **Expected**, quoted verbatim; each answered
   `met`, `not_met`, or `undecided`, with the evidence used.
 - **Decision.** `PASS` only if every item is `met` with evidence; `FAIL` if an item is
-  `not_met` with evidence; otherwise `NOT_RUN`. The schema enforces this.
+  `not_met` with evidence; `NOT_APPLICABLE` only where the test's **Expected** names
+  that outcome for what the reviewer found (for example, a feature the specification
+  leaves optional and the implementation does not offer), with `reason_code`
+  `NOT_OFFERED` and evidence for the item that establishes it; otherwise `NOT_RUN`. The
+  schema enforces this. A record's free-text remarks go in `notes`, or in an item's
+  `note`.
 - **Method.** `inspection` or `declaration`. A Declaration is recorded as a statement
   (`declaration_ref`), never as a measurement, and only where the test's method
   includes Declaration (CTS 1.3).
@@ -540,7 +546,11 @@ This section is the record format for CTS 1.8.
   decision.
 - **Signature.** `signature_ref` points to a signature over the JCS serialization of the
   record without that field, or to an authenticated record that identifies the
-  reviewer.
+  reviewer. A reviewer that cannot sign, such as an AI system, has its records signed by
+  the person who commissioned the review. That person's authenticated attestation names
+  the reviewer, the records, and the run they apply to, and states that the records are
+  unchanged. An authenticated commit that adds the records and the attestation to a
+  repository is one such record.
 - **Per test.** For CT-REL-023, the reviewer follows the actual record links and cites
   each. For CT-ABD-007 and every Declaration, the report states that the evidence is a
   statement. For Section 26 `RUI` tests, screenshots show the URL and a visible time.
@@ -697,3 +707,4 @@ cases built to break it.
 | 0.4 | 2026-10-20 | after the Contract Verification Audit | Run plan and report completeness; RFC 8785 canonicalization as published; evidence verified byte by byte; unit tests of every check. |
 | 0.5 | 2026-10-23 | for CTS WD8 | Written for CTS WD8 and AQEF 0.41.1. Operations `record_admission` and `list_admissions` for the Admission tests (CTS Section 16); the tests of clean controls added to the operations they use. The history above is restored: 0.3 and 0.4 had been merged into one row. |
 | 0.6 | 2026-10-24 | for CTS WD9 | Written for CTS WD9 and AQEF 0.41.4, after the first run of WD8 against a reference implementation. Behavior registry completed (`SR-HI`, `J-ALARM` were missing) and `J-PASS-90-A3` added; `audit_query` serves CT-REL-038. Reason code `CAPABILITY_CLAIMED` (§7, row 2a). |
+| 0.7 | 2026-10-24 | for CTS WD10 | Written for CTS WD10 and AQEF 0.41.5, after the review of WD9's Inspection and Declaration tests. A review record may decide `NOT_APPLICABLE` (`NOT_OFFERED`) where the test names it (§13; §7, row 2b); a reviewer that cannot sign is signed for by the person who commissioned the review (§13). Version numbers in schemas and examples, left at 0.5 in 0.6, read 0.7; schema `$id`s move to `/schemas/0.7/`. |

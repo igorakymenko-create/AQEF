@@ -1,7 +1,7 @@
 {
   "fixture_id": "F-SIGNALS",
   "recipe_version": "0.3.0",
-  "cts_ref": "CTS WD9 §2.7",
+  "cts_ref": "CTS WD10 §2.7",
   "base": "F-MULTI",
   "base_changes": [
     "CT-REL-035's configuration: semantic-gate; execution: { scheduling: sequential, retry: { max_attempts: 2, on: infrastructure_failure } }"

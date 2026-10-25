@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.5",
+  "schema_version": "0.7",
   "run_id": "run-1",
   "created_at": "2026-10-20T19:00:00Z",
   "canonicalization": "RFC8785",
@@ -353,5 +353,5 @@
       "collected_at": "2026-10-20T17:55:00Z"
     }
   ],
-  "manifest_sha256": "44ab6e4e8980da36b624139f18944714a7bbf0a6da6b99e596661dc633ecf4ab"
+  "manifest_sha256": "446e31fd60ed72255ec18a2cf4ed134030790a5611f2fde1ddd034d1922e1a9c"
 }
