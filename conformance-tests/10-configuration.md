@@ -453,3 +453,41 @@ them needs an Execution.
 - **Expected:** Each variant whose `dataset_mechanism:<t>` the Conformance Statement does
   not claim is rejected. Where every one is claimed, the test is `NOT_APPLICABLE` (1.2).
 - **Fails if:** A variant whose mechanism is not claimed loads.
+
+### CT-CFG-029 — Every operation that changes configuration enforces the rules of a full load
+
+- **Capability:** core; case `CT-CFG-029.09`: `seeded_controls`
+- **Requirement:** Appendix B, introduction: "Whether or not it publishes one, an
+  implementation MUST enforce the property constraints of B.2 and the cross-type rules of
+  B.3 whenever a configuration is loaded or changed, through every operation that loads
+  or changes one (Appendix C)."
+- **Method:** Automated
+- **Fixture:** F-BASE with `semantic-gate`, except where a case names another start.
+  Each case runs in a Project of its own and has its own outcome (1.2, Cases).
+- **Action:** For each case, load the start. Then, through the operation named (Appendix
+  C §C.3, or the implementation's documented equivalent for that one entity), make:
+  1. the valid change: a setup check. If it is rejected, the case is `NOT_RUN`,
+     because the operation itself does not work;
+  2. the invalid change;
+  3. retrieve the entity changed.
+
+  An implementation that changes these entities only by replacing the whole Project
+  offers none of these operations. Each case is then `NOT_APPLICABLE` (1.2): CT-CFG-001
+  to 028 cover full loads.
+
+| Case | Start | Operation | Valid change (setup check) | Invalid change | Rule broken |
+|---|---|---|---|---|---|
+| `CT-CFG-029.01` | | Add a Scenario | Scenario `s-extra`, as `s-greeting` with `query: "Extra"` | Scenario `s-extra-2`, the same with `dataset: absent@1` in place of `variables` | B.3 Dataset reference |
+| `CT-CFG-029.02` | | Replace a Scenario | `s-greeting` with `query: "Hi"` | `s-greeting` with its Expectation removed | B.3 Gate coverage (`semantic-gate`) |
+| `CT-CFG-029.03` | CT-CFG-027's start, with (P, S) = (`AND`, `AND`) | Replace a Scenario | `s-greeting` with `query: "Hi"` | `s-greeting` with `validator_composition: OR` | B.3 Composition conflict surfacing |
+| `CT-CFG-029.04` | | Define a Quality Gate | `{ name: semantic-gate-2, aggregate: semantic, threshold: 0.5, on_failure: warn }` | `{ name: operational-gate, aggregate: operational, threshold: 0.5, on_failure: warn }` | B.3 Gate coverage |
+| `CT-CFG-029.05` | | Change a Quality Gate | `functional-gate` with `threshold: 0.9` | `functional-gate` with `aggregate: operational` | B.3 Gate coverage |
+| `CT-CFG-029.06` | | Replace an Environment | `cts-env` with `prompt_version: cts-prompt@2` | `cts-env` with `model_version: cts-scripted-judge@1`, the Expectation's Judge | B.3 Independent Oracle — identity |
+| `CT-CFG-029.07` | | Create a Dataset | `ds-2@1`, static, one row `{ id: r1, variables: { query: "Hi" } }` | The same as `ds-3@1`, with `base_dataset: absent@1` | B.3 Dataset reference |
+| `CT-CFG-029.08` | | Remove a Scenario | Add `s-extra` (as 029.01), then remove it | Remove `s-greeting`, the Suite's only Scenario | Appendix A §A.3: a Suite has at least one Scenario |
+| `CT-CFG-029.09` | F-SEED, with `greeting-missing` given `difficulty_prior: 0.9`, `prior_basis: 50`, `prior_source: reference_oracles`, and `reference_oracles: [ { model: cts-reference-judge@1, confidence_source: self_rating } ]` | Replace a Scenario | `s-control` with its planted Response `"Bye now."` | `s-control` with its Expectation's Judge `model: cts-reference-judge@1` | Appendix A §A.1, `reference_oracles` |
+
+- **Expected:** In each case, the valid change is accepted, the invalid change is
+  rejected (1.5), and the entity retrieved afterwards is as the valid change left it.
+- **Fails if:** An invalid change is accepted, or takes effect in part. The test's own
+  outcome summarizes its cases (1.2).

@@ -185,7 +185,9 @@ calls the scripted Judge receives.
 - **Capability:** core
 - **Requirement:** Appendix B §B.3, Validator unavailable: "A Validator that cannot
   complete its check MUST produce `oracle_unavailable`, never `fail`, and Validation for
-  that Execution has not passed"; Appendix C §C.7, `oracle_unavailable`.
+  that Execution has not passed"; Volume V, Validator SDK: "A Validator that cannot
+  complete it — it crashes, times out, or lacks something it needs — has reached no
+  verdict"; Appendix C §C.7, `oracle_unavailable`.
 - **Method:** Automated, Harness
 - **Fixture:** F-BASE; add to the Contract's `constraints`:
   ```yaml
@@ -194,12 +196,20 @@ calls the scripted Judge receives.
     expected: {}
   ```
   `cts-crash` is a Custom Validator (Volume V) that raises an error on every call and
-  returns no Result. Where the implementation offers no way to define one but documents
-  a test-only way to make a Validator unable to complete its check (a fault hook), the
-  tester may use that instead, on the schema Constraint, and the report names the hook.
-  With neither, the outcome is `NOT_RUN`, with that reason: no built-in Validator can be
-  made to fail on demand through configuration alone, so the requirement is then not
-  verified for that implementation, and the test report lists it as such (1.7).
+  returns no Result.
+
+  Where the implementation offers no way to define one, the tester uses instead a
+  built-in Validator that lacks what it needs: the Constraint `{ validator: schema,
+  target: artifacts.cts-absent, expected: { type: string } }`, naming an Artifact the
+  scripted subject never produces, written in the implementation's path syntax for an
+  Artifact. Where the implementation instead documents a test-only way to make a
+  Validator unable to complete its check (a fault hook), the tester may use that. The
+  report names the route taken. In what follows, "the `cts-crash` Result" means the
+  Result of whichever Constraint was used.
+
+  If the implementation rejects the absent-target Constraint when the configuration is
+  loaded, and offers neither of the other routes, the outcome is `NOT_RUN`, with that
+  reason.
 - **Action:** Execute `cts-suite`; retrieve every Result.
 - **Expected:** The `cts-crash` Result has `oracle_type: validator`,
   `disposition: oracle_unavailable`, `verdict: null`, and `confidence:

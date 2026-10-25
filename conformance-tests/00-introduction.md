@@ -1,6 +1,6 @@
 # AQEF Conformance Test Specification
 
-**Status:** Working Draft 9. Tests for AQEF Working Draft 0.41.4.
+**Status:** Working Draft 10. Tests for AQEF Working Draft 0.41.5.
 
 **License:** CC BY 4.0, as the specification.
 
@@ -25,10 +25,11 @@ set of tests can. A test that fails shows that it did not. An implementation's
 Conformance Statement (AQEF §10) says which capabilities it claims; this document says
 how each claim can be checked, and a test report says how the checks came out.
 
-Working Draft 8 was run against a reference implementation, built from the specification
-text by a party that had not seen these tests. Working Draft 9 revises what that run
-showed to be wrong in the tests, rather than in the implementation or the specification.
-Tests may be revised again as other implementations are run.
+Working Drafts 8 and 9 were run against a reference implementation, built from the
+specification text by a party that had not seen these tests. Working Drafts 9 and 10
+revise what those runs showed to be wrong or missing in the tests, rather than in the
+implementation or the specification. Tests may be revised again as other
+implementations are run.
 
 ### 0.3 Scope of this draft
 
@@ -56,7 +57,7 @@ when the requirement it checks changes.
 | 12 | Assessment |
 | 13 | Decision: aggregation, Quality Gates, Result Resolution |
 | 14 | Release Decision and Governance |
-| 15 | API behavior: pagination, deletion |
+| 15 | API behavior: pagination, deletion, a published JSON Schema |
 | 16 | Admission of Judges |
 | 20 | Capability `human_review` |
 | 21 | Capability `multi_judge` |
@@ -69,6 +70,27 @@ when the requirement it checks changes.
 | `harness/` | Harness Contract: a separate document specifying the test infrastructure (1.4) |
 
 ### 0.6 Changes
+
+**Working Draft 10** covers AQEF 0.41.5, and closes what the final run of Working
+Draft 9 left open.
+
+- **Tests added.**
+  - CT-CFG-029: the rules a full load enforces are enforced on every operation that
+    changes configuration, one case per kind of operation. Working Draft 9 checked them
+    only through full loads, so a defect that skipped them on a single Scenario's
+    change went unseen.
+  - CT-API-003: a JSON Schema an implementation publishes as Appendix B's meets B.1
+    and B.2 (0.41.5).
+- **Test revised.** CT-ASM-014 can now be run on an implementation whose Custom
+  Validators cannot fail. A built-in Validator whose target is absent from the
+  Evidence "lacks something it needs" (Volume V), and so cannot complete its check.
+- **Harness Contract 0.7.**
+  - A review record may decide `NOT_APPLICABLE` where the test's **Expected** names
+    that outcome.
+  - A review by a reviewer that cannot sign, such as an AI system, is signed by the
+    person who commissioned it, through an attestation naming the reviewer.
+  - Version numbers in the schemas and examples, left at 0.5 by version 0.6, now read
+    0.7.
 
 **Working Draft 9** follows the first run of these tests against an implementation, and
 covers what AQEF 0.41.2 to 0.41.4 added.

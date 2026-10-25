@@ -53,3 +53,20 @@ single layer.
 - **Fails if:** (a) or (b) deletes anything; (c) deletes anything while being rejected;
   an accepted (c) loses the Baseline or any audit record; or the record of an accepted
   (c) does not distinguish deleting the configuration from deleting the history.
+
+### CT-API-003 — A published JSON Schema meets Appendix B
+
+- **Capability:** core
+- **Requirement:** Appendix B, introduction: "The MUSTs of B.1 and B.2 that say what 'a
+  conformant JSON Schema' defines bind such an artifact: an implementation that
+  publishes one MUST make it meet them."
+- **Method:** Inspection
+- **Fixture:** None.
+- **Action:** Establish whether the implementation publishes a JSON Schema as the
+  artifact Appendix B describes. A schema it publishes only as documentation of its
+  API, and says so, is not that artifact. If it publishes one, compare it with B.1 and
+  B.2.
+- **Expected:** The schema defines every top-level type B.1 lists, and enforces for each
+  the property constraints B.2 gives. If the implementation publishes no such schema,
+  the outcome is `NOT_APPLICABLE` (1.2).
+- **Fails if:** A published schema lacks a type B.1 lists, or a constraint B.2 gives.

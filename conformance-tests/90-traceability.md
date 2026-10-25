@@ -1,16 +1,17 @@
 # 90. Traceability
 
-This section maps every requirement in the MUST inventory of AQEF Working Draft 0.41.4
+This section maps every requirement in the MUST inventory of AQEF Working Draft 0.41.5
 to the tests that check it, or says why no test does. The inventory is
 `_inventory/must-inventory.md` (391 rows, extracted from Working Draft 0.36) together
 with `_inventory/must-inventory-v037-additions.md` (28 rows added by 0.37),
 `_inventory/must-inventory-v038-additions.md` (12 rows added by 0.38),
-`_inventory/must-inventory-v041-additions.md` (10 rows added by 0.40 to 0.41.1), and
-`_inventory/must-inventory-v0414-additions.md` (10 rows added by 0.41.2 to 0.41.4),
-451 rows in all, identified `R-nnnn`. It lists every sentence containing MUST or MUST
+`_inventory/must-inventory-v041-additions.md` (10 rows added by 0.40 to 0.41.1),
+`_inventory/must-inventory-v0414-additions.md` (10 rows added by 0.41.2 to 0.41.4), and
+`_inventory/must-inventory-v0415-additions.md` (2 rows added by 0.41.5), 453 rows in
+all, identified `R-nnnn`. It lists every sentence containing MUST or MUST
 NOT, and every field Appendix A or C marks as required, so a few rows are definitions or
-restatements rather than requirements of their own. Twenty rows whose text 0.37 to
-0.41.4 revised keep their IDs and are marked.
+restatements rather than requirements of their own. Twenty-one rows whose text 0.37 to
+0.41.5 revised keep their IDs and are marked.
 
 ## 90.1 Status values
 
@@ -27,13 +28,13 @@ restatements rather than requirements of their own. Twenty rows whose text 0.37 
 
 | Status | Rows |
 |---|---|
-| Tested | 376 |
+| Tested | 378 |
 | Restates | 46 |
 | Field | 0 |
 | Scoped | 0 |
 | Not testable | 29 |
 | Not yet covered | 0 |
-| **Total** | **451** |
+| **Total** | **453** |
 
 ## 90.3 Requirement → test
 
@@ -131,7 +132,7 @@ restatements rather than requirements of their own. Twenty rows whose text 0.37 
 | R-0090 | Vol VIII, Seeded Controls | Tested | CT-SCT-003, CT-SCT-004 |
 | R-0091 | Vol VIII, Seeded Controls | Tested | CT-SCT-006 |
 | R-0092 | Vol VIII, Seeded Controls | Tested | CT-SCT-005 |
-| R-0093 | Vol VIII, Test Maintainability | Not testable | describes practice |
+| R-0093 | Vol VIII, Test Maintainability | Not testable | applies to the people who own a Project (0.41.5); text revised in v0.41.2 or later |
 | R-0094 | Vol X, Baselines | Tested | CT-REL-021 |
 | R-0095 | Vol X, Model Drift | Tested | CT-TTP-001 |
 | R-0096 | Vol X, Dataset Drift | Restates | R-0063 (CT-CFG-017, CT-EXE-010, CT-DSR-003) |
@@ -490,6 +491,8 @@ restatements rather than requirements of their own. Twenty rows whose text 0.37 
 | R-0449 | Vol XII, Teams | Tested | CT-REL-039; added in v0.41.2 to v0.41.4 |
 | R-0450 | Vol XII, Audit | Tested | CT-REL-028, CT-REL-038, CT-API-002; added in v0.41.2 to v0.41.4 |
 | R-0451 | §10, Conformance Statement | Restates | R-0448 (CT-REL-027); added in v0.41.2 to v0.41.4 |
+| R-0452 | App B, Introduction | Tested | CT-API-003; added in v0.41.5 |
+| R-0453 | App B, Introduction | Tested | CT-CFG-029.01, CT-CFG-029.02, CT-CFG-029.03, CT-CFG-029.04, CT-CFG-029.05, CT-CFG-029.06, CT-CFG-029.07, CT-CFG-029.08, CT-CFG-029.09; added in v0.41.5 |
 
 ## 90.4 Not yet covered
 
@@ -531,6 +534,7 @@ run; the test report lists it (1.7).
 | CT-CFG-026 | R-0444, R-0445 |
 | CT-CFG-027 | R-0285 |
 | CT-CFG-028 | R-0443 |
+| CT-CFG-029 | R-0453 |
 | CT-EXE-001 | R-0048 |
 | CT-EXE-002 | R-0057, R-0162 |
 | CT-EXE-003 | R-0055 |
@@ -635,6 +639,7 @@ run; the test report lists it (1.7).
 | CT-ADM-007 | R-0304, R-0441 |
 | CT-API-001 | R-0331, R-0332 |
 | CT-API-002 | R-0348, R-0349, R-0450 |
+| CT-API-003 | R-0452 |
 | CT-HRV-001 | R-0183 |
 | CT-HRV-002 | R-0184, R-0414 |
 | CT-HRV-003 | R-0078 |

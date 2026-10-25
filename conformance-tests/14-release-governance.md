@@ -756,7 +756,7 @@ among its tests has not been shown to be met.
 
 | Core part | Tests |
 |---|---|
-| Layer: Definition | CT-CFG-001…028 |
+| Layer: Definition | CT-CFG-001…029, CT-API-003 |
 | Layer: Execution | CT-EXE-001…007, CT-EXE-009…011 |
 | Layer: Evidence | CT-EXE-003, CT-EXE-008, CT-EXE-012 |
 | Layer: Assessment | CT-ASM-001…012, CT-ASM-014…020 |
