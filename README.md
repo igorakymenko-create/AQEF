@@ -72,7 +72,7 @@ against every slice; each failure was traced to the engine, the tests, or the
 specification, and the specification's share was fixed in releases 0.41.2 to 0.41.5.
 
 Its [Conformance Statement](https://github.com/igorakymenko-create/aqef-reference-engine/blob/main/docs/CONFORMANCE-STATEMENT.md)
-claims Conformance to CR1 for the core, `human_review`, `multi_judge`, and
+claims Conformance to Version 1.0-CR1 for the core, `human_review`, `multi_judge`, and
 `seeded_controls`. Conformance Tests WD9 against it: 189 passed, none failed, 33 not
 applicable to the capabilities it claims or the features it offers, and one that this
 engine cannot be driven to (a crashing Validator). The eight Inspection and Declaration
