@@ -89,13 +89,25 @@ interface for the system under test and its Judges.
 
 ## Companion material
 
-Informative documents that explain or apply this specification. They add no requirement;
-where they differ from the specification, the specification is right.
+# AQEF Measurement Guide
 
-- **[AQEF Textbook](https://github.com/igorakymenko-create/aqef-textbook)** — the theory
-  behind AQEF, chapter by chapter. CC BY 4.0.
-- **[AQEF Measurement Guide](guides/measurement/)** — from a risk to a trusted measurement,
-  with a reference of common metrics and how to tell whether their results can be trusted.
+**From Risk to Trusted Measurement** · Measurement Guide 1.0 · 28 October 2026 · CC BY 4.0
+
+Informative companion to AQEF 1.0-CR1. It adds no requirement, threshold, or mandatory
+metric set; where it differs from the specification, the specification is right.
+
+📄 [Download the PDF](AQEF-Measurement-Guide-1.0.pdf)
+
+What it covers: a six-step method from a risk to a trusted measurement; kinds of Oracle and
+check; twelve risk entries for a reference support assistant; a reference of 37 common
+metrics, each with what it does not tell you and how to tell whether its result can be
+trusted; and how checks become Quality Gates.
+
+For the theory behind each method, see the
+[AQEF Textbook](https://github.com/igorakymenko-create/aqef-textbook) (mapping in Appendix D).
+
+Report issues in the [AQEF repository](https://github.com/igorakymenko-create/AQEF/issues),
+with "Measurement Guide" in the title.
 
 ## Core concepts
 
