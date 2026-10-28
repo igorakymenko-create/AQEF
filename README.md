@@ -87,6 +87,16 @@ records, and a self-test against a known-answer mock engine. Anyone can repeat t
 The engine is a feasibility proof, not a product: one process, SQLite, a scripted HTTP
 interface for the system under test and its Judges.
 
+## Companion material
+
+Informative documents that explain or apply this specification. They add no requirement;
+where they differ from the specification, the specification is right.
+
+- **[AQEF Textbook](https://github.com/igorakymenko-create/aqef-textbook)** — the theory
+  behind AQEF, chapter by chapter. CC BY 4.0.
+- **[AQEF Measurement Guide](guides/measurement/)** — from a risk to a trusted measurement,
+  with a reference of common metrics and how to tell whether their results can be trusted.
+
 ## Core concepts
 
 | Concept | What it is |
