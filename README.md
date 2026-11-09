@@ -108,6 +108,12 @@ claims `reference_ui`, one of the capabilities at risk. All four of its tests pa
 The review records, their evidence, and the owner's attestation are in the UI's
 `conformance/` folder.
 
+The engine's own CLI and Python SDK, `aqef-client` (slice 13), claim `cli` and
+`sdk:python`, two more capabilities at risk. Both tests pass against Conformance Tests
+1.0-CR1.2. CT-SDK-001 is an Inspection test, and an independent AI reviewer decided it.
+Its first review found two readings of the test, and CTS 1.0-CR1.2 clarified it
+([run, records and attestation](https://github.com/igorakymenko-create/aqef-cts-harness/blob/main/reviews/ATTESTATION-CLI-SDK.md)).
+
 ## Companion material
 
 # AQEF Measurement Guide
@@ -168,8 +174,8 @@ Candidate Recommendation 1. The content is believed complete, and implementers a
 invited to build against it and report issues. The public review closes on 2026-12-19.
 Some capabilities are marked at risk, and two are reserved for a later version;
 see [Document Status](front-matter/00-document-status.md). Of the features at risk,
-`reference_ui` now has an implementation that passes all its tests. The others still
-need one.
+`reference_ui`, `cli` and `sdk:python` now have an implementation that passes all their
+tests. The others still need one.
 
 Nothing here is settled by authority — where a decision is contested, the argument for it
 is written down and can be attacked on its merits. The design decisions behind the
