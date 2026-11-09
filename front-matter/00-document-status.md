@@ -69,10 +69,16 @@ Candidate Recommendation or version.
 
 ## Changes During Candidate Recommendation
 
-- An editorial change, which changes no requirement, is published as a patch: 1.0-CR1.1.
+- An editorial change, which changes no requirement, is published as a patch: 1.0-CR1.1,
+  1.0-CR1.2, and so on.
 - A normative change to a feature that is not at risk is published as a new Candidate
   Recommendation, 1.0-CR2, with the CTS revised to match.
 - A feature at risk may be removed without a new Candidate Recommendation.
+- A normative change to a feature at risk, found while implementing it, is published as a
+  patch, 1.0-CR1.x, without a new Candidate Recommendation. The CTS tests of that feature
+  are revised in the same patch, and the CTS takes the same number. The revision history marks the change as normative and
+  names the feature, and the change is announced where the review is announced. A feature
+  that may be removed without a new Candidate Recommendation may be corrected without one.
 - No new feature is added. New features go to version 1.1.
 
 ## Authorship and Consensus
