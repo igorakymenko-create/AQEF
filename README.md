@@ -73,10 +73,10 @@ specification, and the specification's share was fixed in releases 0.41.2 to 0.4
 
 Its [Conformance Statement](https://github.com/igorakymenko-create/aqef-reference-engine/blob/main/docs/CONFORMANCE-STATEMENT.md)
 claims Conformance to Version 1.0-CR1 for the core, `human_review`, `multi_judge`, and
-`seeded_controls`. Conformance Tests WD9 against it: 189 passed, none failed, 33 not
-applicable to the capabilities it claims or the features it offers, and one that this
-engine cannot be driven to (a crashing Validator). The eight Inspection and Declaration
-tests were decided by a named external reviewer, under CTS 1.8.
+`seeded_controls`. Conformance Tests 1.0-CR1 against it: 189 passed, none failed, none
+left unrun, and 36 not applicable to the capabilities it claims or the features it
+offers. The Inspection and Declaration tests were decided by a named external reviewer,
+under CTS 1.8.
 
 The tests were run with [aqef-cts-harness](https://github.com/igorakymenko-create/aqef-cts-harness)
 (Apache 2.0). It drives the Conformance Test Specification against any engine through
@@ -86,6 +86,22 @@ records, and a self-test against a known-answer mock engine. Anyone can repeat t
 
 The engine is a feasibility proof, not a product: one process, SQLite, a scripted HTTP
 interface for the system under test and its Judges.
+
+[aqef-reference-ui](https://github.com/igorakymenko-create/aqef-reference-ui)
+(Apache 2.0) is a local Reference UI over that engine. In it, YAML stays the source of
+truth, and the UI decides nothing the engine decides. An agent that never saw the tests
+built it from the specification text. Its
+[Conformance Statement](https://github.com/igorakymenko-create/aqef-reference-ui/blob/main/conformance/CONFORMANCE-STATEMENT.md)
+claims `reference_ui`, one of the capabilities at risk. All four of its tests pass:
+- CT-RUI-001 is automated, and passes in a
+  [harness run](https://github.com/igorakymenko-create/aqef-cts-harness/tree/main/runs/r261108160634);
+- CT-RUI-002 and CT-RUI-003 were decided by an independent AI inspector;
+- CT-RUI-004 was decided by a human reviewer with no AQEF background. It passed on the
+  second review, after her first one found wording on the Report page that a reader could
+  not follow.
+
+The review records, their evidence, and the owner's attestation are in the UI's
+`conformance/` folder.
 
 ## Companion material
 
@@ -146,7 +162,9 @@ it — see [Scope](front-matter/06-scope.md) and
 Candidate Recommendation 1. The content is believed complete, and implementers are
 invited to build against it and report issues, for a review period of at least eight
 weeks. Some capabilities are marked at risk, and two are reserved for a later version;
-see [Document Status](front-matter/00-document-status.md).
+see [Document Status](front-matter/00-document-status.md). Of the features at risk,
+`reference_ui` now has an implementation that passes all its tests. The others still
+need one.
 
 Nothing here is settled by authority — where a decision is contested, the argument for it
 is written down and can be attacked on its merits. The design decisions behind the
