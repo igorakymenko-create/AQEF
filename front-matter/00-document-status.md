@@ -7,8 +7,8 @@
 | Property | Value |
 |---|---|
 | Status | Candidate Recommendation |
-| Version | 1.0-CR1 |
-| Date | 2026-10 |
+| Version | 1.0-CR1.1 |
+| Date | 2026-11 |
 | Maturity | Candidate Recommendation — implementers invited to build and report issues |
 
 ## What "Candidate Recommendation" Means
@@ -63,7 +63,9 @@ Every issue is answered, and the answer recorded: accepted with a change, accept
 editorial, or declined with reasons.
 
 The review period for this Candidate Recommendation runs for at least eight weeks from
-its publication.
+its publication, and closes on 2026-12-19. Issues opened by then are answered before
+Candidate Recommendation can end; later issues are answered and considered for the next
+Candidate Recommendation or version.
 
 ## Changes During Candidate Recommendation
 

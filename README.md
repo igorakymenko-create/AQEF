@@ -4,9 +4,14 @@
 
 **An open specification for AI Quality Engineering as an engineering discipline.**
 
-Version 1.0-CR1 · 2026-10 · Candidate Recommendation, open for review · by Igor Akymenko
+Version 1.0-CR1.1 · 2026-11 · Candidate Recommendation, open for review until 2026-12-19 · by Igor Akymenko
 
 📖 **[Read the specification](index.md)** · 📄 **[Download PDF](https://github.com/igorakymenko-create/AQEF/releases/latest)** · 💬 **[Open an issue](https://github.com/igorakymenko-create/AQEF/issues)**
+
+> **Public review of 1.0-CR1 is open until 2026-12-19.** Report what you could not build
+> from the text, or would build differently:
+> [open an issue](https://github.com/igorakymenko-create/AQEF/issues). Every issue gets a
+> recorded answer.
 
 ---
 
@@ -160,8 +165,8 @@ it — see [Scope](front-matter/06-scope.md) and
 ## Status
 
 Candidate Recommendation 1. The content is believed complete, and implementers are
-invited to build against it and report issues, for a review period of at least eight
-weeks. Some capabilities are marked at risk, and two are reserved for a later version;
+invited to build against it and report issues. The public review closes on 2026-12-19.
+Some capabilities are marked at risk, and two are reserved for a later version;
 see [Document Status](front-matter/00-document-status.md). Of the features at risk,
 `reference_ui` now has an implementation that passes all its tests. The others still
 need one.
@@ -195,7 +200,7 @@ contributions welcome once the structure has stabilised.
 
 If you reference or build on AQEF, please credit:
 
-> Igor Akymenko, *AQEF — AI Quality Engineering Framework*, Candidate Recommendation 1.0-CR1,
+> Igor Akymenko, *AQEF — AI Quality Engineering Framework*, Candidate Recommendation 1.0-CR1.1,
 > https://github.com/igorakymenko-create/AQEF
 
 ## License
