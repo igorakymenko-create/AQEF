@@ -13,11 +13,16 @@ Each test applies only where the implementation claims the capability it names (
 - **Method:** Harness, Inspection
 - **Fixture:** F-BASE. The tester routes the CLI's traffic through a recording proxy.
 - **Action:** With the CLI, load F-BASE, execute `cts-suite`, and evaluate the Gates.
-  Then list the CLI's documented commands and the REST operations of Appendix C.
+  Then list the CLI's documented commands, the REST operations of Appendix C, and any
+  REST operations the implementation documents beyond Appendix C.
 - **Expected:** Each of the three commands appears in the proxy log as the matching
-  Appendix C operation, and every documented CLI command maps to a REST operation.
+  Appendix C operation, and every documented CLI command maps to a REST operation of the
+  implementation: one in Appendix C, or one the implementation documents beyond it.
 - **Fails if:** A command acts without the matching REST call, or a command has no REST
-  counterpart.
+  counterpart in the implementation's documented API.
+- **Note:** This test checks that the CLI adds no logic of its own. It does not check
+  whether an implementation may offer REST operations beyond Appendix C; a command that
+  wraps such an operation meets this test.
 
 ### CT-SDK-002 — An SDK behaves as the REST API does
 

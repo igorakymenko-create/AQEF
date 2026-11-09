@@ -1,6 +1,6 @@
 # AQEF Conformance Test Specification
 
-**Status:** Candidate Recommendation 1 (1.0-CR1). Tests for AQEF 1.0-CR1.
+**Status:** Candidate Recommendation 1, patch 2 (1.0-CR1.2). Tests for AQEF 1.0-CR1.2.
 
 **License:** CC BY 4.0, as the specification.
 
@@ -72,6 +72,15 @@ when the requirement it checks changes.
 | `harness/` | Harness Contract: a separate document specifying the test infrastructure (1.4) |
 
 ### 0.6 Changes
+
+**1.0-CR1.2** accompanies AQEF 1.0-CR1.2. AQEF 1.0-CR1.1 changed no test, so the CTS
+had no 1.0-CR1.1 of its own.
+
+- **CT-SDK-001 clarified.** A documented CLI command may map to a REST operation the
+  implementation documents beyond Appendix C. The test checks that the CLI adds no logic
+  of its own, not the extent of the implementation's API. Found by a reviewer, who could
+  not decide between the Action ("the REST operations of Appendix C") and Expected ("a
+  REST operation").
 
 **Candidate Recommendation 1 (1.0-CR1)** accompanies AQEF 1.0-CR1. The CTS takes the
 specification's version from here on.
