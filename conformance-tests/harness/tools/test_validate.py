@@ -154,6 +154,14 @@ class ReportInvalid(unittest.TestCase):
         r = report(); r["provenance"]["cts_revision"] = "WD6"
         self.assertRejected(r, "the CTS here is")
 
+    def test_revision_read_from_status(self):
+        # A patch number (1.0-CR1.2) must be read, not dropped.
+        self.assertRegex(INV["revision"] or "", r"^(WD\d+|\d+\.\d+-CR\d+(\.\d+)?)$")
+
+    def test_earlier_patch_rejected(self):
+        r = report(); r["provenance"]["cts_revision"] = "1.0-CR1"
+        self.assertRejected(r, "the CTS here is")
+
     def test_evidence_not_in_manifest(self):
         r = report(); case(r, "CT-ASM-001")["evidence_refs"] = ["evidence://nowhere.json"]
         self.assertRejected(r, "not in the manifest")

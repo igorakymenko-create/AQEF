@@ -1,6 +1,6 @@
 # AQEF Conformance Test Specification
 
-**Status:** Candidate Recommendation 1, patch 2 (1.0-CR1.2). Tests for AQEF 1.0-CR1.2.
+**Status:** Candidate Recommendation 1 (1.0-CR1.2). Tests for AQEF 1.0-CR1.2.
 
 **License:** CC BY 4.0, as the specification.
 
