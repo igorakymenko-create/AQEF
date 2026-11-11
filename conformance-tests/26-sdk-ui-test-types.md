@@ -39,7 +39,8 @@ Each test applies only where the implementation claims the capability it names (
   code, however the SDK represents it, as an exception or otherwise. What field or
   entity the error names, its message text, exception classes, and stack traces are
   not compared; the test report records them. The Results and GateResults recorded agree in every field
-  but identifiers, `execution`, references to their own Execution, and times.
+  but identifiers, `execution`, references to their own Execution, and times, including
+  measured durations such as a latency Artifact.
 - **Fails if:** An outcome differs; an error differs in status or code;
   an SDK succeeds where the API returns an error, or the reverse; or a compared field of
   a recorded Result or GateResult differs.

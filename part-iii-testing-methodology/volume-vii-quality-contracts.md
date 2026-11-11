@@ -98,22 +98,23 @@ rather than a clause in its own right. Two mechanisms already specified in earli
 Volumes are, in Contract terms, Policies authored here and executed there: Validator
 Composition's AND / OR / hard-veto rules (Volume V) are a Policy stating how multiple
 Constraints bound to the same Execution combine into one verdict; a Scenario's Business
-Quality weight or criticality (Chapter 2), which the Aggregation Model (Chapter 6) reads
+Quality weight (Chapter 2), which the Aggregation Model (Chapter 6) reads
 when combining Results across many Executions, is a Policy stating how much this
 Contract's failures should move an aggregate relative to others. A Policy does not
 itself produce a Result — it configures how Results produced elsewhere get combined,
 which is why it is specified here, alongside the clauses it governs, rather than in
 Volume V, VI, or Chapter 6, where it is actually applied.
 
-A Policy MAY set weight or criticality on an individual clause rather than on the
-Scenario as a whole. Scenario-level weighting answers "how much does this situation
-matter relative to others" and is what the Aggregation Model (Chapter 6) reads across
-Executions; clause-level weighting answers a different question — "within this one
-response, which expectations are load-bearing" — and Scenario-level weighting cannot
-express it, because every clause in a Contract attaches to the same Scenario. A Contract
-covering a response that must be both factually exact and appropriately worded is
-mis-specified if a wrong figure and an awkward register carry equal weight, and no
-Scenario-level criticality can separate them.
+Weight is set per Contract, by `policies.weight` (Appendix A §A.5), and applies to every
+clause that Contract contributes. Scenario-level weighting answers "how much does this
+situation matter relative to others" and is what the Aggregation Model (Chapter 6) reads
+across Executions. Weighting within one response answers a different question — "which
+expectations are load-bearing" — and one Contract's weight cannot express it, because
+every clause in a Contract carries the same weight. A response that must be both
+factually exact and appropriately worded is mis-specified if a wrong figure and an
+awkward register carry equal weight. Where clauses need different weights, put them in
+separate Contracts, each with its own `policies.weight`, and compose them (Contract
+Composition, below): each clause keeps the weight of the Contract that contributed it.
 
 ## Contract Composition
 

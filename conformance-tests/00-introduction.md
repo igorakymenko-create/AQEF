@@ -1,6 +1,6 @@
 # AQEF Conformance Test Specification
 
-**Status:** Candidate Recommendation 1 (1.0-CR1.2). Tests for AQEF 1.0-CR1.2.
+**Status:** Candidate Recommendation 1 (1.0-CR1.3). Tests for AQEF 1.0-CR1.3.
 
 **License:** CC BY 4.0, as the specification.
 
@@ -72,6 +72,19 @@ when the requirement it checks changes.
 | `harness/` | Harness Contract: a separate document specifying the test infrastructure (1.4) |
 
 ### 0.6 Changes
+
+**1.0-CR1.3** accompanies AQEF 1.0-CR1.3. It revises the tests of two features at risk,
+and corrects the wording of three tests.
+
+- **CT-DSR-006 added**: a Production Replay Scenario carries no `prompt`
+  (`dataset:production_replay`). It traces R-0457, added in 1.0-CR1.3.
+- **CT-REL-024** also traces R-0458, added in 1.0-CR1.3: an implementation that claims
+  `ci_cd:<platform>` offers the read of a stored Gate evaluation, which the test's
+  pipeline uses to read its own GateResult back after the override. No new test.
+- **CT-SDK-002 clarified.** The "times" it does not compare include measured durations,
+  such as a latency Artifact.
+- **CT-DSR-001 and CT-DSR-002** name their starting configuration for the rejection
+  tests: the same Dataset with a complete `generator`, or a complete `capture`.
 
 **1.0-CR1.2** accompanies AQEF 1.0-CR1.2. AQEF 1.0-CR1.1 changed no test, so the CTS
 had no 1.0-CR1.1 of its own.

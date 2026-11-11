@@ -14,7 +14,8 @@ that it is rejected.
 - **Method:** Automated
 - **Fixture:** Three variants of a Dataset `ds-gen` (version `1.0.0`, `source:
   generated`) in the Project's `datasets`: (a) no `generator`; (b) a `generator` with no
-  `model`; (c) a `generator` with no `instruction`.
+  `model`; (c) a `generator` with no `instruction`. The starting configuration (1,
+  Rejection tests) is the same Dataset with a complete `generator`.
 - **Action:** Load each variant.
 - **Expected:** All three rejected.
 - **Fails if:** Any is loaded.
@@ -28,7 +29,8 @@ that it is rejected.
 - **Method:** Automated
 - **Fixture:** Six variants of a Dataset `ds-replay` (version `1.0.0`, `source:
   production_replay`): (a) no `capture`; (b)–(f) a complete `capture` with one of its
-  five fields removed.
+  five fields removed. The starting configuration (1, Rejection tests) is the same
+  Dataset with a complete `capture`.
 - **Action:** Load each variant.
 - **Expected:** All six rejected.
 - **Fails if:** Any is loaded.
@@ -83,3 +85,15 @@ that it is rejected.
   exists.
 - **Fails if:** A version `2.0.0` exists, with one row, two rows, or a row given an `id`
   the generator did not return; or the failure is not reported.
+
+### CT-DSR-006 — A Production Replay Scenario carries no prompt
+
+- **Capability:** `dataset:production_replay`
+- **Requirement:** Appendix B §B.3, Prompt presence: "A Scenario whose `dataset` is a
+  `production_replay` Dataset MUST NOT carry `prompt`."
+- **Method:** Automated
+- **Fixture:** CT-DSR-004's configuration, and a variant of it in which `s-greeting`
+  also carries F-BASE's `prompt`.
+- **Action:** Load the variant.
+- **Expected:** Rejected.
+- **Fails if:** The variant is loaded.

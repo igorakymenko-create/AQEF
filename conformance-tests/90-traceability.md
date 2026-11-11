@@ -29,13 +29,13 @@ restatements rather than requirements of their own. Twenty-four rows whose text 
 
 | Status | Rows |
 |---|---|
-| Tested | 381 |
+| Tested | 383 |
 | Restates | 46 |
 | Field | 0 |
 | Scoped | 0 |
 | Not testable | 29 |
 | Not yet covered | 0 |
-| **Total** | **456** |
+| **Total** | **458** |
 
 ## 90.3 Requirement → test
 
@@ -497,6 +497,8 @@ restatements rather than requirements of their own. Twenty-four rows whose text 
 | R-0454 | App A, A.2 — Environment | Tested | CT-ABD-008; added in 1.0-CR1 |
 | R-0455 | App A, A.8 — Dataset | Tested | CT-CFG-028; added in 1.0-CR1 |
 | R-0456 | Vol IV, Generated Datasets | Tested | CT-DSR-005; added in 1.0-CR1 |
+| R-0457 | App B, B.3 — Cross-Type Validation Rules | Tested | CT-DSR-006; added in 1.0-CR1.3 |
+| R-0458 | App C, C.3 — Operations by Resource | Tested | CT-REL-024; added in 1.0-CR1.3 |
 
 ## 90.4 Not yet covered
 
@@ -618,7 +620,7 @@ run; the test report lists it (1.7).
 | CT-REL-021 | R-0094, R-0311, R-0222, R-0223, R-0224, R-0225, R-0226, R-0227, R-0228, R-0229 |
 | CT-REL-022 | R-0108, R-0298, R-0346, R-0347 |
 | CT-REL-023 | None in the inventory: Volume XII, Traceability, states this without MUST |
-| CT-REL-024 | R-0015, R-0113 |
+| CT-REL-024 | R-0015, R-0113, R-0458 |
 | CT-REL-025 | R-0114 |
 | CT-REL-026 | R-0017, R-0018 |
 | CT-REL-027 | R-0016, R-0448 |
@@ -687,6 +689,7 @@ run; the test report lists it (1.7).
 | CT-DSR-003 | R-0063, R-0282 |
 | CT-DSR-004 | R-0158, R-0279 |
 | CT-DSR-005 | R-0456 |
+| CT-DSR-006 | R-0457 |
 | CT-PLG-001 | R-0122, R-0384 |
 | CT-PLG-002 | R-0123 |
 | CT-PLG-003 | R-0126 |

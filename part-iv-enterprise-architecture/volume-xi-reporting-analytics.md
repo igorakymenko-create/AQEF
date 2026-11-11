@@ -40,9 +40,9 @@ raw data a reader would have to reconstruct by hand:
   both things a reader must not have to discover from raw Artifacts.
 - every Judge configuration whose Results are in the Report's scope and that has not been
   admitted (Volume VI), whether or not a Gate required it.
-A Report that omits these is not wrong, but it is incomplete in a way a reader has no way
-to notice from the Report alone — precisely the failure mode surfacing them by name is
-meant to prevent.
+A Report that omits any of these does not conform (Appendix C §C.10), and its gap is one a
+reader has no way to notice from the Report alone — precisely the failure mode surfacing
+them by name is meant to prevent.
 
 ## Dashboards
 

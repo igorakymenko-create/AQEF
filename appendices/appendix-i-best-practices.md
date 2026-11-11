@@ -72,8 +72,9 @@ one would have caught the failure (Volume V — Execution Order).
 **Never label a probabilistic check as a Validator.** A Custom Validator that
 internally calls an LLM, a semantic similarity model, or any other probabilistic
 process is structurally a Judge regardless of what it is labeled (Volume V). The Plugin
-Architecture (Volume XVI) mechanically enforces this by running a candidate Validator
-Plugin against a fixed input multiple times at registration — any variance rejects it.
+Architecture (Volume XVI) checks repeatability by running a candidate Validator Plugin
+against a fixed input multiple times at registration, and any variance rejects it; that
+shows repeatability on one input, not determinism (§I.8).
 If you need probabilistic judgment, model it as a Judge and give it a Confidence value.
 
 **Use independent Judges.** A Judge MUST NOT share the same weights or decision process

@@ -292,6 +292,7 @@ operation modifies or replaces a Snapshot.
 | POST | `/projects/{project}/gates` | Define a Quality Gate. Governed by Approval Workflow. | `contract_define` |
 | PUT | `/projects/{project}/gates/{gate}` | Change a Quality Gate (threshold, `min_basis`, `on_failure`). Governed by Approval Workflow. | `contract_define` |
 | POST | `/projects/{project}/gates/check` | Evaluate Gates against a set of Results. Returns one GateResult (Appendix A §A.12) per Gate and the `snapshot_id` captured for the evaluation. | `execute` |
+| GET | `/projects/{project}/gates/evaluations/{evaluation}` | Retrieve a stored Gate evaluation by the `snapshot_id` its `gates/check` returned: its `execution_batch_id`, and one GateResult (Appendix A §A.12) per Gate as recorded, each carrying its `override` where one has been approved since. Evaluates nothing. An implementation that claims `ci_cd:<platform>` MUST offer it (Volume XIII); others MAY. | `read` |
 | POST | `/projects/{project}/gates/{gate}/override` | Override one failed blocking GateResult. Body MUST name the GateResult by its `id` (Appendix A §A.12), give its `execution_batch_id`, and include a non-empty justification. Applies to that GateResult only. Governed by Approval Workflow. | `gate_override` |
 
 **Aggregate Basis Reporting:** the response to `POST /projects/{project}/gates/check`,

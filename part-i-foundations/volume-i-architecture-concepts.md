@@ -184,7 +184,7 @@ every Scenario carries equal stakes: an incorrect response in a rarely-used edge
 and an incorrect response in the system's single most common request are functionally
 identical failures but very different Business Quality failures. This dimension is what
 lets a Quality Contract express priority rather than a flat pass/fail — attaching a
-weight or criticality to a Scenario so that Aggregation and Quality Gates (Chapter 6)
+weight to a Scenario so that Aggregation and Quality Gates (Chapter 6)
 can treat failures differently depending on what is actually at stake, instead of
 counting every failing Scenario equally.
 
@@ -552,7 +552,7 @@ scope — a Suite, a Project, or a specific release candidate:
    decision.
 2. **Apply the Confidence Model** to the Results underlying those Metrics, so that how
    much each Result is trusted is decided before, not during, aggregation.
-3. **Apply the Aggregation Model** to combine Confidence-weighted Results across
+3. **Apply the Aggregation Model** to combine Confidence-modeled Results across
    Scenarios and Quality dimensions into per-dimension and overall aggregates.
 4. **Evaluate Quality Gates** against those aggregates.
 5. **Render the Release Decision** — ship, don't ship, or ship with an explicit,
@@ -648,7 +648,7 @@ dimension (Chapter 2), then, where a Quality Gate requires it, across dimensions
 the aggregates a Quality Gate actually checks. Two properties of the six-dimension model
 carry directly into how this combination MUST work:
 
-- **Business Quality weighting.** A Contract's weight or criticality on a given Scenario
+- **Business Quality weighting.** A Contract's weight on a given Scenario
   (Chapter 2) determines how much one failing Result there moves an aggregate. A failure
   on a Scenario marked high-stakes MUST count for more than an equally-sized failure on
   a low-stakes one; a flat, unweighted failure count would erase exactly the
@@ -836,7 +836,7 @@ the old one produced.
 ```mermaid
 flowchart TD
     M["Metrics (Volume XI)"] --> CM["Confidence Model<br/>Low-Confidence Results below the Contract's threshold<br/>routed to Human Review (Volume VI) instead of counted directly"]
-    CM --> AM["Aggregation Model<br/>Business Quality weight applied per Scenario (Ch. 2);<br/>Safety: Validator failures act as a hard veto,<br/>kept separate from the weighted combination elsewhere"]
+    CM --> AM["Aggregation Model<br/>Business Quality weight from each clause's Contract (Ch. 2);<br/>Safety: Validator failures act as a hard veto,<br/>kept separate from the weighted combination elsewhere"]
     AM --> QG["Quality Gate(s)<br/>e.g. Safety Gate, Regression Gate (vs. Baseline/<br/>Snapshot, Volume X), Functional Gate, Cost Gate"]
     QG -->|fail| RDN["Release Decision: don't ship<br/>(or: Governance-logged override, Volume XII)"]
     QG -->|"pass (all blocking Gates)"| RDS["Release Decision: ship"]

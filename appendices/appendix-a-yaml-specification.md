@@ -151,7 +151,8 @@ supplies Variables; specifying both creates an ambiguous resolution order.
 
 The Environment's `prompt_version` (§A.2) pins the system-side instructions; `prompt` is
 the stimulus a Scenario gives. A captured production Conversation (`production_replay`,
-Volume IV) supplies its own Prompts, so a Scenario using one needs no `prompt`.
+Volume IV) supplies its own Prompts, so a Scenario using one carries no `prompt`, and one
+that does is rejected (Appendix B §B.3).
 
 **SeededControlConfig**
 
