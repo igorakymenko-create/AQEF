@@ -221,14 +221,16 @@ Baselines, and the loop closes.
 
 ## What This Guide Does Not Cover
 
-This guide showed the shortest path through AQEF. The full specification covers
-significantly more:
+This guide showed the shortest path through AQEF. The rest of the specification
+covers, among other things:
 
 - Multi-Judge configurations for higher-stakes assessments (Volume VI).
-- Dataset generation and mutation for broad coverage (Volume IV).
+- Generated and Production Replay Datasets (Volume IV; features at risk in 1.0).
+  Data Mutation and the other coverage mechanisms are reserved for a later version.
 - Governance, Roles, and Approval Workflows for team-based quality management (Volume
   XII).
-- Plugin Architecture for extending Validators, Judges, and Datasets (Volume XVI).
+- Plugin Architecture for extending Validators, Judges, Datasets, and Reports (Volume
+  XVI; a feature at risk in 1.0).
 - Reporting and Analytics for trend analysis and historical comparison (Volume XI).
 
 Start with one Scenario, one Contract, and one Environment. Let complexity grow from
