@@ -73,7 +73,7 @@ when the requirement it checks changes.
 
 ### 0.6 Changes
 
-**1.0-CR1.4** accompanies AQEF 1.0-CR1.4, which changes no specification text.
+**1.0-CR1.4** accompanies AQEF 1.0-CR1.4, which changes no requirement.
 
 - **CT-DSR-006 corrected.** Its variant gave `s-greeting` F-BASE's `prompt`, whose
   template is `{{query}}`. A replay Row has no Variables, so an implementation could
