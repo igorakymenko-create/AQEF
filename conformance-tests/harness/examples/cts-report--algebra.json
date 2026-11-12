@@ -3,7 +3,7 @@
   "run_id": "run-1",
   "provenance": {
     "aqef_version": "1.0-CR1",
-    "cts_revision": "1.0-CR1.3",
+    "cts_revision": "1.0-CR1.4",
     "cts_commit": "<commit of the CTS used>",
     "harness_contract_version": "0.8",
     "harness_version": "0.5.0",

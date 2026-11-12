@@ -1,6 +1,6 @@
 # AQEF Conformance Test Specification
 
-**Status:** Candidate Recommendation 1 (1.0-CR1.3). Tests for AQEF 1.0-CR1.3.
+**Status:** Candidate Recommendation 1 (1.0-CR1.4). Tests for AQEF 1.0-CR1.4.
 
 **License:** CC BY 4.0, as the specification.
 
@@ -72,6 +72,14 @@ when the requirement it checks changes.
 | `harness/` | Harness Contract: a separate document specifying the test infrastructure (1.4) |
 
 ### 0.6 Changes
+
+**1.0-CR1.4** accompanies AQEF 1.0-CR1.4, which changes no specification text.
+
+- **CT-DSR-006 corrected.** Its variant gave `s-greeting` F-BASE's `prompt`, whose
+  template is `{{query}}`. A replay Row has no Variables, so an implementation could
+  reject the variant for the missing Variable and pass without enforcing the rule. The
+  variant now carries a template with no Variables. Found by running the test against an
+  engine with the rule switched off.
 
 **1.0-CR1.3** accompanies AQEF 1.0-CR1.3. It revises the tests of two features at risk,
 and corrects the wording of three tests.

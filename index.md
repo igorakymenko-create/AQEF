@@ -1,5 +1,5 @@
 # AQEF — AI Quality Engineering Framework
-### Master Index (Candidate Recommendation 1.0-CR1.3)
+### Master Index (Candidate Recommendation 1.0-CR1.4)
 
 Legend: ✅ drafted & confirmed · 🟨 partially drafted · ⬜ not yet drafted
 

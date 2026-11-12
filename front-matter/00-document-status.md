@@ -7,7 +7,7 @@
 | Property | Value |
 |---|---|
 | Status | Candidate Recommendation |
-| Version | 1.0-CR1.3 |
+| Version | 1.0-CR1.4 |
 | Date | 2026-11 |
 | Maturity | Candidate Recommendation — implementers invited to build and report issues |
 

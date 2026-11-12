@@ -93,7 +93,8 @@ that it is rejected.
   `production_replay` Dataset MUST NOT carry `prompt`."
 - **Method:** Automated
 - **Fixture:** CT-DSR-004's configuration, and a variant of it in which `s-greeting`
-  also carries F-BASE's `prompt`.
+  also carries `prompt: { template: "Hello" }`. The template uses no Variables, so the
+  variant cannot be rejected for a Row that lacks them.
 - **Action:** Load the variant.
 - **Expected:** Rejected.
 - **Fails if:** The variant is loaded.
