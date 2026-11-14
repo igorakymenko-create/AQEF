@@ -10,7 +10,8 @@ metric set; where it differs from the specification, the specification is right.
 What it covers: a six-step method from a risk to a trusted measurement; kinds of Oracle and
 check; twelve risk entries for a reference support assistant; a reference of 37 common
 metrics, each with what it does not tell you and how to tell whether its result can be
-trusted; and how checks become Quality Gates.
+trusted; how checks become Quality Gates; and how to choose a Judge configuration,
+admit it independently, and keep checking it in every run.
 
 For the theory behind each method, see the
 [AQEF Textbook](https://github.com/igorakymenko-create/aqef-textbook) (mapping in Appendix D).
