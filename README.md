@@ -123,12 +123,12 @@ clarified in the CTS after its first review found two readings.
 
 # AQEF Measurement Guide
 
-**From Risk to Trusted Measurement** · Measurement Guide 1.0 · 28 October 2026 · CC BY 4.0
+**From Risk to Trusted Measurement** · Measurement Guide 1.1 · 13 November 2026 · CC BY 4.0
 
-Informative companion to AQEF 1.0-CR1. It adds no requirement, threshold, or mandatory
+Informative companion to AQEF 1.0-CR1.4. It adds no requirement, threshold, or mandatory
 metric set; where it differs from the specification, the specification is right.
 
-📄 [Download the PDF](AQEF-Measurement-Guide-1.0.pdf)
+📄 [Download the PDF](guides/measurement/AQEF_Measurement_Guide_1.1.pdf)
 
 What it covers: a six-step method from a risk to a trusted measurement; kinds of Oracle and
 check; twelve risk entries for a reference support assistant; a reference of 37 common
