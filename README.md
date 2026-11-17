@@ -108,13 +108,17 @@ claims `reference_ui`, one of the capabilities at risk. All four of its tests pa
 The review records, their evidence, and the owner's attestation are in the UI's
 `conformance/` folder.
 
-The engine itself has since gained five more capabilities at risk, each built from the
-specification text by an agent that never saw the tests, and each passing all its tests
-against Conformance Tests 1.0-CR1.2 in the
+The engine itself has since gained ten more capabilities at risk. Each was built from the
+specification text by an agent that never saw the tests. Each passes all its tests
+against Conformance Tests 1.0-CR1.2 to 1.0-CR1.4 in the
 [harness](https://github.com/igorakymenko-create/aqef-cts-harness):
 - `cli` and `sdk:python`: its CLI and Python SDK;
 - `dataset:generated` and `dataset:production_replay`;
-- `action_boundary`: subjects that act through tools, behind a boundary.
+- `action_boundary`: subjects that act through tools, behind a boundary;
+- `ci_cd:github_actions`: a GitHub Action that carries the Quality Gates' outcome into a
+  pipeline. Its tests ran on GitHub Actions itself;
+- `plugins:validator`, `plugins:judge`, `plugins:dataset` and `plugins:report`: plugins as
+  external services that the engine calls.
 
 Where a test needed a reviewer, an independent AI reviewer decided it. One test was
 clarified in the CTS after its first review found two readings.
@@ -179,10 +183,8 @@ Candidate Recommendation 1. The content is believed complete, and implementers a
 invited to build against it and report issues. The public review closes on 2026-12-19.
 Some capabilities are marked at risk, and two are reserved for a later version;
 see [Document Status](front-matter/00-document-status.md). Of the features at risk,
-`reference_ui`, `cli`, `sdk:python`, `dataset:generated`, `dataset:production_replay`
-and `action_boundary` now have an implementation that passes all their tests. The
-plugins (`plugins:validator`, `plugins:judge`, `plugins:dataset`, `plugins:report`) and
-`ci_cd:<platform>` still need one.
+every one now has an implementation that passes all its tests (see Reference
+implementation above).
 
 Nothing here is settled by authority — where a decision is contested, the argument for it
 is written down and can be attacked on its merits. The design decisions behind the
