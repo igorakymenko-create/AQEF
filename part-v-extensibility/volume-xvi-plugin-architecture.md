@@ -8,8 +8,9 @@ enumerates by name. The governing constraint is already set — a plugin, like
 every SDK and the CLI, consumes AQEF's own REST API surface rather than reimplementing
 AQEF's logic independently — and one requirement was already made explicit
 before this Volume existed to enforce it: a Custom Validator's determinism and absence
-of a Confidence value MUST be enforced at the SDK level, not merely documented as a
-convention. This Volume specifies how: four plugin types, how a plugin is invoked, the
+of a Confidence value MUST be checked by the Plugin Architecture as far as a check can
+reach, not merely documented as a convention (Validator Plugins, below). This Volume
+specifies how: four plugin types, how a plugin is invoked, the
 Authentication every one of them operates under, and the Extension Lifecycle that
 governs how a plugin is installed, verified, and retired.
 

@@ -84,6 +84,13 @@ GPT-4o Judge risks correlated blind spots where both miss the same failure mode.
 a different model family — if the subject is GPT-4o, assess with Gemini or Claude (see
 Appendix H, example H.2).
 
+**Do not leave the standard to the Judge.** A Judge told that what counts as a defect is
+its own call applies its model's habits, and two Judges given the same Evidence can then
+differ widely. The criteria belong to the Contract (Volume VII): what the property is,
+what fails it, and against what it is measured. A Judge from another vendor is
+independent, but that does not make it rigorous. Independence (Volume I, Chapter 3) and
+Admission (Volume VI) answer different questions, and both are needed.
+
 **Declare Multi-Judge purpose explicitly.** Running multiple Judges against the same
 Conversation serves either of two distinct purposes that MUST be stated: independence
 (different model families to catch blind spots) or stability (repeated sampling to

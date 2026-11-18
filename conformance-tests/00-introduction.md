@@ -1,6 +1,6 @@
 # AQEF Conformance Test Specification
 
-**Status:** Candidate Recommendation 1 (1.0-CR1.4). Tests for AQEF 1.0-CR1.4.
+**Status:** Candidate Recommendation 1 (1.0-CR1.5). Tests for AQEF 1.0-CR1.5.
 
 **License:** CC BY 4.0, as the specification.
 
@@ -72,6 +72,14 @@ when the requirement it checks changes.
 | `harness/` | Harness Contract: a separate document specifying the test infrastructure (1.4) |
 
 ### 0.6 Changes
+
+**1.0-CR1.5** accompanies AQEF 1.0-CR1.5.
+
+- **CT-PLG-005** quotes Volume XVI's corrected opening. R-0121 in the MUST inventory
+  carries the new text.
+- **CT-ASM-014** states that its fallback route applies where a Validator that raises
+  cannot be registered. A Validator Plugin that raises fails Volume XVI's registration
+  check. Found against an implementation that offers Validator Plugins.
 
 **1.0-CR1.4** accompanies AQEF 1.0-CR1.4, which changes no requirement.
 

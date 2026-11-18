@@ -87,8 +87,9 @@ no `confidence` field.
 
 - **Capability:** `plugins:validator`
 - **Requirement:** Volume XVI: "a Custom Validator's determinism and absence of a
-  Confidence value MUST be enforced at the SDK level, not merely documented as a
-  convention"; Volume V, Custom Validators: "the same input MUST always produce the same
+  Confidence value MUST be checked by the Plugin Architecture as far as a check can
+  reach, not merely documented as a convention"; Volume V, Custom Validators: "the
+  same input MUST always produce the same
   Result, and it MUST NOT carry a Confidence value." Volume V, Validator SDK, adds that
   the SDK "SHOULD NOT give it a clock, a random source, or network access": a SHOULD,
   which this test reports on but does not fail.

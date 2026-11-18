@@ -1,6 +1,6 @@
 # 1. Revision History
 
-**Status:** current through 1.0-CR1.4.
+**Status:** current through 1.0-CR1.5.
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
@@ -37,3 +37,4 @@
 | 1.0-CR1.2 | 2026-11 | Igor Akymenko | No change to the specification text. Conformance Tests 1.0-CR1.2: CT-SDK-001 is clarified. A documented CLI command may map to a REST operation the implementation documents beyond Appendix C; the test checks that the CLI adds no logic of its own (Volume XIV, CLI; Appendix C, introduction). Found by a reviewer of the test. |
 | 1.0-CR1.3 | 2026-11 | Igor Akymenko | Normative changes to two features at risk, under the 1.0-CR1.1 rule. A Scenario on a Production Replay Dataset MUST NOT carry `prompt` (Appendix B §B.3; Appendix A §A.4); new test CT-DSR-006. A stored Gate evaluation can be retrieved, so that a Pipeline reads back its own GateResult with its override, and an implementation that claims `ci_cd:<platform>` MUST offer it (Appendix C §C.3; Volume XIII). Editorial: the Decision Pipeline combines Confidence-modeled Results (Volume I, Chapter 6); weight is set per Contract, and clauses that need different weights go in separate Contracts (Volume VII; Volume I); Appendix I §I.2 no longer says repeatability enforces determinism; a Report that omits a required signal does not conform (Volume XI). Conformance Tests 1.0-CR1.3: CT-DSR-006 added; CT-SDK-002's "times" include measured durations; CT-DSR-001 and 002 name their starting configuration. |
 | 1.0-CR1.4 | 2026-11 | Igor Akymenko | Editorial: Appendix K no longer presents Data Mutation, which is reserved, or plugins, which are at risk, as covered by this version. Conformance Tests 1.0-CR1.4: CT-DSR-006's variant carries a prompt without Variables, so that it can be rejected only because a Production Replay Scenario carries `prompt` (Appendix B §B.3), not because a replay Row lacks the Variables of F-BASE's template. Found by testing the test against an engine that does not enforce the rule. |
+| 1.0-CR1.5 | 2026-11 | Igor Akymenko | Volume XVI's opening now states the Validator Plugin requirement as its own section does: checked by the Plugin Architecture as far as a check can reach, not "enforced at the SDK level" (a feature at risk). Editorial: Appendix I §I.2 gains "Do not leave the standard to the Judge". Conformance Tests 1.0-CR1.5: CT-PLG-005 quotes the corrected requirement; CT-ASM-014 takes its fallback route where a Validator that raises cannot be registered. |

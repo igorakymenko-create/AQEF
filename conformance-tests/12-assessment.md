@@ -198,7 +198,9 @@ calls the scripted Judge receives.
   `cts-crash` is a Custom Validator (Volume V) that raises an error on every call and
   returns no Result.
 
-  Where the implementation offers no way to define one, the tester uses instead a
+  Where the implementation offers no way to define one, or cannot register it (a
+  Validator Plugin that raises fails the registration check of Volume XVI, Extension
+  Lifecycle), the tester uses instead a
   built-in Validator that lacks what it needs: the Constraint `{ validator: schema,
   target: artifacts.cts-absent, expected: { type: string } }`, naming an Artifact the
   scripted subject never produces, written in the implementation's path syntax for an
