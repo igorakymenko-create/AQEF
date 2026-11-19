@@ -97,11 +97,15 @@ Conversation serves either of two distinct purposes that MUST be stated: indepen
 reduce noise). These are not interchangeable — stability says nothing about correlated
 blind spots, and independence says nothing about sampling noise (Volume VI).
 
-**Calibrate Judges against Human Review.** A Judge's Confidence is only useful if it
-tracks reality. Calibration (Volume VI) periodically compares a Judge's verdicts
-against Human Reviewer ground truth to verify that stated Confidence values are
-numerically meaningful. A Judge whose Confidence says 0.95 but whose actual accuracy is
-0.70 is worse than useless — it produces confidently wrong evidence.
+**When a panel looks for defects, let one Judge's finding count.** Under
+`purpose: independence` with `method: voting` and the default `threshold: majority`, two
+Judges that miss a defect outvote the one that found it, and the blind spot the panel
+exists to catch is voted away. Where the panel's job is to find defects, set
+`threshold: unanimous`: any dissent then leaves the vote unresolved, and
+`on_disagreement` decides (Volume VI — Voting; Appendix A §A.7). With `on_disagreement: fail`, one Judge's `fail`
+fails the panel. With `on_disagreement: human_review`, the default, a person settles
+every dissent, which also catches one Judge's false alarm. Either way, pair the panel
+with clean controls (below), so that a Judge that fails everything is found.
 
 **Admit a Judge against a Reference Set before trusting it.** A Judge's output looks the
 same whether its verdicts track reality or not; only a comparison with human judgment
@@ -120,6 +124,15 @@ accurate. A Reference Set earns trust the way the Judge must:
 A Judge that fails its admission is a finding, not a setback: correct its criteria and
 admit it again, or use it only to sort Results for a Human Reviewer, who decides.
 
+**Calibrate an admitted Judge against Human Review.** A Judge's Confidence is only useful
+if it tracks reality. Calibration (Volume VI) periodically compares a Judge's verdicts
+against Human Reviewer ground truth to verify that stated Confidence values are
+numerically meaningful. A Judge whose Confidence says 0.95 but whose actual accuracy is
+0.70 is worse than useless — it produces confidently wrong evidence. Calibrate after
+admission, not instead of it. Calibration aligns a Judge's Confidence with how often it
+is right about what it sees; it cannot make the Judge see more. A Judge that misses
+defects can be well calibrated and still pass what it should fail.
+
 **Pair defect controls with clean controls.** A Seeded Control with a planted defect
 catches a Judge that went blind. It cannot catch one that sees defects everywhere,
 because that Judge catches every plant. A clean control (Volume VIII), Evidence free of
@@ -137,6 +150,17 @@ Judge Drift). If a model provider updates what a stable model identifier resolve
 or if the Judge's own prompt version changes, its verdicts may shift. Track Judge Drift
 separately from subject drift — the same Semantic Regression symptom has two different
 causes, and they require different responses.
+
+**Prepare for a change of the Judge's model.** A changed model is a different Judge and
+needs its own admission (Volume VI), so a change you did not plan for can block every
+Gate that requires admitted Judges until the new one is admitted. Name a dated model
+version in the Judge's configuration, not an alias whose meaning the provider can
+change. Keep Reference Set items and Seeded Controls in reserve, so that a successor can
+be admitted at once. Where a provider announces that a version will be retired, admit
+its successor while the current version is still in use, and switch only then. Count
+how many configurations were tried against the same Reference Set version: when many
+are tried, one may reach the threshold by chance, and the count tells a reviewer how
+much an admission rests on.
 
 ## I.3 — Dataset Management
 
