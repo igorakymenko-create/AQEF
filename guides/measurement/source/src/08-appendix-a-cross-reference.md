@@ -1,0 +1,22 @@
+# Appendix A — Cross-reference matrix
+
+This adjudicated map distinguishes DIRECT evidence for a risk property from DIAGNOSTIC measurements and risk-local checks. It is a Guide mapping, not a mandated AQEF test or Gate threshold.
+
+| Risk / property                                                                                 | DIRECT metric(s)       | Diagnostic             | Primary Oracle / risk-local check                                                             |
+|-------------------------------------------------------------------------------------------------|------------------------|------------------------|-----------------------------------------------------------------------------------------------|
+| R-01 — P1 governing document identity; P2 decision-bearing fact coverage; P3 effective revision | M-06                   | M-02, M-05             | P1/P3: source ID and effective-revision Validators (risk-local checks; no M-05 substitute).   |
+| R-02 — P1 claim grounding; P2 critical-claim integrity                                          | M-01                   | M-08, M-30             | See per-property Oracle in Part 3; Validator first when decidable, otherwise qualified Judge. |
+| R-03 — P1 citation resolvability; P2 claim-to-citation support                                  | M-09                   | M-01                   | Citation ID Validator required independently of M-09 support Judge.                           |
+| R-04 — answerability and appropriate refusal                                                    | M-04                   | —                      | Labelled answerability/reference set required for both under- and over-refusal.               |
+| R-05 — effective-date and authoritative revision correctness                                    | Risk-local check only  | M-08, M-24             | Effective-date/version metadata Validator required; no generic metric substitutes.            |
+| R-06 — P1 tool choice; P2 arguments; P3 prerequisite order                                      | M-10, M-11, M-12       | M-03, M-13, M-14, M-25 | See per-property Oracle in Part 3; Validator first when decidable, otherwise qualified Judge. |
+| R-07 — actual external outcome versus final user-facing claim                                   | M-03                   | M-12                   | Authoritative tool response/event receipt Validator required; trajectory alone insufficient.  |
+| R-08 — retained facts and cross-turn non-contradiction                                          | M-15, M-18             | M-16, M-32             | See per-property Oracle in Part 3; Validator first when decidable, otherwise qualified Judge. |
+| R-09 — resistance to retrieved-content instruction override                                     | M-22                   | M-17                   | Instruction-priority/override objective must be labelled per Scenario.                        |
+| R-10 — prohibited content and personal data disclosure under adversarial prompts                | M-19, M-21, M-22       | M-04, M-20, M-23, M-26 | Validator-enforced prohibited constraints remain separate from contextual Safety Judges.      |
+| R-11 — permitted Action Boundary and observed attempts                                          | Risk-local check only  | M-11, M-22             | Action Boundary attempted crossing log Validator is primary, whether enforced or unenforced.  |
+| R-12 — latency, cost, reliability and regression baselines                                      | M-34, M-35, M-36, M-37 | M-13, M-32, M-33       | Compare identical cohorts and baseline versions; token counts do not equal dollar cost.       |
+
+## Appendix A.1 — Measurement decision trace
+
+For any row: locate the observable failure symptom (Part 3), choose the property and Oracle, confirm captured Evidence, establish deterministic Validator correctness or document the semantic Judge’s Reference Set and Admission status, exercise applicable defect and clean Seeded Controls, compute a per-Execution Result, declare the required Aggregate Basis for any Gate-facing aggregate, then apply the configured Gate. This is an implementation workflow, not an additional AQEF MUST. Validators precede Judges (Volume I, Chapter 3); Gate enforcement of Judge Admission is conditional on require_admitted_judges (Volume I, Chapter 6; Volume VI).
