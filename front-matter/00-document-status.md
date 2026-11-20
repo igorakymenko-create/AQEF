@@ -7,7 +7,7 @@
 | Property | Value |
 |---|---|
 | Status | Candidate Recommendation |
-| Version | 1.0-CR1.6 |
+| Version | 1.0-CR1.7 |
 | Date | 2026-11 |
 | Maturity | Candidate Recommendation — implementers invited to build and report issues |
 
@@ -28,16 +28,16 @@ This version enters Candidate Recommendation on this evidence:
   public.
 - Every testable MUST in the requirement inventory has at least one CTS test (CTS,
   Section 90).
-- The capabilities no implementation has yet built were read independently, as an
+- The capabilities no implementation had yet built were read independently, as an
   implementer would read them. Their defects were corrected in this version, or the
   capability is reserved (below).
 
 ## Features at Risk
 
-These capabilities have no implementation yet. Each stays in this version during
-Candidate Recommendation. A feature at risk that has no implementation passing its CTS
-tests when Candidate Recommendation ends is removed from 1.0, or moved to a later
-version. Removing it does not restart Candidate Recommendation.
+These capabilities had no implementation when Candidate Recommendation began. Each stays
+in this version during Candidate Recommendation. A feature at risk that has no
+implementation passing its CTS tests when Candidate Recommendation ends is removed from
+1.0, or moved to a later version. Removing it does not restart Candidate Recommendation.
 
 - `action_boundary` (Volume III, Action Boundary)
 - `dataset:generated`, `dataset:production_replay` (Volume IV)
