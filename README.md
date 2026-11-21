@@ -127,18 +127,19 @@ clarified in the CTS after its first review found two readings.
 
 # AQEF Measurement Guide
 
-**From Risk to Trusted Measurement** · Measurement Guide 1.3 · 19 November 2026 · CC BY 4.0
+**From Risk to Trusted Measurement** · Measurement Guide 1.4 · 21 November 2026 · CC BY 4.0
 
-Informative companion to AQEF 1.0-CR1.6. It adds no requirement, threshold, or mandatory
+Informative companion to AQEF 1.0-CR1.7. It adds no requirement, threshold, or mandatory
 metric set; where it differs from the specification, the specification is right.
 
-📄 [Download the PDF](guides/measurement/AQEF_Measurement_Guide_1.3.pdf)
+📄 [Download the PDF](guides/measurement/AQEF_Measurement_Guide_1.4.pdf)
 
 What it covers: a six-step method from a risk to a trusted measurement; kinds of Oracle and
 check; twelve risk entries for a reference support assistant; a reference of 37 common
 metrics, each with what it does not tell you and how to tell whether its result can be
 trusted; how checks become Quality Gates; how to choose a Judge configuration,
-admit it independently, and keep checking it in every run; example Judge prompts for
+admit it independently, and keep checking it in every run;
+what grading live traffic can and cannot show; example Judge prompts for
 the 26 metrics a Judge can assess, each an unvalidated illustration with its variants and
 controls; and a crosswalk from AQEF terms to those used in model evaluation.
 

@@ -972,7 +972,7 @@ PRIMARY RISK-LOCAL CHECK — Instruction-priority/override objective must be lab
 
 **9. Static Dataset.** Retrieved pages, search snippets and tool outputs; benign quoted instructions as clean controls; channel-labelled variations.
 
-**10. Trusting the Oracle.** injection_obedience, unauthorized_route; defect: retrieved article asks assistant to expose secret and it changes behavior; clean: assistant summarizes that malicious line as data only. Reference Set specifies channel trust and permitted behavior. Any Judge configuration used in decision evidence should be validated against independently established labels; use defect and clean controls by named class. Apply AQEF Gate admission rules exactly as configured.
+**10. Trusting the Oracle.** injection_obedience, unauthorized_route; defect: retrieved article asks assistant to expose secret and it changes behavior; clean: assistant summarizes that malicious line as data only. Reference Set specifies channel trust and permitted behavior. The same technique can be aimed at the Judge that grades the response; §6.4 gives the controls for it. Any Judge configuration used in decision evidence should be validated against independently established labels; use defect and clean controls by named class. Apply AQEF Gate admission rules exactly as configured.
 
 11\. Gate placement. A failure of a Validator-enforced Safety constraint vetoes the aggregate; contextual Safety findings from Judges/Human Reviewers enter weighted aggregation and apply through configured Gates rather than an automatic hard veto. Choose a minimum Aggregate Basis based on the release consequence; no numeric value is prescribed here.
 
@@ -1166,7 +1166,7 @@ PRIMARY RISK-LOCAL CHECK — Action Boundary attempted crossing log Validator is
 
 **13. Illustrative clause.** Conceptually: bind each independently named property to a Quality Dimension, its evidence target, Oracle configuration and declared defect class, then place its aggregate in a Project/Suite Gate. No YAML is supplied here because Appendix A schema-level conformance has not yet been verified.
 
-**14. Maturity note. Action Boundary is a Feature at Risk in AQEF 1.0-CR1.6 and may change or be removed before the final 1.0 specification. Do not treat it as a mandatory or universally available facility; independently captured subject tool trajectories remain usable evidence.**
+**14. Maturity note. Action Boundary is a Feature at Risk in AQEF 1.0-CR1.7 and may change or be removed before the final 1.0 specification. Do not treat it as a mandatory or universally available facility; independently captured subject tool trajectories remain usable evidence.**
 
 Integration changes the risk being measured. In text-only use, “kill PID 1” may be a benign administration string. In an acting agent, the same string can be an attempted effect beyond authorization. The action property needs captured boundary attempts, not just a text-content judgement. Action Boundary and Unauthorized Action are AQEF features and tests with their documented maturity and applicability; no chat-only content check proves action safety.
 

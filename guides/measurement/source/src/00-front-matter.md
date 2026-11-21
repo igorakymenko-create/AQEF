@@ -1,22 +1,20 @@
 ---
 title: AQEF Measurement Guide
 subtitle: From Risk to Trusted Measurement
-version: "1.3"
-date: 19 November 2026
-basis: AQEF 1.0-CR1.6
+version: "1.4"
+date: 21 November 2026
+basis: AQEF 1.0-CR1.7
 license: CC BY 4.0
 ---
 
-# Changes in 1.3
+# Changes in 1.4
 
-Basis updated to AQEF 1.0-CR1.6. That revision changed Appendix I §I.2 and two examples; this Guide quoted neither.
+Basis updated to AQEF 1.0-CR1.7. That revision changed only the specification’s Document Status; this Guide quoted nothing it changed.
 
-Added Appendix E, a terminology crosswalk between AQEF terms and terms used in model evaluation, with where their meanings part.
+Added §5.7, Measuring on live traffic: why results on test data and on real data part; what grading live traffic can and cannot show; why a correct rule in the prompt does not make a correct answer; how to check a testing tool itself; and what to establish about a grader placed in the request path.
 
-§6.4 gains a stratum for surface quality: a fluent, well-formatted wrong answer beside a short correct one.
+Added §5.6.3: a sampled human review of graded Results in operation, sampling both verdicts.
 
-§6.6 points to two practices that AQEF 1.0-CR1.6 added to Appendix I: a panel that looks for defects, and preparing for a change of the Judge's model.
-
-The Guide is now built from its Markdown source; page layout and fonts differ from 1.2, and the text of 1.2 is unchanged except where listed here. Five stray asterisks left by formatting in Part 4 are removed.
+§6.4 gains a stratum for injection aimed at the Judge: Evidence that fails the clause and asks to be passed, paired with clean Evidence that holds benign instruction-like text. The instruction-override risk R-09 in Part 3 points to it.
 
 The Guide remains an informative companion: no new AQEF fields, obligations, universal thresholds or mandatory metric set.

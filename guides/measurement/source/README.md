@@ -2,8 +2,8 @@
 
 The Markdown source of the AQEF Measurement Guide, and the script that builds its PDF.
 
-This source holds the text of **Measurement Guide 1.3** (19 November 2026), published as
-`guides/measurement/AQEF_Measurement_Guide_1.3.pdf`. Edit these files for the next version;
+This source holds the text of **Measurement Guide 1.4** (21 November 2026), published as
+`guides/measurement/AQEF_Measurement_Guide_1.4.pdf`. Edit these files for the next version;
 do not edit the PDF.
 
 ## Files

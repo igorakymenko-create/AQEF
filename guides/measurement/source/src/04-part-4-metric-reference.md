@@ -1813,7 +1813,7 @@ It does not establish that a consistently repeated answer is correct; it cannot 
 
 5\. How it is usually computed; this Guide's procedure
 
-Methodological basis: AQEF 1.0-CR1.6, Volume VIII, Consistency Testing. No unique universal primary formula identified; the measure below is Guide-defined.
+Methodological basis: AQEF 1.0-CR1.7, Volume VIII, Consistency Testing. No unique universal primary formula identified; the measure below is Guide-defined.
 
 Guide procedure: Take N independently initiated Executions of the same Scenario, with a fixed subject configuration and a declared environment distribution. Store all final states, outputs and termination labels. For each run evaluate task correctness separately and compare its substantive answer or state with the reference response class. Predefine an equivalence predicate; for a chosen property record the proportion of runs matching the modal allowed outcome, and separately the proportion meeting the reference. A second diagnostic reports pairwise equivalence across all N(N−1)/2 pairs.
 

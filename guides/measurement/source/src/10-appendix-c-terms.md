@@ -1,6 +1,6 @@
 # Appendix C — Terms and authoritative definitions
 
-Authoritative reference: AQEF 1.0-CR1.6, Appendix D — Glossary, and Front Matter §8 for the twelve core domain terms. The list below is an index of where to consult definitions, not a competing glossary.
+Authoritative reference: AQEF 1.0-CR1.7, Appendix D — Glossary, and Front Matter §8 for the twelve core domain terms. The list below is an index of where to consult definitions, not a competing glossary.
 
 | Term for lookup                         | Authoritative AQEF location                |
 |-----------------------------------------|--------------------------------------------|
