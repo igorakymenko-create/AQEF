@@ -1,6 +1,6 @@
 # AQEF Conformance Test Specification
 
-**Status:** Candidate Recommendation 1 (1.0-CR1.7). Tests for AQEF 1.0-CR1.7.
+**Status:** Candidate Recommendation 1 (1.0-CR1.8). Tests for AQEF 1.0-CR1.8.
 
 **License:** CC BY 4.0, as the specification.
 
@@ -72,6 +72,8 @@ when the requirement it checks changes.
 | `harness/` | Harness Contract: a separate document specifying the test infrastructure (1.4) |
 
 ### 0.6 Changes
+
+**1.0-CR1.8** accompanies AQEF 1.0-CR1.8. No test changes: AQEF 1.0-CR1.8 is editorial.
 
 **1.0-CR1.7** accompanies AQEF 1.0-CR1.7. No test changes: AQEF 1.0-CR1.7 is editorial.
 

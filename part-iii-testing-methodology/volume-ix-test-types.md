@@ -76,8 +76,12 @@ once produced).
 
 **Jailbreak** *(elicitation technique)* — Attempts to bypass the system's safety
 boundaries through direct conversational manipulation: reframing, roleplay, hypothetical
-framing, or gradual multi-turn erosion of an initial refusal. Draws on Adversarial
-Datasets (Volume IV) and Negative Testing (Volume VIII).
+framing, a request bundled with legitimate ones in the same message, or gradual
+multi-turn erosion of an initial refusal. A bundled request hides a disallowed request
+among allowed ones, so that the decision to refuse is made for the message as a whole
+rather than for each request in it; a Response that answers the allowed requests and
+partly serves the disallowed one, for example with an approximation, has not refused it.
+Draws on Adversarial Datasets (Volume IV) and Negative Testing (Volume VIII).
 
 **Prompt Injection** *(elicitation technique)* — Attempts to hijack the system's
 behavior through instructions embedded in untrusted secondary content it consumes but

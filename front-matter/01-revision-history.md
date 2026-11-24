@@ -1,6 +1,6 @@
 # 1. Revision History
 
-**Status:** current through 1.0-CR1.7.
+**Status:** current through 1.0-CR1.8.
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
@@ -40,3 +40,4 @@
 | 1.0-CR1.5 | 2026-11 | Igor Akymenko | Volume XVI's opening now states the Validator Plugin requirement as its own section does: checked by the Plugin Architecture as far as a check can reach, not "enforced at the SDK level" (a feature at risk). Editorial: Appendix I §I.2 gains "Do not leave the standard to the Judge". Conformance Tests 1.0-CR1.5: CT-PLG-005 quotes the corrected requirement; CT-ASM-014 takes its fallback route where a Validator that raises cannot be registered. |
 | 1.0-CR1.6 | 2026-11 | Igor Akymenko | Editorial; no requirement on implementations changes. Appendix I §I.2 gains three practices: a panel that looks for defects lets one Judge's finding count (`threshold: unanimous` with `on_disagreement`); calibrate a Judge after admitting it, since calibration cannot make it see more; prepare for a change of the Judge's model (a dated version, a reserve of Reference Set items and controls, a successor admitted before the switch, a count of configurations tried against one Reference Set version). "Calibrate" now follows "Admit". The examples in Appendix A §A.4 and Appendix H.10 name a dated Judge model instead of an alias. Conformance Tests 1.0-CR1.6: no test changes. |
 | 1.0-CR1.7 | 2026-11 | Igor Akymenko | Editorial; no requirement on implementations changes. Document Status: the features at risk had no implementation when Candidate Recommendation began, not "have no implementation yet"; an implementation has since built several of them. Conformance Tests 1.0-CR1.7: no test changes. |
+| 1.0-CR1.8 | 2026-11 | Igor Akymenko | Editorial; no requirement on implementations changes. Volume IX, Jailbreak: names a disallowed request bundled with legitimate ones in the same message, and says that a partial answer to it is not a refusal. Conformance Tests 1.0-CR1.8: no test changes. |
