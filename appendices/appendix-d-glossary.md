@@ -556,7 +556,8 @@ resolves to, correlated with a Semantic Regression.
 
 **Prompt Injection** — A Safety-Adjacent elicitation technique (Volume IX) attempting
 to hijack behavior through embedded instructions in untrusted secondary content — a
-RAG-retrieved document, a tool's output. Distinguished from Jailbreak by channel.
+RAG-retrieved document, a tool's output, an attachment — in any modality. Distinguished
+from Jailbreak by channel, not by modality.
 
 **Quality Contract §8** — A declarative specification stating which Oracles MUST be
 applied, what constitutes a passing Result under each, and what Confidence threshold

@@ -86,10 +86,13 @@ Draws on Adversarial Datasets (Volume IV) and Negative Testing (Volume VIII).
 **Prompt Injection** *(elicitation technique)* — Attempts to hijack the system's
 behavior through instructions embedded in untrusted secondary content it consumes but
 did not receive directly from its primary conversational partner: a retrieved document
-(RAG, Chapter 7), a tool's output (Tool Calling, Chapter 7). Distinguished from
-Jailbreak by channel, not intent — both aim to induce a boundary violation, but Prompt
-Injection's payload arrives through content the system was supposed to trust less than
-it apparently did.
+(RAG, Chapter 7), a tool's output (Tool Calling, Chapter 7), an attachment or a web page
+it reads. The content need not be text: text inside an image or a screenshot, speech in
+audio from someone other than the primary partner, the subtitles or soundtrack of a
+video, a file's metadata, and a QR code or a similar encoding carry instructions the same
+way. Distinguished from Jailbreak by channel, not intent — both aim to induce a
+boundary violation, but Prompt Injection's payload arrives through content the system was
+supposed to trust less than it apparently did.
 
 **Bias** *(output category)* — The system produces systematically unfair or
 discriminatory output, whether or not any adversarial elicitation was involved; Bias can
@@ -153,7 +156,10 @@ Safety-adjacent, or another type at the same time, composing rather than replaci
 the same non-exclusive relationship Hybrid Systems (Chapter 7) already established for
 architectural patterns. A Multimodal Scenario's Contract binds the same way any other
 Scenario's does; what changes is only the modality of the evidence a Validator or Judge
-inspects, not the taxonomy this Volume specifies.
+inspects, not the taxonomy this Volume specifies. Jailbreak and Prompt Injection both
+arrive in any modality, and the modality does not decide which one a case is: an image
+the primary conversational partner sends is Jailbreak's channel, and an image inside an
+email the system reads is Prompt Injection's.
 
 ---
 
