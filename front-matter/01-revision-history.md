@@ -1,6 +1,6 @@
 # 1. Revision History
 
-**Status:** current through 1.0-CR1.9.
+**Status:** current through 1.0-CR1.10.
 
 | Version | Date | Author | Summary |
 |---|---|---|---|
@@ -42,3 +42,4 @@
 | 1.0-CR1.7 | 2026-11 | Igor Akymenko | Editorial; no requirement on implementations changes. Document Status: the features at risk had no implementation when Candidate Recommendation began, not "have no implementation yet"; an implementation has since built several of them. Conformance Tests 1.0-CR1.7: no test changes. |
 | 1.0-CR1.8 | 2026-11 | Igor Akymenko | Editorial; no requirement on implementations changes. Volume IX, Jailbreak: names a disallowed request bundled with legitimate ones in the same message, and says that a partial answer to it is not a refusal. Conformance Tests 1.0-CR1.8: no test changes. |
 | 1.0-CR1.9 | 2026-11 | Igor Akymenko | Editorial; no requirement on implementations changes. Volume IX and Glossary, Prompt Injection: the instructions can arrive in any modality (an image, audio, video, file metadata, a QR code) and through an attachment or a web page; Jailbreak and Prompt Injection are told apart by channel, not by modality. Appendix H gains H.12, an injection inside an email's attached image. Conformance Tests 1.0-CR1.9: no test changes. |
+| 1.0-CR1.10 | 2026-11 | Igor Akymenko | Editorial; no requirement on implementations changes. Front Matter §6, Scope, gains an informative subsection, Applicability: the five assumptions AQEF rests on, where each breaks, what still applies there, and where AQEF fits best; a component may meet them when the whole system does not; passing AQEF Quality Gates is not evidence of compliance with any standard or certification scheme. Conformance Tests 1.0-CR1.10: no test changes. |

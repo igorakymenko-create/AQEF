@@ -14,6 +14,43 @@ All of it applies specifically to testing the behavior of a Probabilistic Subjec
 input. AQEF does not replace classical software testing for a product's deterministic
 components; it governs the parts of a system where that assumption no longer holds.
 
+## Applicability
+
+AQEF rests on five assumptions. Where all five hold, it applies as specified. Where one
+breaks, parts of it still apply and others do not fit; this subsection says which, so
+that the specification claims no more than it covers. It is informative and adds no
+requirement.
+
+| # | Assumption | Where it breaks | Why | What still applies |
+|---|---|---|---|---|
+| 1 | A verdict exists for each case when the test runs | Credit scoring, hiring, insurance, forecasting | The true outcome arrives later, after months or a year | Contracts, Baselines, Quality Gates, Traceability. A Result whose Oracle arrives later is not defined |
+| | | Fairness, probability calibration | The property belongs to a population, not to one case | Quality Gates on aggregates. A Result, as the unit of checking, does not fit |
+| | | Recommendation, search, ranking | No single correct answer; quality shows in what users do | Validators, Regression Suites. The main evaluation is an online experiment, which AQEF does not specify |
+| 2 | Interaction is a Conversation: a request, a Response, actions | Robotics, drones, vehicles, real-time control, automated trading | A continuous stream of decisions with feedback; no discrete Conversation to assess | The ideas of a Contract and of Seeded Controls, not the Execution model |
+| 3 | The boundary is a software sandbox | Robotics, vehicles, medical devices | Consequences are physical and may be irreversible; a simulation is not the world | The Action Boundary as an idea. Physical containment is a different engineering discipline |
+| 4 | Release is a decision taken before deployment | Recommender and advertising systems, systems that learn online | The model changes in production; a version is not fixed | Drift Detection, Production Replay. A Release Decision as a single event loses its meaning |
+| 5 | No stricter certification regime applies | Road vehicles, aviation, medical devices | A mandatory life cycle, safety case and audit of their own | AQEF can supply evidence inside such a process, never replace it |
+
+AQEF fits best today:
+
+- text and multimodal generative systems;
+- retrieval-augmented generation;
+- agents acting in software environments;
+- classifiers with labelled cases, where a verdict for each case is meaningful;
+- assistive systems in which a person takes the decision.
+
+Within a system that breaks an assumption, a component may still satisfy all five: a
+perception model that labels one camera frame, a planner choosing one manoeuvre in a
+fixed simulated situation, an interviewer holding one conversation with a candidate.
+Each gives a verdict for each case, even where the driving of the vehicle or the hiring
+decision as a whole does not. AQEF can apply to that component; it does not thereby
+assess the whole system.
+
+Where AQEF is used inside a regulated or certified process, it is one source of evidence
+for that process. Passing AQEF Quality Gates is not evidence of compliance with any
+standard, regulation or certification scheme (see "Specific regulatory or legal
+requirements" below).
+
 ## Out of Scope
 
 - **Model training and fine-tuning.** AQEF assesses an AI system's behavior; it does not
