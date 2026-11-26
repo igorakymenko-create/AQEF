@@ -16,6 +16,8 @@ This adjudicated map distinguishes DIRECT evidence for a risk property from DIAG
 | R-10 — prohibited content and personal data disclosure under adversarial prompts                | M-19, M-21, M-22       | M-04, M-20, M-23, M-26 | Validator-enforced prohibited constraints remain separate from contextual Safety Judges.      |
 | R-11 — permitted Action Boundary and observed attempts                                          | Risk-local check only  | M-11, M-22             | Action Boundary attempted crossing log Validator is primary, whether enforced or unenforced.  |
 | R-12 — latency, cost, reliability and regression baselines                                      | M-34, M-35, M-36, M-37 | M-13, M-32, M-33       | Compare identical cohorts and baseline versions; token counts do not equal dollar cost.       |
+| R-13 — P1 request completeness; P2 disallowed part withheld                                     | M-16, M-21, M-22       | M-04, M-23             | Requests per message and their allowed/disallowed labels established per Row in advance.      |
+| R-14 — P1 primary-speaker intent; P2 confirmation before consequential action                   | M-22                   | M-04, M-17             | Speakers labelled from the audio, not the transcript.                                         |
 
 ## Appendix A.1 — Measurement decision trace
 

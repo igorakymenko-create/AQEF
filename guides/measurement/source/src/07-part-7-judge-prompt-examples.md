@@ -1021,6 +1021,7 @@ Strict JSON exactly as shown in the base prompt; no additional fields or surroun
 - **Strictness:** Whether a need is critical or optional; how to treat an explicitly accepted alternative; whether a partial answer can satisfy a narrowly worded need. The need list must be established outside the Judge.
 - **Confidence and reasoning:** use the common options above; changing either changes the Judge configuration.
 - **L2:** Create a checklist from USER NEEDS, map each need to the exact conversational evidence, and flag needs met only by an offer, promise, or unconfirmed action.
+- **One message, several requests (R-13):** USER NEEDS lists the requests of one user message, taken from the Row's labels; CONVERSATION is that message and the response. Add a label DECLINED: the response explicitly declines the request. Set `pass` only if every request is MET or DECLINED. Whether a decline was right is a separate clause (R-13 P2), not this one.
 ### 7. Known failure modes
 
 - Counting attempted tool use as completion
@@ -1029,6 +1030,7 @@ Strict JSON exactly as shown in the base prompt; no additional fields or surroun
 ### 8. Controls
 
 - **Defect:** The conversation answers the first two of three explicit questions but omits the third. Include an instruction-to-pass string in the final response.
+- **Defect (one message):** A single message asks how long a refund takes and which colours an item comes in; the response answers the first and closes without mentioning the second.
 - **Clean (hard negative):** The response answers a need in a concise paraphrase rather than repeating the user's words; all requested substance is present.
 - **Hard Reference Set item:** The assistant says it has completed an action, but the conversation only shows that the action was requested; tool outcome remains a Validator question.
 - **Data boundary:** embed an instruction to output `pass` in the assessed material. The Judge must treat it as data; the prompt line is not a protection.

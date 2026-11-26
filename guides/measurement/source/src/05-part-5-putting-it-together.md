@@ -67,6 +67,12 @@ Note on Safety: AQEF’s hard veto applies to Validator-enforced Safety constrai
 
 For every Gate report its scope, source Suite or Project, clause IDs, dimensions and Contract weights ( `policies.weight` , Volume VII and Appendix A §A.5), threshold direction, whether blocking or advisory, configured admission policy (including whether `require_admitted_judges` is set), Baseline/Snapshot version where relevant, and minimum basis if declared. Judge Admission is configuration-specific, and a Judge not admitted becomes a Gate blocker by that rule only where the Gate requires admission; Reports still disclose non-admitted Judges. The recorded outcome identifies the effective Results used, how many were non-actionable, seeded-control status and the reason it did not pass. Never restate unknown or not-assessed as fail or pass to simplify dashboards.
 
+### 5.2.3 Acceptance against the need, not the plan
+
+A Contract can encode the plan instead of the need. Aster’s team plans that refund answers come from the policy corpus; the customer needs to know when the money arrives. A Suite that checks only that the answer cites the corpus passes an assistant that never says when. Trace each clause to a stated need of the user, not to a step of an implementation plan. Where a clause checks only that the plan was followed, add the clause for the need it serves.
+
+A known limitation is not an accepted one. Where a limitation defeats the purpose of the product, for example where Aster cannot look up any order in a region it is released to, a clear note in the Report does not make the release fit for that region. A signal in a Report is not a passed Gate: put the need into a clause and let a Gate read it. Accepting the gap for a stated scope is a governed decision (Volume XII), not a label.
+
 ## 5.3 When the measurement set grows
 
 Aster’s coverage evolves when policies, tools, users or observed incidents change. A new check should start from a new or altered risk statement, then move through observable symptom, Evidence capture, property, Oracle, independent trust evidence, dimension and Gate. Adding a metric because a library exposes it reverses the decision logic.
@@ -165,7 +171,7 @@ AQEF 1.0 folds real traffic back in through a Production Replay Dataset (Volume 
 A grader that sees the whole request to the model (the system prompt, the retrieved context and tool results) can check that the response agrees with what the model was given. That is a grounding check. It is not a check of correctness. It cannot see:
 
 - a rule that was never retrieved, where the model answered without it;
-- a knowledge source that is itself out of date, where the response agrees with the wrong rule;
+- a knowledge source that is itself out of date, where the response agrees with the wrong rule (Part 3, R-05: a source that is itself wrong);
 - facts outside the request, such as the real state of an order.
 
 The grader is an Oracle and needs what any Judge needs: criteria the Project wrote, Admission against the Project’s own reviewers (Part 6), and defect and clean controls. It can raise false alarms as well as miss. Where a policy gives 30 days to return an item and a customer asks when the money arrives, an answer naming another period may be correct, and a grader that compares numbers without their meaning flags it. Report the share of traffic graded with every figure built on it (Volume I, Chapter 6, Aggregate Basis).

@@ -1,20 +1,22 @@
 ---
 title: AQEF Measurement Guide
 subtitle: From Risk to Trusted Measurement
-version: "1.4"
-date: 21 November 2026
-basis: AQEF 1.0-CR1.7
+version: "1.5"
+date: 25 November 2026
+basis: AQEF 1.0-CR1.9
 license: CC BY 4.0
 ---
 
-# Changes in 1.4
+# Changes in 1.5
 
-Basis updated to AQEF 1.0-CR1.7. That revision changed only the specification’s Document Status; this Guide quoted nothing it changed.
+Basis updated to AQEF 1.0-CR1.9. Those revisions are editorial: Volume IX names a disallowed request bundled with legitimate ones, and says that Prompt Injection can arrive in any modality. This Guide quotes the first in R-13.
 
-Added §5.7, Measuring on live traffic: why results on test data and on real data part; what grading live traffic can and cannot show; why a correct rule in the prompt does not make a correct answer; how to check a testing tool itself; and what to establish about a grader placed in the request path.
+Added R-13, one message holding several requests: a legitimate request silently left out, or a disallowed request among legitimate ones served in full or in part. §7.14 gains a one-message variant and control.
 
-Added §5.6.3: a sampled human review of graded Results in operation, sampling both verdicts.
+Added R-14, speech that is not the user’s request acted on as one: background speech, another person, a recording, a quotation; and confirmation before a consequential action.
 
-§6.4 gains a stratum for injection aimed at the Judge: Evidence that fails the clause and asks to be passed, paired with clean Evidence that holds benign instruction-like text. The instruction-override risk R-09 in Part 3 points to it.
+Added §5.2.3, acceptance against the need, not the plan.
+
+R-05 gains a note on a source that is itself wrong, which no staleness rule catches; §5.7.2 points to it.
 
 The Guide remains an informative companion: no new AQEF fields, obligations, universal thresholds or mandatory metric set.

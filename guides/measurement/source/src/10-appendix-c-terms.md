@@ -1,6 +1,6 @@
 # Appendix C — Terms and authoritative definitions
 
-Authoritative reference: AQEF 1.0-CR1.7, Appendix D — Glossary, and Front Matter §8 for the twelve core domain terms. The list below is an index of where to consult definitions, not a competing glossary.
+Authoritative reference: AQEF 1.0-CR1.9, Appendix D — Glossary, and Front Matter §8 for the twelve core domain terms. The list below is an index of where to consult definitions, not a competing glossary.
 
 | Term for lookup                         | Authoritative AQEF location                |
 |-----------------------------------------|--------------------------------------------|
@@ -14,7 +14,9 @@ Authoritative reference: AQEF 1.0-CR1.7, Appendix D — Glossary, and Front Matt
 | Evidence / Artifact                     | Front Matter §8; Volume II; Volume III     |
 | Execution                               | Front Matter §8; Volume III                |
 | Human Review                            | Volume VI, Human Review                    |
+| Jailbreak / Prompt Injection            | Appendix D; Volume IX                      |
 | Judge / Validator / Oracle              | Front Matter §8; Volumes V–VI              |
+| Multimodal                              | Volume IX, Multimodal                      |
 | Quality Dimension                       | Volume I, Chapter 2                        |
 | Quality Gate                            | Appendix D; Volume I, Chapter 6            |
 | Reference Set                           | Volume VI, Admission                       |
